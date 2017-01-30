@@ -10,7 +10,7 @@ import client.app.Day;
 */
 public class TimeBlock{
 
-    private Day;
+    private Day day;
     private String start;
     private ScheduleEvent se;
     private boolean occupied;
