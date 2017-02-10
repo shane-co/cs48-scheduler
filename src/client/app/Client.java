@@ -3,6 +3,7 @@ package client.app;
 //Imports
 import client.app.obj.User;
 import client.app.obj.ScheduleEvent;
+import client.app.obj.Database;
 
 /**
 *Class representing the Client application. Holds all object data and maintains the state of the Application.
@@ -11,22 +12,14 @@ import client.app.obj.ScheduleEvent;
 public class Client{
     //instance variables
     private User currUser; //User currently using the application
-    private ArrayList<Database> orgs; //All known REMOTE databases (Called: organizations)
-    private ArrayList<ScheduleEvent> myEvents; //List of all ScheduleEvent that the User has subscribed to.
-    private ArrayList<ScheduleEvent> myHostedEvents; //list of all ScheduleEvent that the User has created. These are meant for other people to subscribe to.
+    private Database local;
+    private ArrayList<User> hostedUsers; //Collection of all users that have used this application.
 
     /*
-    *Function to set the currUser variable. Queries Database associated with orgName at currOrg with login credentials. Throws Exception if
-    *no organization associated with orgName exists or if login credentials are invalid.
+    *Function to set the currUser variable. Queries LOCAL Database with login credentials. Throws Exception if
+    *if login credentials are invalid.
     */
-    public void setCurrUser(String uname, String pw, String orgName){}
-
-    /*
-    *Function to set the currOrg variable. Queries orgs ArrayList to find a matching Database object with the same name.
-    *Throws Exception if no organization with name orgName exists in orgs.
-    *@param orgName String of the organization name to set currOrg to.
-    */
-    public void setCurrOrg(String orgName){}
+    public void setCurrUser(String uname, String pw){}
 
     /*
     *Function to add an organization to orgs and allow Client to connect to it. Places newOrg into orgs.
@@ -35,19 +28,19 @@ public class Client{
     public void registerOrg(Database newOrg){}
 
     /*
-    *Function to add an event to myEvents. Effectively completes the "subscription" process of the currUser to this Event.
+    *Function to add an event to currUser.myEvents. Effectively completes the "subscription" process of the currUser to this Event.
     *@param e ScheduleEvent object that the currUser is subcribed to.
     */
     public void addEvent(ScheduleEvent e){}
 
     /*
-    *Function to delete an event to myEvents. Effectively completes the "un-subscription" process of the currUser to this Event.
+    *Function to delete an event from currUser.myEvents. Effectively completes the "un-subscription" process of the currUser to this Event.
     *@param e ScheduleEvent object that the currUser is unsubcribed to.
     */
     public void deleteEvent(ScheduleEvent e){}
 
     /*
-    *Function to add a ScheduleEvent to myHostedEvents. Makes a ScheduleEvent available to be subscibed to.
+    *Function to add a ScheduleEvent to currUser.myHostedEvents. Makes a ScheduleEvent available to be subscibed to.
     *@param e ScheduleEvent object that the User has created.
     */
     public void createEvent(ScheduleEvent e){}
@@ -58,4 +51,9 @@ public class Client{
     *@param filters ArrayList<String> of filters to apply to the search results.
     */
     public ArrayList<ScheduleEvent> search(String orgName, ArrayList<String> filters){}
+
+    /*
+    *Function to write the state of the currentUser to Database local.
+    */
+    public void writeToDB(){}
 }

@@ -57,5 +57,5 @@ public class BGCommander{
     *Function to set the currentUser variable in Client. Uses Client to verify that credentials are present
     *and valid on local database. Modifies Client to update currentUser
     */
-    public void login(String username, String password, String orgName){}
+    public void login(String username, String password){}
 }
