@@ -40,7 +40,7 @@ public class BGCommander{
     /**
     *Function to generate a list of Schedule objects to return to UserInterface for display.
     *Uses internal ScheduleGenerator object to perform schedule generation algorithm and uses
-    *Client to get Events[] from the current User
+    *Client to get myEvents from the current User
     *@return ArrayList containing all Schedule objects obtained by Events subscribed to by the current User
     */
     public ArrayList<Schedule> genSchedule(){}
