@@ -15,4 +15,5 @@ public class ScheduleEvent{
     private TimeBlock start;
     private TimeBlock end;
     private String description;
+    private int id;
 }
