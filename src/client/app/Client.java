@@ -36,12 +36,6 @@ public class Client{
     public void setCurrUser(String uname, String pw){}
 
     /*
-    *Function to add an organization to currUser.myOrgs and allow Client to connect to it. Places newOrg into orgs.
-    *@param newOrg a Database object representing the mySQL connection hosted by the organization
-    */
-    public void registerOrg(Database newOrg){}
-
-    /*
     *Function to add an event to currUser.myEvents. Queries the Database found at DatabaseConnection db. Effectively completes the "subscription" process of the currUser to this Event.
     *@param e ScheduleEvent object that the currUser is subcribed to.
     */
@@ -54,6 +48,29 @@ public class Client{
     public void unsubscribe(ScheduleEvent e){}
 
     /*
+    *Function to add a Schedule to User.mySchedules
+    *@param s Schedule object to be added to currUser.
+    */
+    public void addSchedule(Schedule s){}
+    /*
+    *Function to delete a Schedule to User.mySchedules
+    *@param s Schedule object to be deleted to currUser.
+    */
+    public void deleteSchedule(Schedule s){}
+
+    /*
+    *Function to add an organization to currUser.myOrgs and allow Client to connect to it. Places newOrg into orgs.
+    *@param newOrg a DatabaseConnection object representing the data store connection hosted by the organization
+    */
+    public void registerOrg(DatabaseConnection newOrg){}
+
+    /*
+    *Function to remove an organization from currUser.myOrgs.
+    *@param org a DatabaseConnection object representing the data store connection hosted by the organization.
+    */
+    public void forgetOrg(DatabaseConnection org){}
+        
+    /*
     *Function to add a ScheduleEvent to currUser.myHostedEvents. Makes a ScheduleEvent available to be subscibed to.
     *@param e ScheduleEvent object that the User has created.
     */
@@ -65,9 +82,9 @@ public class Client{
     */
     public void deleteEvent(ScheduleEvent e){}
 
-    public void addSchedule(Schedule s){}
-    public void deleteSchedule(Schedule s){}
 
+
+    //----------------------------SERVER FUNCTIONALITY---------------------------------------------
     /*
     *Function to set Client public and listen for requests
     */

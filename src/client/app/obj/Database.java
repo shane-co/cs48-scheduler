@@ -23,8 +23,7 @@ import javax.xml.xpath.*;
 import java.util.ArrayList;
 import java.util.ListIterator;
 //local imports
-import client.app.exceptions.UserNotFoundException;
-import client.app.exceptions.ScheduleEventNotFoundException;
+import client.app.exceptions.*;
 import client.app.obj.Filter;
 
 /*
@@ -37,25 +36,27 @@ public class Database{
     private static Document doc;
     private static Element users;
     private static Transformer transformer;
+    private int usernum;
 
     /*
-    *Helper function to locate a User in the NodeList provided.
+    *Helper functions to locate Elements in the NodeList provided.
     *@return int index of the User; -1 if not found
     */
-    private int getIndexOf(String uname, NodeList list){
+    private int getIndexOf(String idnum, NodeList list){
         for(int i=0; i<list.getLength(); i++){
-            String query = list.item(i).getFirstChild().getTextContent();
-            if(query.equals(uname)) return i;
+            String query = ((Element)list.item(i)).getAttribute("id");
+            if(query.equals(idnum)) return i;
         }
         return -1;
     }
-    private Element getUser(String uname) throws UserNotFoundException{
-        NodeList list = users.getElementsByTagName("user");
-        int index = getIndexOf(uname, list);
-        if(index == -1) throw new UserNotFoundException(); //if user exists, get its myEvents list
-        Element user = (Element) list.item(index);
-        return user;
+    private Element findUserElement(Element userField, String tag, String idnum) throws ElementNotFoundException{
+        NodeList list = userField.getElementsByTagName(tag);
+        int index = getIndexOf(idnum, list);
+        if(index == -1) throw new ElementNotFoundException();
+        Element e = (Element) list.item(index);
+        return e;
     }
+
     //Constructor. Checks for existence of appliation record. Loads it if available, makes new one if not.
     public Database(){
         try{
@@ -69,24 +70,29 @@ public class Database{
                 doc = docBuilder.newDocument();
                 users = doc.createElement("users");
                 doc.appendChild(users);
+                usernum=0;
             }
             else{ //read in existing record
                 doc = docBuilder.parse(record);
                 System.out.println("Record loaded.");
                 users = doc.getDocumentElement();
+                usernum = users.getElementsByTagName("user").getLength();
             }
         } catch (Exception e){e.printStackTrace();}
     }
 
     /*
-    *Function to add a User to the data store. Creates XML structure for a new User with no subcscriptions.
+    *Function to add a new User to the data store. Creates XML structure for a new User with no subcscriptions.
+    *DOES NOT check for User existence
+    *@param username String of the User's username
+    *@param password String of the User's password
     */
     public void addUser(String username, String password){
         //create user with all fields needed.
         Element user = doc.createElement("user");
-        Element uname = doc.createElement("username");
-            uname.appendChild(doc.createTextNode(username));
-            user.appendChild(uname);
+        Attr uname = doc.createAttribute("id");
+        uname.setValue(username);
+        user.setAttributeNode(uname);
         Element pw = doc.createElement("pw");
             pw.appendChild(doc.createTextNode(password));
             user.appendChild(pw);
@@ -105,10 +111,11 @@ public class Database{
     /*
     *Function to add a ScheduleEvent to a User.
     *@param uname the username of the User to add the Event to.
+    *@id an integer id of the ScheduleEvent to be added.
     *@param eventDetails an ArrayList containing Strings containing {start;end;desc;block;dep} and data.
     */
-    public void subscribe(String uname, String id, ArrayList<String> eventDetails) throws UserNotFoundException {
-        Element user = getUser(uname);
+    public void subscribe(String uname, String id, ArrayList<String> eventDetails) throws ElementNotFoundException {
+        Element user = findUserElement(users, "user", uname);
         Element userEvents = (Element)user.getElementsByTagName("myEvents").item(0);
         //create the event Element to be added based on the information provided in the eventDetails
         Element newev = doc.createElement("event");
@@ -152,9 +159,13 @@ public class Database{
         newev.setAttributeNode(idnum);
         userEvents.appendChild(newev);
     }
-
-    public void unsubscribe(String uname, int id) throws ScheduleEventNotFoundException, UserNotFoundException{
-        Element user = getUser(uname);
+    /*
+    *Function to remove a ScheduleEvent from a User.
+    *@param uname the username of the User to remove the Event from.
+    *@param id the integer id of the ScheduleEvent
+    */
+    public void unsubscribe(String uname, String id) throws ScheduleEventNotFoundException, ElementNotFoundException{
+        Element user = findUserElement(users, "user", uname);
         Element userEvents = (Element)user.getElementsByTagName("myEvents").item(0);
         XPathFactory xPathfactory = XPathFactory.newInstance();
         try{
@@ -169,9 +180,44 @@ public class Database{
         } catch(XPathExpressionException e){}
     }
 
+    /*
+    *Function to modify the XML record of a specified User by either adding to or deleting from the main XML fields. (e.g. myEvents, myOrgs
+    *mySchedules, myHostedEvents)
+    *@param uname the username of the User to modify
+    *@param add a boolean value either true meaning add, false meaning delete.
+    *@param f the main XMl field to alter {myEvents,myHostedEvents,mySchedules,myOrgs}
+    *@param newelem a DOM Element Node containing all runtime information about the object to be stored in the main XML file.
+    */
+    public void modifyUser(String userid, boolean add, String f, Element newelem) throws UserNotFoundException, ElementNotFoundException{
+        Element user = findUserElement(users, "user", userid);
+        Element field = doc.createElement("null");
+        String tagname = "null";
+        switch(f){
+            case "myEvents": field = (Element)user.getElementsByTagName("myEvents").item(0);
+                tagname="event";
+                break;
+            case "myHostedEvents": field = (Element)user.getElementsByTagName("myHostedEvents").item(0);
+                tagname="event";
+                break;
+            case "mySchedules": field = (Element)user.getElementsByTagName("mySchedules").item(0);
+                tagname="schedule";
+                break;
+            case "myOrgs": field = (Element)user.getElementsByTagName("myOrgs").item(0);
+                tagname="org";
+                break;
+            default: break;
+        }
+        if(add) field.appendChild(newelem);
+        else{
+            //find element in doc and delete it.
+            String newelemid = newelem.getAttribute("id");
+            Element deleted = findUserElement(field, tagname, newelemid);
+            deleted.getParentNode().removeChild(deleted);
+        }
+    }
+
     public String outputSearchResultString(String uname, ArrayList<Filter>filters) throws UserNotFoundException{
             //get element corresponding to tagname and val.
-            Element user = getUser(uname);
             //get all elements from myHostedEvents and apply filters.
             return ""; //STUB
     }
@@ -183,6 +229,24 @@ public class Database{
     public static void main(String argv[]){
         Database tester = new Database();
         ArrayList<String> list = new ArrayList<String>();
+        Element newev = doc.createElement("hevent");
+        Attr idnum = doc.createAttribute("id");
+        idnum.setValue("1");
+        Element timeblocks = doc.createElement("blocks");
+        Element dependencies = doc.createElement("deps");
+        Element start = doc.createElement("start");
+        Element end = doc.createElement("end");
+        newev.setAttributeNode(idnum);
+        newev.appendChild(start);
+        newev.appendChild(end);
+        newev.appendChild(dependencies);
+        newev.appendChild(timeblocks);
+        try{
+            tester.addUser("jared","aowruigh");
+            tester.modifyUser("jared", true, "myHostedEvents", newev);
+            writeToFile();
+        } catch(Exception e){}
+        /*
         list.add("start");
         list.add("Apr 7 1995");
         list.add("end");
@@ -197,18 +261,16 @@ public class Database{
         tester.addUser("Jared","asdf");
         System.out.println("added user");
         try{
-            writeToFile();
-            tester.subscribe("Jared", "1", list);
+            tester.subscribe("Jared", "2", list);
         //System.out.println("added event");
         writeToFile();
         }
         catch(Exception e){e.printStackTrace();}
-        try{
-            writeToFile();
+        /*try{
             tester.unsubscribe("Jared", 1);
         //System.out.println("added event");
         writeToFile();
         }
         catch(Exception e){e.printStackTrace();}
-    }
+    */}
 }
