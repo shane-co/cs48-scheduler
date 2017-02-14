@@ -15,7 +15,7 @@ public class User{
     private ArrayList<Schedule> mySchedules;
     private ArrayList<ScheduleEvent> myHostedEvents;
     private ArrayList<ScheduleEvent> myEvents;
-    private ArrayList<Database> myOrgs;
+    private ArrayList<DatabaseConnection> myOrgs;
 
     //Functions to retrieve from instance variables;
 

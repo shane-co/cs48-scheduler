@@ -17,11 +17,15 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.*;
+
 //ArrayList imports
 import java.util.ArrayList;
 import java.util.ListIterator;
 //local imports
 import client.app.exceptions.UserNotFoundException;
+import client.app.exceptions.ScheduleEventNotFoundException;
+import client.app.obj.Filter;
 
 /*
 *Class representing a database store. Keeps all information about User objects and their corresponding Events.
@@ -32,6 +36,7 @@ public class Database{
     private static File record;
     private static Document doc;
     private static Element users;
+    private static Transformer transformer;
 
     /*
     *Helper function to locate a User in the NodeList provided.
@@ -54,6 +59,8 @@ public class Database{
     //Constructor. Checks for existence of appliation record. Loads it if available, makes new one if not.
     public Database(){
         try{
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            transformer = transformerFactory.newTransformer();
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = factory.newDocumentBuilder();
             record = new File("record.xml");
@@ -132,6 +139,10 @@ public class Database{
                     d=(String)iter.next(); dep.appendChild(doc.createTextNode(d));
                     dependencies.appendChild(dep);
                     break;
+                case "name": Element name = doc.createElement("name");
+                    d=(String)iter.next(); name.appendChild(doc.createTextNode(d));
+                    newev.appendChild(name);
+                default: break;
             }
             if(iter.hasNext()) d=(String)iter.next();
         }
@@ -142,13 +153,30 @@ public class Database{
         userEvents.appendChild(newev);
     }
 
-    public void unsubscribe(String uname, int id){
+    public void unsubscribe(String uname, int id) throws ScheduleEventNotFoundException, UserNotFoundException{
+        Element user = getUser(uname);
+        Element userEvents = (Element)user.getElementsByTagName("myEvents").item(0);
+        XPathFactory xPathfactory = XPathFactory.newInstance();
+        try{
+            XPath xpath = xPathfactory.newXPath();
+            XPathExpression ex = xpath.compile("event[@id=\""+id+"\"]");
+            NodeList result = (NodeList) ex.evaluate(userEvents, XPathConstants.NODESET);
+            if(result.getLength()==0) throw new ScheduleEventNotFoundException();
+            else{
+                Element deleted = (Element)result.item(0);
+                deleted.getParentNode().removeChild(deleted);
+            }
+        } catch(XPathExpressionException e){}
+    }
 
+    public String outputSearchResultString(String uname, ArrayList<Filter>filters) throws UserNotFoundException{
+            //get element corresponding to tagname and val.
+            Element user = getUser(uname);
+            //get all elements from myHostedEvents and apply filters.
+            return ""; //STUB
     }
 
     public static void writeToFile() throws TransformerException{
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
         transformer.transform(new DOMSource(doc), new StreamResult(record));
     }
 
@@ -171,6 +199,13 @@ public class Database{
         try{
             writeToFile();
             tester.subscribe("Jared", "1", list);
+        //System.out.println("added event");
+        writeToFile();
+        }
+        catch(Exception e){e.printStackTrace();}
+        try{
+            writeToFile();
+            tester.unsubscribe("Jared", 1);
         //System.out.println("added event");
         writeToFile();
         }

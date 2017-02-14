@@ -4,17 +4,31 @@ package client.app;
 import client.app.obj.User;
 import client.app.obj.ScheduleEvent;
 import client.app.obj.Database;
-
+//networking
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketAddress;
 /**
 *Class representing the Client application. Holds all object data and maintains the state of the Application.
 *Interacts with Database object and manages conversions between Java Objects and mySQL database entries.
+*Serves as applciation server to remote instances of application running.
 */
 public class Client{
     //instance variables
     private User currUser; //User currently using the application
-    private Database local;
-    private ArrayList<User> hostedUsers; //Collection of all users that have used this application.
+    private Database local; //Collection of all users that have used this application and their application data.
+    //private ArrayList<User> hostedUsers;
+    //networking information
+    private static final int port = 7777;
+    ServerSocket ss;
+    Socket s;
+    private boolean pub; //default value false.
 
+    public Client(){
+        ss = new ServerSocket(port);
+        local = new Database();
+        pub = false;
+    }
     /*
     *Function to set the currUser variable. Queries LOCAL Database with login credentials. Throws Exception if
     *if login credentials are invalid.
@@ -28,7 +42,7 @@ public class Client{
     public void registerOrg(Database newOrg){}
 
     /*
-    *Function to add an event to currUser.myEvents. Effectively completes the "subscription" process of the currUser to this Event.
+    *Function to add an event to currUser.myEvents. Queries the Database found at DatabaseConnection db. Effectively completes the "subscription" process of the currUser to this Event.
     *@param e ScheduleEvent object that the currUser is subcribed to.
     */
     public void subscribe(ScheduleEvent e){}
@@ -51,16 +65,65 @@ public class Client{
     */
     public void deleteEvent(ScheduleEvent e){}
 
-    /*
-    *Function to retrieve all ScheduleEvent objects from organization associate with orgName that fits the current filters
-    *Will use currUser to find orgName in currUser.myOrgs and find ScheduleEvents.
-    *@param orgName Name of organization to query. Will retrieve Database object from orgs associated with orgName
-    *@param filters ArrayList<String> of filters to apply to the search results.
-    */
-    public ArrayList<ScheduleEvent> search(String orgName, ArrayList<String> filters){}
+    public void addSchedule(Schedule s){}
+    public void deleteSchedule(Schedule s){}
 
     /*
-    *Function to write the state of the currentUser to Database local.
+    *Function to set Client public and listen for requests
     */
-    public void writeToDB(){}
+    public void setPublic(){
+        pub = true;
+        try{
+                Listener serve = new Listener();
+                new Thread(serve).start();
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+
+    }
+    /*
+    *Function to set Client private and stop listening for requests
+    */
+    public void setPrivate(){pub=false;}
+
+    /*
+    *Inner Listener class to listen for requests on port 7777. Handles server functionality.
+    */
+    class Listener implements Runnable{
+        public void run(){
+            while(pub){
+                try{
+                    s = ss.accept();
+                    DataInputStream dis = new DataInputStream(s.getInputStream());
+                    String request = dis.readUTF();
+                    parseRequest(request);
+                }catch(IOException e){ }
+            }
+        }
+
+        public void parseRequest(String in){ //requests come in the form ORGNAME;%COMMAND;ARG COMMAND={get,search} ARG={filter:}
+            DataOutputStream dos = new DataOutputStream(s.getOutputStream());
+            ArrayList<String> req = new ArrayList<String>(Arrays.asList(in.split(";"))); //split request into parseable list.
+            ListIterator iter = req.listIterator();
+            String result;
+            String orgName = iter.next(); //get the name of the organization hosted in local to query.
+            String r = iter.next();
+            switch(r){
+                case "%get": //returns all events from orgName
+                    try{
+                        result = local.outputSearchResultString(orgName, new ArrayList<String>);
+                        dos.writeUTF(result);
+                    }catch(UserNotFoundException e){dos.writeUTF("USER NOT FOUND");}
+                    break;
+                case "%search": //applies search filters.
+                    try{
+                        result = local.outputSearchResultString(orgName, parseFilters(iter.next()));
+                        dos.writeUTF(result);
+                    }catch(UserNotFoundException e){dos.writeUTF("USER NOT FOUND");}
+                    break;
+            }
+        }
+
+        public ArrayList<Filters> parseFilters(String in){}
+    }
 }

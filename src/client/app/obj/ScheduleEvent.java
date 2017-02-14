@@ -1,4 +1,4 @@
-package client.app;
+package client.app.obj;
 
 //Imports
 import client.app.obj.Dependencies;
@@ -16,4 +16,5 @@ public class ScheduleEvent{
     private TimeBlock end;
     private String description;
     private int id;
+    private String name;
 }
