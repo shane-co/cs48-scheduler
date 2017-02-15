@@ -49,13 +49,16 @@ public class Database{
         }
         return -1;
     }
-    private Element findUserElement(Element userField, String tag, String idnum) throws ElementNotFoundException{
+    private Element findElement(Element userField, String tag, String elemid) throws ElementNotFoundException{
         NodeList list = userField.getElementsByTagName(tag);
-        int index = getIndexOf(idnum, list);
+        int index = getIndexOf(elemid, list);
         if(index == -1) throw new ElementNotFoundException();
         Element e = (Element) list.item(index);
         return e;
     }
+	private Element findElement(String tag, String elemid) throws ElementNotFoundException{
+		return findElement(users, tag, elemid);
+	}
 
     //Constructor. Checks for existence of appliation record. Loads it if available, makes new one if not.
     public Database(){
@@ -84,11 +87,11 @@ public class Database{
     /*
     *Function to add a new User to the data store. Creates XML structure for a new User with no subcscriptions.
     *DOES NOT check for User existence
-    *@param username String of the User's username
-    *@param password String of the User's password
+    *@param u Element object representing the User as an XML record
     */
-    public void addUser(String username, String password){
-        //create user with all fields needed.
+    public void addUser(Element u){
+        /* commented out code to be implemented in User object's record() function.
+		//create user with all fields needed.
         Element user = doc.createElement("user");
         Attr uname = doc.createAttribute("id");
         uname.setValue(username);
@@ -104,8 +107,8 @@ public class Database{
         user.appendChild(mySchedules);
         Element myOrgs = doc.createElement("myOrgs");
         user.appendChild(myOrgs);
-
-        users.appendChild(user); //add user to total list
+		*/
+        users.appendChild(u); //add user to total list
     }
 
     /*
@@ -115,7 +118,7 @@ public class Database{
     *@param eventDetails an ArrayList containing Strings containing {start;end;desc;block;dep} and data.
     */
     public void subscribe(String uname, String id, ArrayList<String> eventDetails) throws ElementNotFoundException {
-        Element user = findUserElement(users, "user", uname);
+        Element user = findElement(users, "user", uname);
         Element userEvents = (Element)user.getElementsByTagName("myEvents").item(0);
         //create the event Element to be added based on the information provided in the eventDetails
         Element newev = doc.createElement("event");
@@ -165,7 +168,7 @@ public class Database{
     *@param id the integer id of the ScheduleEvent
     */
     public void unsubscribe(String uname, String id) throws ScheduleEventNotFoundException, ElementNotFoundException{
-        Element user = findUserElement(users, "user", uname);
+        Element user = findElement(users, "user", uname);
         Element userEvents = (Element)user.getElementsByTagName("myEvents").item(0);
         XPathFactory xPathfactory = XPathFactory.newInstance();
         try{
@@ -189,7 +192,7 @@ public class Database{
     *@param newelem a DOM Element Node containing all runtime information about the object to be stored in the main XML file.
     */
     public void modifyUser(String userid, boolean add, String f, Element newelem) throws UserNotFoundException, ElementNotFoundException{
-        Element user = findUserElement(users, "user", userid);
+        Element user = findElement(users, "user", userid);
         Element field = doc.createElement("null");
         String tagname = "null";
         switch(f){
@@ -211,7 +214,7 @@ public class Database{
         else{
             //find element in doc and delete it.
             String newelemid = newelem.getAttribute("id");
-            Element deleted = findUserElement(field, tagname, newelemid);
+            Element deleted = findElement(field, tagname, newelemid);
             deleted.getParentNode().removeChild(deleted);
         }
     }

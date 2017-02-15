@@ -25,6 +25,7 @@ public class Client{
     private boolean pub; //default value false.
 
     public Client(){
+		currUser = null;
         ss = new ServerSocket(port);
         local = new Database();
         pub = false;
@@ -33,7 +34,21 @@ public class Client{
     *Function to set the currUser variable. Queries LOCAL Database with login credentials. Throws Exception if
     *if login credentials are invalid.
     */
-    public void setCurrUser(String uname, String pw){}
+    public void setCurrUser(String uname, String pw) throws ElementNotFoundException, UserLoggedInException{
+		if(currUser!=null) throw new UserLoggedInException();
+		if(verifyCredentials(uname, pw)){
+			currUser = new User();
+			currUser.load(local.findElement("user",uname));
+		}
+	}
+	
+	/*
+ 	*Function to add User object to local Database. Allows user to sign in with registered credentials
+	*@param u instantiated User object to be added to Database.
+ 	*/ 
+	public void addUser(User u){
+		local.addUser(u.record());
+	}
 
     /*
     *Function to add an event to currUser.myEvents. Queries the Database found at DatabaseConnection db. Effectively completes the "subscription" process of the currUser to this Event.
