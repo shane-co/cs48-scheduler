@@ -229,7 +229,7 @@ public class Database{
     public static void main(String argv[]){
         Database tester = new Database();
         ArrayList<String> list = new ArrayList<String>();
-        Element newev = doc.createElement("hevent");
+        Element newev = doc.createElement("event");
         Attr idnum = doc.createAttribute("id");
         idnum.setValue("1");
         Element timeblocks = doc.createElement("blocks");
@@ -243,6 +243,7 @@ public class Database{
         newev.appendChild(timeblocks);
         try{
             tester.addUser("jared","aowruigh");
+            tester.modifyUser("jared", true, "myHostedEvents", newev);
             tester.modifyUser("jared", true, "myHostedEvents", newev);
             writeToFile();
         } catch(Exception e){}
