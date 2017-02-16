@@ -224,7 +224,21 @@ public class Database{
             //get all elements from myHostedEvents and apply filters.
             return ""; //STUB
     }
+	
+	/*
+ 	* Function to check login credentials against a User already stored in the database.
+ 	* @return bool true if valid credentials; false otw
+ 	*/
+	
+	public boolean verifyCredentials(String uname, String pw){
+		Element u = findElement(users, "user", uname);
+		String recordedPW = u.getElementsByTagName("pw").item(0).getTextContent();
+		return recordedPW.equals(pw);	
+	}
 
+	/*
+ 	* Function to write the entire DOM model to local XML stored on the computer.
+ 	*/
     public static void writeToFile() throws TransformerException{
         transformer.transform(new DOMSource(doc), new StreamResult(record));
     }
