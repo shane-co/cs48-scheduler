@@ -56,7 +56,7 @@ public class Database{
         Element e = (Element) list.item(index);
         return e;
     }
-	private Element findElement(String tag, String elemid) throws ElementNotFoundException{
+	public Element findUser(String tag, String elemid) throws ElementNotFoundException{
 		return findElement(users, tag, elemid);
 	}
 
@@ -224,16 +224,16 @@ public class Database{
             //get all elements from myHostedEvents and apply filters.
             return ""; //STUB
     }
-	
+
 	/*
  	* Function to check login credentials against a User already stored in the database.
  	* @return bool true if valid credentials; false otw
  	*/
-	
+
 	public boolean verifyCredentials(String uname, String pw){
 		Element u = findElement(users, "user", uname);
 		String recordedPW = u.getElementsByTagName("pw").item(0).getTextContent();
-		return recordedPW.equals(pw);	
+		return recordedPW.equals(pw);
 	}
 
 	/*

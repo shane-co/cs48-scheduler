@@ -10,11 +10,5 @@ import client.app.obj.TimeBlock;
 */
 public class ScheduleEvent{
 
-    private ArrayList<Dependencies> deps;
-    private ArrayList<TimeBlocks> duration;
-    private TimeBlock start;
-    private TimeBlock end;
-    private String description;
-    private int id;
-    private String name;
+    
 }

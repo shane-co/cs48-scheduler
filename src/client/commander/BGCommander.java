@@ -6,6 +6,8 @@ import client.app.obj.ScheduleEvent;
 import client.view.UserInterface;
 import client.app.obj.ScheduleGenerator;
 
+import java.util.ArrayList;
+
 /*
 *Class BackGround Commander acting as the Controller in the MVC Design Pattern. Responsible for changing the state of the application
 * and coordinating method calls between UserInterface and the rest of the application.
@@ -30,7 +32,7 @@ public class BGCommander{
     *@return BGCommander object
     */
     public static BGCommander getBGCommander(){
-        if(command==NULL)
+        if(command==null)
             command = new BGCommander();
         return command;
     }

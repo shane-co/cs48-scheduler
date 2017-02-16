@@ -3,11 +3,16 @@ package client.app;
 //Imports
 import client.app.obj.User;
 import client.app.obj.ScheduleEvent;
+import client.app.obj.*;
 import client.app.obj.Database;
+import client.app.exceptions.*;
 //networking
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
+//ArrayList
+import java.util.ArrayList;
+
 /**
 *Class representing the Client application. Holds all object data and maintains the state of the Application.
 *Interacts with Database object and manages conversions between Java Objects and mySQL database entries.
@@ -36,16 +41,16 @@ public class Client{
     */
     public void setCurrUser(String uname, String pw) throws ElementNotFoundException, UserLoggedInException{
 		if(currUser!=null) throw new UserLoggedInException();
-		if(verifyCredentials(uname, pw)){
+		if(local.verifyCredentials(uname, pw)){
 			currUser = new User();
-			currUser.load(local.findElement("user",uname));
+			currUser.load(local.findUser("user",uname));
 		}
 	}
-	
+
 	/**
  	*Function to add User object to local Database. Allows user to sign in with registered credentials
 	*@param u instantiated User object to be added to Database.
- 	*/ 
+ 	*/
 	public void addUser(User u){
 		local.addUser(u.record());
 	}
@@ -58,7 +63,7 @@ public class Client{
 		//update the currUser to include subscription.
 		currUser.addToMyEvents(e);
 		//update the local database to reflect new change.
-		local.modifyUser(currUser.getUsername(), true, "myEvents", e.record());	
+		local.modifyUser(currUser.getUsername(), true, "myEvents", e.record());
 	}
 
     /**
@@ -80,7 +85,7 @@ public class Client{
 		//update the currUser to include schedule.
 		currUser.addToMySchedules(s);
 		//update the local database to reflect new change.
-		local.modifyUser(currUser.getUsername(), true, "mySchedules", s.record());	
+		local.modifyUser(currUser.getUsername(), true, "mySchedules", s.record());
 	}
     /**
     *Function to delete a Schedule to User.mySchedules
@@ -90,7 +95,7 @@ public class Client{
 		//update the currUser to include schedule.
 		currUser.removeFromMySchedules(s);
 		//update the local database to reflect new change.
-		local.modifyUser(currUser.getUsername(), false, "mySchedules", s.record());	
+		local.modifyUser(currUser.getUsername(), false, "mySchedules", s.record());
 	}
 
     /**
@@ -101,7 +106,7 @@ public class Client{
 		//update the currUser to include schedule.
 		currUser.addToMyOrgs(newOrg);
 		//update the local database to reflect new change.
-		local.modifyUser(currUser.getUsername(), true, "myOrgs", newOrg.record());	
+		local.modifyUser(currUser.getUsername(), true, "myOrgs", newOrg.record());
 	}
 
     /**
@@ -112,8 +117,8 @@ public class Client{
 		//update the currUser to include schedule.
 		currUser.removeFromMyOrgs(newOrg);
 		//update the local database to reflect new change.
-		local.modifyUser(currUser.getUsername(), false, "myOrgs", org.record());	
-    } 
+		local.modifyUser(currUser.getUsername(), false, "myOrgs", org.record());
+    }
     /**
     *Function to add a ScheduleEvent to currUser.myHostedEvents. Makes a ScheduleEvent available to be subscibed to.
     *@param e ScheduleEvent object that the User has created.
@@ -122,7 +127,7 @@ public class Client{
 		//update the currUser to include schedule.
 		currUser.addToMyHostedEvents(e);
 		//update the local database to reflect new change.
-		local.modifyUser(currUser.getUsername(), true, "myHostedEvents", e.record());	
+		local.modifyUser(currUser.getUsername(), true, "myHostedEvents", e.record());
 	}
     /**
     *Function to remove a ScheduleEvent from currUser.myHostedEvents.
@@ -132,7 +137,7 @@ public class Client{
 		//update the currUser to include schedule.
 		currUser.removeFromMyHostedEvents(e);
 		//update the local database to reflect new change.
-		local.modifyUser(currUser.getUsername(), false, "myHostedEvents", e.record());	
+		local.modifyUser(currUser.getUsername(), false, "myHostedEvents", e.record());
 	}
 
 
@@ -181,7 +186,7 @@ public class Client{
             switch(r){
                 case "%get": //returns all events from orgName
                     try{
-                        result = local.outputSearchResultString(orgName, new ArrayList<String>);
+                        result = local.outputSearchResultString(orgName, new ArrayList<String>());
                         dos.writeUTF(result);
                     }catch(UserNotFoundException e){dos.writeUTF("USER NOT FOUND");}
                     break;
@@ -194,6 +199,6 @@ public class Client{
             }
         }
 
-        public ArrayList<Filters> parseFilters(String in){}
+        //public ArrayList<Filters> parseFilters(String in){}
     }
 }
