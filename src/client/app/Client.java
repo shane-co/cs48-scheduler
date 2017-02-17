@@ -147,7 +147,13 @@ public class Client{
 	}
 
 
-
+    /**
+    *Function to retrieve ArrayList of the currUser's myEvents.
+    * @return ArrayList<ScheduleEvent>
+    */
+    public ArrayList<ScheduleEvent> getUserEvents(){
+        return currUser.getMyEvents();
+    }
     //----------------------------SERVER FUNCTIONALITY---------------------------------------------
     /**
     *Function to set Client public and listen for requests
