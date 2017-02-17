@@ -49,6 +49,7 @@ public class ScheduleEvent implements Recordable{
     public int when_to_end() {return end; }
     public int duration() {return start-end;}
     public String get_descpt() {return description; }
+    public String get_ID() {return id; }
     public void set_day(int d){day=d;}
     public void set_start(int s) {start=s; }
     public void set_to_end(int e) { end=e; }
