@@ -1,8 +1,7 @@
-package client.app;
+package client.app.obj;
 
 //Imports
 import client.app.obj.ScheduleEvent;
-import client.app.obj.Day;
 /**
 *Class representing a TimeBlock within a schedule. Is the basic unit within a schedule and holds only information regarding the
 *block of time, its availability, and a reference to the ScheduleEvent that is occupying it. Takes 24hr time notation to denote
@@ -10,10 +9,10 @@ import client.app.obj.Day;
 */
 public class TimeBlock{
     //instance variables
-    private Day day;
-    private String start;
-    private ScheduleEvent se;
-    private boolean occupied;
+    private int day;
+	private int start;
+    private ArrayList<ScheduleEvent> se;
+
 
     /**
     *Default Constructor
@@ -22,7 +21,7 @@ public class TimeBlock{
     *@param ev the ScheduleEvent that occupies this TimeBlock. NULL if no event associated
     *@param occ boolean indicating availability. Must be True if ev!=NULL
     */
-    public TimeBlock(Day d, String s, ScheduleEvent ev, boolean occ){}
+    public TimeBlock(int d,int s){day=d; start=s;}
 
     /**
     *Function to retrieve time information regarding the TimeBlock
@@ -40,12 +39,13 @@ public class TimeBlock{
     *Function to determine availability of TimeBlock
     *@return TRUE if se!=NULL; FALSE otherwise
     */
-    public boolean isOccupied(){}
+    //public boolean isOccupied(){}
 
     /**
     *Sets the ScheduleEvent that occupies the time block and changes occupied boolean accordingly
     *@param ev ScheduleEvent object that is occupying the time block. If NULL this method sets occupied to false; otherwise sets to true
     */
-    public void setEvent(ScheduleEvent ev){}
+    public void addEvent(ScheduleEvent ev){se.add(ev);}
+    public void removeEvent(int position){se.remove(position);}
 
 }

@@ -1,9 +1,9 @@
 package client.app.obj;
-
+import client.app.interfaces.Recordable;
 /*
 *Class representing an Internet connection to a remote Database.
 */
-public class DatabaseConnection{
+public class DatabaseConnection implements Recordable{
     private String IP;
     private int port;
 

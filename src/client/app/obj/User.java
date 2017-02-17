@@ -5,6 +5,7 @@ import client.app.obj.ScheduleEvent;
 import client.app.obj.Schedule;
 import client.app.obj.Database;
 import java.util.Iterator;
+import client.app.interfaces.Recordable;
 import java.util.ArrayList;
 
 /**
@@ -12,20 +13,26 @@ import java.util.ArrayList;
 *saved data after using the application. It's state is kept up to date in the LOCAL Database by the
 *Client
 */
-public class User{
+public class User implements Recordable{
     //instance variables
-    private ArrayList<Schedule> mySchedules = new ArrayList<Schedule>();
-    private ArrayList<ScheduleEvent> myHostedEvents = new ArrayList<ScheduleEvent>();
-    private ArrayList<ScheduleEvent> myEvents = new ArrayList<ScheduleEvent>();
-    private ArrayList<DatabaseConnection> myOrgs = new ArrayList<DatabaseConnection>();
+    private ArrayList<Schedule> mySchedules;
+    private ArrayList<ScheduleEvent> myHostedEvents;
+    private ArrayList<ScheduleEvent> myEvents;
+    private ArrayList<DatabaseConnection> myOrgs;
     
-  //Functions to modify instance variables;
+    public User(){
+        mySchedules = new ArrayList<Schedule>();
+      myHostedEvents = new ArrayList<ScheduleEvent>();
+      myEvents = new ArrayList<ScheduleEvent>();
+      myOrgs = new ArrayList<DatabaseConnection>();
+    }
+  //Functions to add to instance variables;
     
     public void addSchedule(Schedule s){
     	this.mySchedules.add(s);
     }
     
-    public void addScheduleEvent(ScheduleEvent s){
+    public void addHostedEvent(ScheduleEvent s){
     	this.myHostedEvents.add(s);
     }
     
@@ -38,7 +45,7 @@ public class User{
     }
     
     
-    //Functions to retrieve from instance variables;
+    //Functions to remove from instance variables;
     public void removemySchedule(Schedule s){
     	Iterator<Schedule> iter = mySchedules.iterator();
     	while (iter.hasNext()){
@@ -86,4 +93,6 @@ public class User{
     		}
     	}
     }
+  
+    
 }

@@ -1,0 +1,23 @@
+<project default="compile">
+
+    <property environment="env"/>
+    <property name="projectName" value="cs48_scheduler"/>
+    <property name="mainClass" value="client.app.RunApp"/>
+    <property name="webroot" value="www"/>
+    <property name="javadocDest" value="$(webroot)/$(projectName)/javadoc"/>
+
+    <target name="compile" description="compile entire application">
+            <mkdir dir="build"/>
+            <javac srcdir="src" destdir="build"/>
+    </target>
+
+    <target name="javadoc" depends="compile" description="generate javadoc for application" >
+        <delete dir="$(javadocDest)"/>
+        <javadoc destdir="javadoc">
+            <fileset dir="src" includes="**/*.java"/>
+            <link href="https://docs.oracle.com/javase/8/docs/api" />
+        </javadoc>
+        <echo>javadoc written to file: $(javadocDest)/index.html</echo>
+    </target>
+
+</project>
