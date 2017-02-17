@@ -7,6 +7,13 @@ import client.app.obj.Database;
 import java.util.Iterator;
 import client.app.interfaces.Recordable;
 import java.util.ArrayList;
+//XML DOM imports
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
 *Class representing a user using the Application. Maintains all data about the user and their
@@ -15,38 +22,36 @@ import java.util.ArrayList;
 */
 public class User implements Recordable{
     //instance variables
+    private String username;
     private ArrayList<Schedule> mySchedules;
     private ArrayList<ScheduleEvent> myHostedEvents;
     private ArrayList<ScheduleEvent> myEvents;
     private ArrayList<DatabaseConnection> myOrgs;
-    
+
     public User(){
         mySchedules = new ArrayList<Schedule>();
-      myHostedEvents = new ArrayList<ScheduleEvent>();
-      myEvents = new ArrayList<ScheduleEvent>();
-      myOrgs = new ArrayList<DatabaseConnection>();
+        myHostedEvents = new ArrayList<ScheduleEvent>();
+        myEvents = new ArrayList<ScheduleEvent>();
+        myOrgs = new ArrayList<DatabaseConnection>();
     }
   //Functions to add to instance variables;
-    
-    public void addSchedule(Schedule s){
+    public void setUsername(String s){username=s;}
+    public void addToMySchedules(Schedule s){
     	this.mySchedules.add(s);
     }
-    
     public void addHostedEvent(ScheduleEvent s){
     	this.myHostedEvents.add(s);
     }
-    
-    public void addScheduleEvent(ScheduleEvent s){
+    public void addToMyEvents(ScheduleEvent s){
     	this.myEvents.add(s);
     }
-    
     public void addDatabaseConnection(DatabaseConnection d){
     	this.myOrgs.add(d);
     }
-    
-    
+
     //Functions to remove from instance variables;
-    public void removemySchedule(Schedule s){
+    public String getUsername(){return username;}
+    public void removeFromMySchedules(Schedule s){
     	Iterator<Schedule> iter = mySchedules.iterator();
     	while (iter.hasNext()){
     		Schedule ss = iter.next();
@@ -57,8 +62,7 @@ public class User implements Recordable{
     		}
     	}
     }
-    
-    public void removeScheduleEvent(ScheduleEvent s){
+    public void removeFromMyEvents(ScheduleEvent s){
     	Iterator<ScheduleEvent> iter = myEvents.iterator();
     	while (iter.hasNext()){
     		ScheduleEvent ss = iter.next();
@@ -69,8 +73,7 @@ public class User implements Recordable{
     		}
     	}
     }
-    
-    public void removemyHostedEvents(ScheduleEvent s){
+    public void removeHostedEvent(ScheduleEvent s){
     	Iterator<ScheduleEvent> iter = myHostedEvents.iterator();
     	while (iter.hasNext()){
     		ScheduleEvent ss = iter.next();
@@ -81,7 +84,6 @@ public class User implements Recordable{
     		}
     	}
     }
-    
     public void removeDatabaseConnection(DatabaseConnection d){
     	Iterator<DatabaseConnection> iter = myOrgs.iterator();
     	while (iter.hasNext()){
@@ -93,6 +95,21 @@ public class User implements Recordable{
     		}
     	}
     }
-  
-    
+
+    //Accessor functions
+    public ArrayList<Schedule> getMySchedules(){return mySchedules;}
+    public ArrayList<ScheduleEvent> getMyEvents(){return myEvents;}
+    public ArrayList<ScheduleEvent> getMyHostedEvents(){return myHostedEvents;}
+    public ArrayList<DatabaseConnection> getMyOrgs(){return myOrgs;}
+
+    //Recordable interface functions
+    public Element record(){
+        try{
+            Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+            return doc.createElement("STUB");
+        }catch(ParserConfigurationException p){}
+            return null;
+    }
+    public void load(Element root){}
+
 }

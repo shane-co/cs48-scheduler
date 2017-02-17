@@ -3,6 +3,7 @@ package client.app.obj;
 //Local Imports
 import client.app.obj.Dependencies;
 import client.app.obj.TimeBlock;
+import client.app.interfaces.Recordable;
 //XML DOM imports
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -10,7 +11,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
+//ArrayList
+import java.util.ArrayList;
 /**
 *Class representing an event. Basic object that a user will subscribe to. Is created by Organizations and has event dependencies,
 *duration of event, and the organization it was created by.
@@ -53,37 +55,40 @@ public class ScheduleEvent implements Recordable{
 
     //Methods to implement Recordable interface
     public Element record(){
-        Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-        Element ev = doc.createElement("event");
-        Attr idnum = doc.createAttribute("id");
-        Element d = doc.createElement("day");
-        Attr dnum = doc.createAttribute("val");
-        Element s = doc.createElement("start");
-        Attr startTime = doc.createAttribute("val");
-        Element e = doc.createElement("end");
-        Attr endTime = doc.createAttribute("val");
-        Element desc = doc.createElement("desc");
-        Element dep =  doc.createElement("deps");
+        try{
+            Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+            Element ev = doc.createElement("event");
+            Attr idnum = doc.createAttribute("id");
+            Element d = doc.createElement("day");
+            Attr dnum = doc.createAttribute("val");
+            Element s = doc.createElement("start");
+            Attr startTime = doc.createAttribute("val");
+            Element e = doc.createElement("end");
+            Attr endTime = doc.createAttribute("val");
+            Element desc = doc.createElement("desc");
+            Element dep =  doc.createElement("deps");
 
-        idnum.setValue(Integer.toString(id));
-        dnum.setValue(Integer.toString(day));
-        startTime.setValue(Integer.toString(start));
-        endTime.setValue(Integer.toString(end));
-        ev.setAttributeNode(idnum);
-        d.setAttributeNode(dnum);
-        s.setAttributeNode(startTime);
-        e.setAttributeNode(endTime);
-        desc.appendChild(doc.createTextNode(description));
-        for(int i=0; i<deps.size(); i++){
-            dep.appendChild(deps.get(i).record());
-        }
-        ev.appendChild(d);
-        ev.appendChild(s);
-        ev.appendChild(e);
-        ev.appendChild(desc);
-        ev.appendChild(dep);
+            idnum.setValue(id);
+            dnum.setValue(Integer.toString(day));
+            startTime.setValue(Integer.toString(start));
+            endTime.setValue(Integer.toString(end));
+            ev.setAttributeNode(idnum);
+            d.setAttributeNode(dnum);
+            s.setAttributeNode(startTime);
+            e.setAttributeNode(endTime);
+            desc.appendChild(doc.createTextNode(description));
+            for(int i=0; i<deps.size(); i++){
+                dep.appendChild(deps.get(i).record());
+            }
+            ev.appendChild(d);
+            ev.appendChild(s);
+            ev.appendChild(e);
+            ev.appendChild(desc);
+            ev.appendChild(dep);
 
-        return ev;
+            return ev;
+        }catch(ParserConfigurationException p){}
+            return null;
     }
 
     public void load(Element root){

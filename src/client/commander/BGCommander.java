@@ -3,6 +3,7 @@ package client.commander;
 //Imports
 import client.app.Client;
 import client.app.obj.ScheduleEvent;
+import client.app.obj.Schedule;
 import client.view.UserInterface;
 import client.app.obj.ScheduleGenerator;
 
@@ -45,7 +46,7 @@ public class BGCommander{
     *Client to get myEvents from the current User
     *@return ArrayList containing all Schedule objects obtained by Events subscribed to by the current User
     */
-    public ArrayList<Schedule> genSchedule(){}
+    //public ArrayList<Schedule> genSchedule(){}
 
     /**
     *Function to generate a list of ScheduleEvent objects to return to UserInterface for display.
@@ -53,11 +54,11 @@ public class BGCommander{
     *@param orgName A string corresponding to the Organization name to search through
     *@param filters A set of filters to apply when searching for a ScheduleEvent
     */
-    public ArrayList<ScheduleEvent> search(String orgName, ArrayList<String> filters){}
+    //public ArrayList<ScheduleEvent> search(String orgName, ArrayList<String> filters){}
 
     /**
     *Function to set the currentUser variable in Client. Uses Client to verify that credentials are present
     *and valid on local database. Modifies Client to update currentUser
     */
-    public void login(String username, String password){}
+    //public void login(String username, String password){}
 }

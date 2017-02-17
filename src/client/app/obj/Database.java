@@ -147,7 +147,7 @@ public class Database{
         }
     }
 
-    public String outputSearchResultString(String uname, ArrayList<Filter>filters) throws UserNotFoundException{
+    public String outputSearchResultString(String uname, String filters) throws UserNotFoundException{
             //get element corresponding to tagname and val.
             //get all elements from myHostedEvents and apply filters.
             return ""; //STUB
@@ -158,7 +158,7 @@ public class Database{
  	* @return bool true if valid credentials; false otw
  	*/
 
-	public boolean verifyCredentials(String uname, String pw){
+	public boolean verifyCredentials(String uname, String pw) throws ElementNotFoundException{
 		Element u = findElement(users, "user", uname);
 		String recordedPW = u.getElementsByTagName("pw").item(0).getTextContent();
 		return recordedPW.equals(pw);
@@ -171,52 +171,5 @@ public class Database{
         transformer.transform(new DOMSource(doc), new StreamResult(record));
     }
 
-    public static void main(String argv[]){
-        Database tester = new Database();
-        ArrayList<String> list = new ArrayList<String>();
-        Element newev = doc.createElement("event");
-        Attr idnum = doc.createAttribute("id");
-        idnum.setValue("1");
-        Element timeblocks = doc.createElement("blocks");
-        Element dependencies = doc.createElement("deps");
-        Element start = doc.createElement("start");
-        Element end = doc.createElement("end");
-        newev.setAttributeNode(idnum);
-        newev.appendChild(start);
-        newev.appendChild(end);
-        newev.appendChild(dependencies);
-        newev.appendChild(timeblocks);
-        try{
-            tester.addUser("jared","aowruigh");
-            tester.modifyUser("jared", true, "myHostedEvents", newev);
-            tester.modifyUser("jared", true, "myHostedEvents", newev);
-            writeToFile();
-        } catch(Exception e){}
-        /*
-        list.add("start");
-        list.add("Apr 7 1995");
-        list.add("end");
-        list.add("Feb 2 2017");
-        list.add("desc");
-        list.add("STUB");
-        list.add("block");
-        list.add("STUB");
-        list.add("dep");
-        list.add("STUB");
 
-        tester.addUser("Jared","asdf");
-        System.out.println("added user");
-        try{
-            tester.subscribe("Jared", "2", list);
-        //System.out.println("added event");
-        writeToFile();
-        }
-        catch(Exception e){e.printStackTrace();}
-        /*try{
-            tester.unsubscribe("Jared", 1);
-        //System.out.println("added event");
-        writeToFile();
-        }
-        catch(Exception e){e.printStackTrace();}
-    */}
 }
