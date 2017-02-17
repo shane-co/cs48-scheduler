@@ -1,5 +1,6 @@
 package client.view;
 import client.app.obj.ScheduleEvent;				//this is temporary, should have methods and sub classes to do this
+import client.commander.BGCommander;
 
 import java.util.ArrayList;
 import java.awt.EventQueue;
@@ -19,10 +20,14 @@ public class UserInterface {
 	private String[] columnNames = {"ID", "DAY", "START DATE", "END DATE"};
 	private Object[][] data_1, data_2;
 	private DefaultTableModel model_1, model_2;
+    private BGCommander commander;
 
 
+    public UserInterface(boolean stub){ //STUB parameter to be removed when UserInterface fixed. only here to allow overloading
+        commander = BGCommander.getBGCommander();
+        initialize();
+    }
 	public UserInterface() {
-
 		initialize();
 	}
     /**
@@ -37,7 +42,7 @@ public class UserInterface {
 		}
     }
 	/**
-	 * Initialize the contents of the frame.
+	 * Initialize the contents of the frame. Needs to be re-examined. Should contain only display relevant information.
 	 */
 	private void initialize() {
 		this.test();
