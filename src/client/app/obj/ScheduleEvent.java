@@ -25,21 +25,23 @@ public class ScheduleEvent implements Recordable{
     private int end;
     private String description;
     private String id;
-    public ScheduleEvent(ArrayList<Dependencies> dep,int d,int s, int e, String dp)
+    public ScheduleEvent(ArrayList<Dependencies> dep,int d,int s, int e, String dp,String i)
     {
     	deps=dep;
     	day=d;
     	start=s;
     	end=e;
     	description=dp;
+        id=i;
     }
 
-    public ScheduleEvent(int d,int s, int e, String dp)
+    public ScheduleEvent(int d,int s, int e, String dp,String i)
     {
     	day=d;
     	start=s;
     	end=e;
     	description=dp;
+        id=i;
     }
 
     public int what_day() {return day;}
