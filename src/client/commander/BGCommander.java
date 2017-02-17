@@ -37,23 +37,24 @@ public class BGCommander{
             command = new BGCommander();
         return command;
     }
-    
+
     public ArrayList<ScheduleEvent> demoArray(){
-        private ArrayList<ScheduleEvent> Events = new ArrayList<ScheduleEvent>();
-        Events.add(new ScheduleEvent(2,1700, 2100, "dung"));
-        Events.add(new ScheduleEvent(12, 800, 11, "A good ol' morning at the beach"));
-        Events.add(new ScheduleEvent(12, 1200, 2, "Beach clean-up"));
-        Events.add(new ScheduleEvent(15, 800, 1100, "dope"));
-        Events.add(new ScheduleEvent(15,1200, 1900, "superdope"));
-        Events.add(new ScheduleEvent(4,1100, 1300, "Koala"));
-        Events.add(new ScheduleEvent(7,500, 700, "biggie"));
-        Events.add(new ScheduleEvent(27,800, 1000, "smalls"));
+        ArrayList<ScheduleEvent> Events = new ArrayList<ScheduleEvent>();
+        Events.add(new ScheduleEvent(2,1700, 2100, "dung", "ID1"));
+        Events.add(new ScheduleEvent(12, 800, 11, "A good ol' morning at the beach","ID1"));
+        Events.add(new ScheduleEvent(12, 1200, 2, "Beach clean-up","ID1"));
+        Events.add(new ScheduleEvent(15, 800, 1100, "dope","ID1"));
+        Events.add(new ScheduleEvent(15,1200, 1900, "superdope","ID1"));
+        Events.add(new ScheduleEvent(4,1100, 1300, "Koala","ID1"));
+        Events.add(new ScheduleEvent(7,500, 700, "biggie","ID1"));
+        Events.add(new ScheduleEvent(27,800, 1000, "smalls","ID1"));
         return Events;
-        
+
     }
-    
+
     public ArrayList<ScheduleEvent> myEventArray(){
-    	return client.currUser.getMyEvents();
+    	//return client.currUser.getMyEvents();
+        return new ArrayList<ScheduleEvent>();
     }
 
 
