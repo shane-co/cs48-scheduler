@@ -20,4 +20,7 @@
         <echo>javadoc written to file: $(javadocDest)/index.html</echo>
     </target>
 
+    <target name="runapp" depends="compile" description="run the application">
+        <java classname="$(mainClass)" fork="true" classpath="build"/>
+    </target>
 </project>

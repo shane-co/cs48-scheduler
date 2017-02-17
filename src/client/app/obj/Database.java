@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.ListIterator;
 //local imports
 import client.app.exceptions.*;
-import client.app.obj.Filter;
 
 /**
 *Class representing a database store. Keeps all information about User objects and their corresponding Events.
