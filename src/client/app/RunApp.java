@@ -3,7 +3,15 @@ import client.view.UserInterface;
 
 public class RunApp{
     public static void main(String[] args){
-        UserInterface main = new UserInterface();
-        main.launch();
+    	EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					UserInterface window = new UserInterface();
+					window.returnFrame().setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
     }
 }
