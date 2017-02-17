@@ -26,7 +26,7 @@ import java.util.ListIterator;
 import client.app.exceptions.*;
 import client.app.obj.Filter;
 
-/*
+/**
 *Class representing a database store. Keeps all information about User objects and their corresponding Events.
 *Allows for program persistence after termination. Contains functions to modify an XML document as a record.
 * Used by Client to manipulate program state.
@@ -38,7 +38,7 @@ public class Database{
     private static Transformer transformer;
     private int usernum;
 
-    /*
+    /**
     *Helper functions to locate Elements in the NodeList provided.
     *@return int index of the User; -1 if not found
     */
@@ -60,7 +60,8 @@ public class Database{
 		return findElement(users, tag, elemid);
 	}
 
-    //Constructor. Checks for existence of appliation record. Loads it if available, makes new one if not.
+    /**Constructor. Checks for existence of appliation record. Loads it if available, makes new one if not.
+    */
     public Database(){
         try{
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -84,7 +85,7 @@ public class Database{
         } catch (Exception e){e.printStackTrace();}
     }
 
-    /*
+    /**
     *Function to add a new User to the data store. Creates XML structure for a new User with no subcscriptions.
     *DOES NOT check for User existence
     *@param u Element object representing the User as an XML record
@@ -111,7 +112,7 @@ public class Database{
         users.appendChild(u); //add user to total list
     }
 
-    /*
+    /**
     *Function to modify the XML record of a specified User by either adding to or deleting from the main XML fields. (e.g. myEvents, myOrgs
     *mySchedules, myHostedEvents)
     *@param uname the username of the User to modify
@@ -153,7 +154,7 @@ public class Database{
             return ""; //STUB
     }
 
-	/*
+	/**
  	* Function to check login credentials against a User already stored in the database.
  	* @return bool true if valid credentials; false otw
  	*/
@@ -164,7 +165,7 @@ public class Database{
 		return recordedPW.equals(pw);
 	}
 
-	/*
+	/**
  	* Function to write the entire DOM model to local XML stored on the computer.
  	*/
     public static void writeToFile() throws TransformerException{
