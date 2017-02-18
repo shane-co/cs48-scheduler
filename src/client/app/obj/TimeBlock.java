@@ -19,5 +19,8 @@ public class TimeBlock{
 
     public void addEvent(ScheduleEvent ev){se.add(ev);}
     public void removeEvent(int position){se.remove(position);}
-
+    public int getDay(){return day;}
+    public int getStart(){return start;}
+    public int numberOfEvents(){return se.size();}
+    public ScheduleEvent getEvent(int index){return se.get(index);}
 }

@@ -90,24 +90,6 @@ public class Database{
     *@param u Element object representing the User as an XML record
     */
     public void addUser(Element u){
-        /* commented out code to be implemented in User object's record() function.
-		//create user with all fields needed.
-        Element user = doc.createElement("user");
-        Attr uname = doc.createAttribute("id");
-        uname.setValue(username);
-        user.setAttributeNode(uname);
-        Element pw = doc.createElement("pw");
-            pw.appendChild(doc.createTextNode(password));
-            user.appendChild(pw);
-        Element myEvents = doc.createElement("myEvents");
-        user.appendChild(myEvents);
-        Element myHostedEvents = doc.createElement("myHostedEvents");
-        user.appendChild(myHostedEvents);
-        Element mySchedules = doc.createElement("mySchedules");
-        user.appendChild(mySchedules);
-        Element myOrgs = doc.createElement("myOrgs");
-        user.appendChild(myOrgs);
-		*/
         users.appendChild(u); //add user to total list
     }
 

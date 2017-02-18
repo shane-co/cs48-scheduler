@@ -3,21 +3,18 @@ package client.app.obj;
 //Local Imports
 import client.app.obj.Dependencies;
 import client.app.obj.TimeBlock;
-import client.app.interfaces.Recordable;
-//XML DOM imports
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import client.app.interfaces.ScheduleObject;
+
 //ArrayList
 import java.util.ArrayList;
+//ScheduleEvent imports
+import org.w3c.dom.Element;
+
 /**
 *Class representing an event. Basic object that a user will subscribe to. Is created by Organizations and has event dependencies,
 *duration of event, and the organization it was created by.
 */
-public class ScheduleEvent implements Recordable{
+public class ScheduleEvent extends ScheduleObject{
 
     private ArrayList<Dependencies> deps;
     private int day;
@@ -55,45 +52,13 @@ public class ScheduleEvent implements Recordable{
     public void set_to_end(int e) { end=e; }
     public void set_descpt(String dp) { description=dp; }
     public void set_id(String i){id=i;}
+    public int num_deps(){return deps.size();}
+    public Dependencies getDependency(int index){return deps.get(index);}
 
-    //Methods to implement Recordable interface
+    //ScheduleObject methods
     public Element record(){
-        try{
-            Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-            Element ev = doc.createElement("event");
-            Attr idnum = doc.createAttribute("id");
-            Element d = doc.createElement("day");
-            Attr dnum = doc.createAttribute("val");
-            Element s = doc.createElement("start");
-            Attr startTime = doc.createAttribute("val");
-            Element e = doc.createElement("end");
-            Attr endTime = doc.createAttribute("val");
-            Element desc = doc.createElement("desc");
-            Element dep =  doc.createElement("deps");
-
-            idnum.setValue(id);
-            dnum.setValue(Integer.toString(day));
-            startTime.setValue(Integer.toString(start));
-            endTime.setValue(Integer.toString(end));
-            ev.setAttributeNode(idnum);
-            d.setAttributeNode(dnum);
-            s.setAttributeNode(startTime);
-            e.setAttributeNode(endTime);
-            desc.appendChild(doc.createTextNode(description));
-            for(int i=0; i<deps.size(); i++){
-                dep.appendChild(deps.get(i).record());
-            }
-            ev.appendChild(d);
-            ev.appendChild(s);
-            ev.appendChild(e);
-            ev.appendChild(desc);
-            ev.appendChild(dep);
-
-            return ev;
-        }catch(ParserConfigurationException p){}
-            return null;
+        return super.record(this); //inherited by Superclass
     }
-
     public void load(Element root){
 
     }
