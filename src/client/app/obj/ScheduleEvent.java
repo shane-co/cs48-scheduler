@@ -55,6 +55,9 @@ public class ScheduleEvent extends ScheduleObject{
     public int num_deps(){return deps.size();}
     public Dependencies getDependency(int index){return deps.get(index);}
 
+    //STUB METHOD
+    public String display(){return "STUB";}
+
     //ScheduleObject methods
     public Element record(){
         return super.record(this); //inherited by Superclass

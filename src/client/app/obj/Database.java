@@ -141,9 +141,11 @@ public class Database{
  	*/
 
 	public boolean verifyCredentials(String uname, String pw) throws ElementNotFoundException{
-		Element u = findElement(users, "user", uname);
-		String recordedPW = u.getElementsByTagName("pw").item(0).getTextContent();
-		return recordedPW.equals(pw);
+        try{
+            Element u = findElement(users, "user", uname);
+    		String recordedPW = u.getElementsByTagName("pw").item(0).getTextContent();
+    		return recordedPW.equals(pw);
+        }catch(ElementNotFoundException e){throw new UserNotFoundException();}
 	}
 
 	/**

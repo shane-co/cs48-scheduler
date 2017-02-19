@@ -22,4 +22,10 @@
     <target name="runapp" depends="compile" description="run the application">
         <java classname="${mainClass}" fork="true" classpath="build"/>
     </target>
+
+    <target name="noui" depends="compile" description="run the application">
+        <java classname="${mainClass}" fork="true" classpath="build">
+            <arg value="--no-ui"/>
+        </java>
+    </target>
 </project>

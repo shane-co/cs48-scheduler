@@ -41,6 +41,13 @@ public class Client{
         local = new Database();
         pub = false;
     }
+
+    /**
+    *Function to determine whether Client has a User logged in yet or not.
+    */
+    public boolean isActive(){
+        return (currUser!=null);
+    }
     /**
     *Function to set the currUser variable. Queries LOCAL Database with login credentials. Throws Exception if
     *if login credentials are invalid.
@@ -152,7 +159,8 @@ public class Client{
     * @return ArrayList<ScheduleEvent>
     */
     public ArrayList<ScheduleEvent> getUserEvents(){
-        return currUser.getMyEvents();
+        if(currUser!=null)return currUser.getMyEvents();
+        else return null;
     }
     //----------------------------SERVER FUNCTIONALITY---------------------------------------------
     /**
