@@ -14,6 +14,7 @@ import java.net.SocketAddress;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import javax.xml.transform.TransformerException;
 //ArrayList
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -161,6 +162,13 @@ public class Client{
     public ArrayList<ScheduleEvent> getUserEvents(){
         if(currUser!=null)return currUser.getMyEvents();
         else return null;
+    }
+
+    /*
+    *Function to exit application cleanly. Tells Database to write current DOM to file.
+    */
+    public void exitApp() throws TransformerException{
+        local.writeToFile();
     }
     //----------------------------SERVER FUNCTIONALITY---------------------------------------------
     /**

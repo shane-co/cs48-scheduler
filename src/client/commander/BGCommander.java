@@ -8,6 +8,8 @@ import client.view.UserInterface;
 import client.app.obj.ScheduleGenerator;
 
 import java.util.ArrayList;
+import javax.xml.transform.TransformerException;
+
 
 /*
 *Class BackGround Commander acting as the Controller in the MVC Design Pattern. Responsible for changing the state of the application
@@ -55,7 +57,6 @@ public class BGCommander{
 
     //TEMPORARY METHOD TO BE RE-IMPLEMENTED
     public ArrayList<ScheduleEvent> myEventArray(){
-    	//return client.currUser.getMyEvents();
         return new ArrayList<ScheduleEvent>();
     }
 
@@ -68,7 +69,10 @@ public class BGCommander{
     *Client to get myEvents from the current User
     *@return ArrayList containing all Schedule objects obtained by Events subscribed to by the current User
     */
-    //public ArrayList<Schedule> genSchedule(){}
+    public ArrayList<Schedule> genSchedule(){
+        //STUB
+        return new ArrayList<Schedule>();
+    }
 
     /**
     *Function to generate a list of ScheduleEvent objects to return to UserInterface for display.
@@ -105,6 +109,12 @@ public class BGCommander{
     */
     public void unsubscribe(String id){}
 
-
-
+    /**
+    *Function to exit the application cleanly. Tells Client to exit application and write application state to file.
+    */
+    public void exitApp(){
+        try{
+            client.exitApp();
+        }catch(TransformerException t){t.printStackTrace();}
+    }
 }

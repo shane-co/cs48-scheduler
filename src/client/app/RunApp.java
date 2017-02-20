@@ -18,6 +18,7 @@ public class RunApp{
                 String input = System.console().readLine();
                 switch(input){
                     case "help": System.out.println("addUser, login, showMyEvents, subscribe, unsubscribe, genSchedule");
+                        break;
                     case "addUser": System.out.println("Enter Username:"); String uname=System.console().readLine();
                         System.out.println("Enter password:"); String pword=System.console().readLine();
                         command.addUser(uname, pword);
@@ -46,6 +47,10 @@ public class RunApp{
                         for(Schedule sched: command.genSchedule()){
                             System.out.println("<implement schedule display>");
                         }
+                        break;
+                    case "exit":
+                        command.exitApp();
+                        System.exit();
                         break;
 
                 }

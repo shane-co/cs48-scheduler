@@ -24,7 +24,7 @@
     </target>
 
     <target name="noui" depends="compile" description="run the application">
-        <java classname="${mainClass}" fork="true" classpath="build">
+        <java classname="${mainClass}" classpath="build">
             <arg value="--no-ui"/>
         </java>
     </target>
