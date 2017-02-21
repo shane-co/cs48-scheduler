@@ -5,7 +5,7 @@ import client.app.Client;
 import client.app.obj.ScheduleEvent;
 import client.app.obj.Schedule;
 import client.view.UserInterface;
-import client.app.obj.ScheduleGenerator;
+import client.commander.ScheduleGenerator;
 
 import java.util.ArrayList;
 import javax.xml.transform.TransformerException;
