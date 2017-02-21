@@ -10,8 +10,15 @@ import client.app.exceptions.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
+//IO
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import javax.xml.transform.TransformerException;
 //ArrayList
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.ListIterator;
 
 /**
 *Class representing the Client application. Holds all object data and maintains the state of the Application.
@@ -31,9 +38,16 @@ public class Client{
 
     public Client(){
 		currUser = null;
-        ss = new ServerSocket(port);
+        try{ss = new ServerSocket(port);}catch(IOException e){e.printStackTrace();}
         local = new Database();
         pub = false;
+    }
+
+    /**
+    *Function to determine whether Client has a User logged in yet or not.
+    */
+    public boolean isActive(){
+        return (currUser!=null);
     }
     /**
     *Function to set the currUser variable. Queries LOCAL Database with login credentials. Throws Exception if
@@ -51,9 +65,16 @@ public class Client{
  	*Function to add User object to local Database. Allows user to sign in with registered credentials
 	*@param u instantiated User object to be added to Database.
  	*/
-	public void addUser(User u){
+	//stub
+	public void addUser(String username, String pword){
+		User new_user = new User();
+		new_user.setUsername(username);
+		new_user.setPassword(pword);
+		User u = new_user;
 		local.addUser(u.record());
 	}
+	
+
 
     /**
     *Function to add an event to currUser.myEvents. Queries the Database found at DatabaseConnection db. Effectively completes the "subscription" process of the currUser to this Event.
@@ -74,14 +95,14 @@ public class Client{
 		//update the currUser to remove subscription
 		currUser.removeFromMyEvents(e);
 		//update the local database to reflect the change
-		local.modifyUser(currUser.getUsername(), false, "myEvents", e.record);
+		local.modifyUser(currUser.getUsername(), false, "myEvents", e.record());
 	}
 
     /**
     *Function to add a Schedule to User.mySchedules
     *@param s Schedule object to be added to currUser.
     */
-    public void addSchedule(Schedule s){
+    public void addSchedule(Schedule s)throws ElementNotFoundException, UserNotFoundException{
 		//update the currUser to include schedule.
 		currUser.addToMySchedules(s);
 		//update the local database to reflect new change.
@@ -91,7 +112,7 @@ public class Client{
     *Function to delete a Schedule to User.mySchedules
     *@param s Schedule object to be deleted to currUser.
     */
-    public void deleteSchedule(Schedule s){
+    public void deleteSchedule(Schedule s)throws ElementNotFoundException, UserNotFoundException{
 		//update the currUser to include schedule.
 		currUser.removeFromMySchedules(s);
 		//update the local database to reflect new change.
@@ -102,9 +123,9 @@ public class Client{
     *Function to add an organization to currUser.myOrgs and allow Client to connect to it. Places newOrg into orgs.
     *@param newOrg a DatabaseConnection object representing the data store connection hosted by the organization
     */
-    public void registerOrg(DatabaseConnection newOrg){
+    public void registerOrg(DatabaseConnection newOrg)throws ElementNotFoundException, UserNotFoundException{
 		//update the currUser to include schedule.
-		currUser.addToMyOrgs(newOrg);
+		currUser.addDatabaseConnection(newOrg);
 		//update the local database to reflect new change.
 		local.modifyUser(currUser.getUsername(), true, "myOrgs", newOrg.record());
 	}
@@ -113,9 +134,9 @@ public class Client{
     *Function to remove an organization from currUser.myOrgs.
     *@param org a DatabaseConnection object representing the data store connection hosted by the organization.
     */
-    public void forgetOrg(DatabaseConnection org){
+    public void forgetOrg(DatabaseConnection org)throws ElementNotFoundException, UserNotFoundException{
 		//update the currUser to include schedule.
-		currUser.removeFromMyOrgs(newOrg);
+		currUser.removeDatabaseConnection(org);
 		//update the local database to reflect new change.
 		local.modifyUser(currUser.getUsername(), false, "myOrgs", org.record());
     }
@@ -123,9 +144,9 @@ public class Client{
     *Function to add a ScheduleEvent to currUser.myHostedEvents. Makes a ScheduleEvent available to be subscibed to.
     *@param e ScheduleEvent object that the User has created.
     */
-    public void createEvent(ScheduleEvent e){
+    public void createEvent(ScheduleEvent e)throws ElementNotFoundException, UserNotFoundException{
 		//update the currUser to include schedule.
-		currUser.addToMyHostedEvents(e);
+		currUser.addHostedEvent(e);
 		//update the local database to reflect new change.
 		local.modifyUser(currUser.getUsername(), true, "myHostedEvents", e.record());
 	}
@@ -133,28 +154,37 @@ public class Client{
     *Function to remove a ScheduleEvent from currUser.myHostedEvents.
     *@param e ScheduleEvent object that the User has created.
     */
-    public void deleteEvent(ScheduleEvent e){
+    public void deleteEvent(ScheduleEvent e)throws ElementNotFoundException, UserNotFoundException{
 		//update the currUser to include schedule.
-		currUser.removeFromMyHostedEvents(e);
+		currUser.removeHostedEvent(e);
 		//update the local database to reflect new change.
 		local.modifyUser(currUser.getUsername(), false, "myHostedEvents", e.record());
 	}
 
 
+    /**
+    *Function to retrieve ArrayList of the currUser's myEvents.
+    * @return ArrayList<ScheduleEvent>
+    */
+    public ArrayList<ScheduleEvent> getUserEvents(){
+        if(currUser!=null)return currUser.getMyEvents();
+        else return null;
+    }
 
+    /*
+    *Function to exit application cleanly. Tells Database to write current DOM to file.
+    */
+    public void exitApp() throws TransformerException{
+        local.writeToFile();
+    }
     //----------------------------SERVER FUNCTIONALITY---------------------------------------------
     /**
     *Function to set Client public and listen for requests
     */
     public void setPublic(){
         pub = true;
-        try{
-                Listener serve = new Listener();
-                new Thread(serve).start();
-        }catch(IOException e){
-            e.printStackTrace();
-        }
-
+        Listener serve = new Listener();
+        new Thread(serve).start();
     }
     /**
     *Function to set Client private and stop listening for requests
@@ -177,28 +207,29 @@ public class Client{
         }
 
         public void parseRequest(String in){ //requests come in the form ORGNAME;%COMMAND;ARG COMMAND={get,search} ARG={filter:}
-            DataOutputStream dos = new DataOutputStream(s.getOutputStream());
-            ArrayList<String> req = new ArrayList<String>(Arrays.asList(in.split(";"))); //split request into parseable list.
-            ListIterator iter = req.listIterator();
-            String result;
-            String orgName = iter.next(); //get the name of the organization hosted in local to query.
-            String r = iter.next();
-            switch(r){
-                case "%get": //returns all events from orgName
-                    try{
-                        result = local.outputSearchResultString(orgName, new ArrayList<String>());
-                        dos.writeUTF(result);
-                    }catch(UserNotFoundException e){dos.writeUTF("USER NOT FOUND");}
-                    break;
-                case "%search": //applies search filters.
-                    try{
-                        result = local.outputSearchResultString(orgName, parseFilters(iter.next()));
-                        dos.writeUTF(result);
-                    }catch(UserNotFoundException e){dos.writeUTF("USER NOT FOUND");}
-                    break;
-            }
+            try{
+                DataOutputStream dos = new DataOutputStream(s.getOutputStream());
+                ArrayList<String> req = new ArrayList<String>(Arrays.asList(in.split(";"))); //split request into parseable list.
+                ListIterator iter = req.listIterator();
+                String result;
+                String orgName = (String)iter.next(); //get the name of the organization hosted in local to query.
+                String r = (String)iter.next();
+                switch(r){
+                    case "%get": //returns all events from orgName
+                        try{
+                            result = local.outputSearchResultString(orgName, "");
+                            dos.writeUTF(result);
+                        }catch(UserNotFoundException e){dos.writeUTF("USER NOT FOUND");}
+                        break;
+                    case "%search": //applies search filters.
+                        try{
+                            result = local.outputSearchResultString(orgName, (String)iter.next());
+                            dos.writeUTF(result);
+                        }catch(Exception e){dos.writeUTF("USER NOT FOUND");}
+                        break;
+                }
+            } catch (Exception e){e.printStackTrace();}
         }
 
-        //public ArrayList<Filters> parseFilters(String in){}
     }
 }
