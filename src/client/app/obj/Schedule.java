@@ -7,10 +7,8 @@ import java.util.ArrayList;
 import client.app.interfaces.ScheduleObject;
 import org.w3c.dom.Element;
 
-
 public class Schedule extends ScheduleObject{
 	private ArrayList<TimeBlock> tb;
-	private ArrayList<ScheduleEvent> se;
 	private String id;
 
 	public Schedule(ArrayList<ScheduleEvent> events, String idnum)
@@ -23,13 +21,15 @@ public class Schedule extends ScheduleObject{
 				TimeBlock t=new TimeBlock(day,hour);
 				tb.add(t);
 			}
-		se=events;
 		//insert events into their corresponding timeblock(s)
-		for (int i=0; i<se.size(); i++){
-			for (int j=0;j<=(se.get(i).duration()-1)/100;j++){
-				tb.get((se.get(i).what_day()-1)*24+se.get(i).when_to_start()+j).addEvent(se.get(i));
+		for (int i=0; i<events.size(); i++){
+			for (int j=0;j<=(events.get(i).duration()-1)/100;j++){
+				tb.get((events.get(i).what_day()-1)*24+events.get(i).when_to_start()+j).addEvent(events.get(i));
 			}
 		}
+	}
+	public Schedule(Element root){ //Constructor that takes a DOM element and loads it.
+		load(root);
 	}
 
 	public int size_of_TimeBlock() {return tb.size();}
@@ -43,5 +43,12 @@ public class Schedule extends ScheduleObject{
 	@Override public Element record(){
 		return super.record(this);
     }
-	public void load(Element e){}
+	public void load(Element root){
+		id=root.getAttribute("id");
+		Element tbelement = (Element) root.getFirstChild();
+		do{
+			tb.add(new TimeBlock(tbelement));
+			tbelement=(Element)tbelement.getNextSibling();
+		}while(tbelement!=null);
+	}
 }

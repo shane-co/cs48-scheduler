@@ -16,7 +16,9 @@ public class DatabaseConnection extends ScheduleObject{
     public DatabaseConnection(String ip, int p){
         IP = ip; port = p;
     }
-
+    public DatabaseConnection(Element root){
+        load(root);
+    }
     public String getIP(){return IP;}
     public int getPort(){return port;}
     public void setIP(String newIP){
@@ -30,5 +32,8 @@ public class DatabaseConnection extends ScheduleObject{
     public Element record(){
         return super.record(this);
     }
-    public void load(Element e){}
+    public void load(Element e){
+        IP=e.getAttribute("ip");
+        port=Integer.parseInt(e.getAttribute("port"));
+    }
 }

@@ -9,7 +9,6 @@ import client.app.interfaces.ScheduleObject;
 import java.util.ArrayList;
 import org.w3c.dom.Element;
 
-
 /**
 *Class representing a user using the Application. Maintains all data about the user and their
 *saved data after using the application. It's state is kept up to date in the LOCAL Database by the
@@ -104,6 +103,36 @@ public class User extends ScheduleObject{
     public Element record(){
         return super.record(this); //inherited by Superclass
     }
-    public void load(Element root){}
+    public void load(Element root){ //recieves a "user" DOM Element Node.
+        username=root.getAttribute("id");
+        password=root.getAttribute("pw");
+        myEvents=new ArrayList<ScheduleEvent>();
+        myHostedEvents=new ArrayList<ScheduleEvent>();
+        mySchedules=new ArrayList<Schedule>();
+        myOrgs= new ArrayList<DatabaseConnection>();
+        Element field = (Element)root.getFirstChild();
+        do{
+            //process entries in a field
+            loadArrayList(field,field.getNodeName());
+            //get next field.
+            field=(Element)field.getNextSibling();
+        }while(field!=null);
+    }
+    private void loadArrayList(Element field,String tag){ //helper function to load series of DOM Elements
+        Element e = (Element)field.getFirstChild();
+        do{
+            switch(tag){
+                case("myEvents"): myEvents.add(new ScheduleEvent(e));
+                    break;
+                case("myHostedEvents"): myHostedEvents.add(new ScheduleEvent(e));
+                    break;
+                case("mySchedules"): mySchedules.add(new Schedule(e));
+                    break;
+                case("myOrgs"): myOrgs.add(new DatabaseConnection(e));
+                    break;
+            }
+            e=(Element)e.getNextSibling();
+        }while(e!=null);
+    }
 
 }

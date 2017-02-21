@@ -50,7 +50,7 @@ public class RunApp{
                         break;
                     case "exit":
                         command.exitApp();
-                        System.exit();
+                        System.exit(0);
                         break;
 
                 }

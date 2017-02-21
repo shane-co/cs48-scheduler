@@ -32,25 +32,29 @@ public abstract class ScheduleObject{
             doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
             if(o instanceof Schedule){
                 Schedule s = (Schedule) o;
-                Element sched = doc.createElement("hevent");
+                Element sched = doc.createElement("sched");
                 Attr schedid = doc.createAttribute("id");
-                Element timeblocks = doc.createElement("timeblocks");
                 for(int i=0;i<s.size_of_TimeBlock();i++){
                     TimeBlock t = s.get_TimeBlock(i);
-                    Element tb = doc.createElement("tb");
-                    Attr tbday = doc.createAttribute("day");
-                    Attr tbstart = doc.createAttribute("start");
-                    Element events = doc.createElement("events");
-                    tbday.setValue(Integer.toString(t.getDay()));
-                    tbstart.setValue(Integer.toString(t.getStart()));
-                    for(int j=0;j<t.numberOfEvents();j++){
-                        events.appendChild(t.getEvent(j).record());
-                    }
-                    tb.setAttributeNode(tbday);
-                    tb.setAttributeNode(tbstart);
-                    tb.appendChild(events);
-                    return tb;
+                    sched.appendChild(t.record());
                 }
+                sched.setAttributeNode(schedid);
+            }
+            else if(o instanceof TimeBlock){
+                TimeBlock t = (TimeBlock) o;
+                Element tb = doc.createElement("tb");
+                Attr tbday = doc.createAttribute("day");
+                Attr tbstart = doc.createAttribute("start");
+                Element events = doc.createElement("events");
+                tbday.setValue(Integer.toString(t.getDay()));
+                tbstart.setValue(Integer.toString(t.getStart()));
+                for(int j=0;j<t.numberOfEvents();j++){
+                    events.appendChild(t.getEvent(j).record());
+                }
+                tb.setAttributeNode(tbday);
+                tb.setAttributeNode(tbstart);
+                tb.appendChild(events);
+                return tb;
             }
             else if(o instanceof ScheduleEvent){
                 ScheduleEvent e = (ScheduleEvent) o;
@@ -115,6 +119,8 @@ public abstract class ScheduleObject{
                 ArrayList<ScheduleEvent> hevs = u.getMyHostedEvents();
                 ArrayList<Schedule> scheds = u.getMySchedules();
                 ArrayList<DatabaseConnection> orgs = u.getMyOrgs();
+                uname.setValue(u.getUsername());
+                pword.setValue(u.getPassword());
                 for(int i=0;i<evs.size();i++){
                     myEvents.appendChild(evs.get(i).record());
                 }
@@ -132,6 +138,7 @@ public abstract class ScheduleObject{
                 user.setAttributeNode(pword);
                 user.appendChild(myEvents);
                 user.appendChild(myHostedEvents);
+                user.appendChild(mySchedules);
                 user.appendChild(myOrgs);
                 return user;
             }

@@ -40,6 +40,9 @@ public class ScheduleEvent extends ScheduleObject{
     	description=dp;
         id=i;
     }
+    public ScheduleEvent(Element root){
+        load(root);
+    }
 
     public int what_day() {return day;}
     public int when_to_start() {return start; }
@@ -63,6 +66,15 @@ public class ScheduleEvent extends ScheduleObject{
         return super.record(this); //inherited by Superclass
     }
     public void load(Element root){
-
+        id=root.getAttribute("id");
+        day=Integer.parseInt(root.getAttribute("day"));
+        start=Integer.parseInt(root.getAttribute("start"));
+        end=Integer.parseInt(root.getAttribute("end"));
+        description=root.getFirstChild().getTextContent();
+        Element d = (Element)root.getLastChild().getFirstChild();
+        do{
+            deps.add(new Dependencies(d));
+            d= (Element)d.getNextSibling();
+        }while(d!=null);
     }
 }

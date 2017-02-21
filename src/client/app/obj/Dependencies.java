@@ -16,6 +16,9 @@ public class Dependencies extends ScheduleObject{
 	prerequiste = pre;
 	object = obj;
 	}
+	public Dependencies(Element root){
+		load(root);
+	}
 
 	//set and get functions
 	public String get_prerequiste(){
@@ -38,5 +41,8 @@ public class Dependencies extends ScheduleObject{
 	public Element record(){
         return super.record(this); //inherited by Superclass
     }
-	public void load(Element e){}
+	public void load(Element e){
+		prerequiste=e.getFirstChild().getTextContent();
+		object=e.getLastChild().getTextContent();
+	}
 }
