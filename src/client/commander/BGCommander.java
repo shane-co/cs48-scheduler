@@ -26,7 +26,7 @@ public class BGCommander{
     */
     private BGCommander(){
         client = new Client();
-        gen = new ScheduleGenerator();
+        gen = new ScheduleGenerator(myEventArray());
     }
 
     /**
@@ -57,7 +57,7 @@ public class BGCommander{
 
     //TEMPORARY METHOD TO BE RE-IMPLEMENTED
     public ArrayList<ScheduleEvent> myEventArray(){
-        return new ArrayList<ScheduleEvent>();
+        return client.getUserEvents();
     }
 
 
