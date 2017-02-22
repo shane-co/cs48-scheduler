@@ -81,11 +81,11 @@ public class BGCommander{
         return client.getUserEvents();
     }
     
-    //Function to get a list of Schedule Objects from current users return to User Interface for display
-    public ArrayList<Schedule> getScheduel(){
-        //STUB
-        return client.getUserSchedule();
-    }
+//     //Function to get a list of Schedule Objects from current users return to User Interface for display
+//     public ArrayList<Schedule> getScheduel(){
+//         //STUB
+//         return client.getUserSchedule();
+//     }
     
     
     
