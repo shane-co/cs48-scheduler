@@ -65,7 +65,8 @@ public class Client{
  	*Function to add User object to local Database. Allows user to sign in with registered credentials
 	*@param u instantiated User object to be added to Database.
  	*/
-	public void addUser(User u){
+	public void addUser(User u) throws UserLoggedInException{
+		if(currUser!=null) throw new UserLoggedInException();
 		local.addUser(u.record());
 	}
 
@@ -82,7 +83,7 @@ public class Client{
 
     /**
     *Function to delete an event from currUser.myEvents. Effectively completes the "un-subscription" process of the currUser to this Event.
-    *@param e ScheduleEvent object that the currUser is unsubcribed to.
+    *@param e ScheduleEvent object that the currUser is unsubscribed to.
     */
     public void unsubscribe(ScheduleEvent e) throws UserNotFoundException, ElementNotFoundException{
 		//update the currUser to remove subscription
