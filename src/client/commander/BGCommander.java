@@ -73,7 +73,16 @@ public class BGCommander{
         //STUB
         return new ArrayList<Schedule>();
     }
-
+    
+    
+    //Function to generate a list of ScheduleEvents objects return to UserInterface for display
+//     public ArrayList<Schedule> genScheduleEvents(){
+//         //STUB
+//         return client.getUserEvents();
+//     }  
+    
+    
+    
     /**
     *Function to generate a list of ScheduleEvent objects to return to UserInterface for display.
     *Uses Client to retrieve ScheduleEvent objects according to search filters, from another Organization
