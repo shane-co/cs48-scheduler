@@ -2,8 +2,7 @@ package client.commander;
 
 //Imports
 import client.app.Client;
-import client.app.obj.ScheduleEvent;
-import client.app.obj.Schedule;
+import client.app.obj.*;
 import client.view.UserInterface;
 import client.commander.ScheduleGenerator;
 import client.app.exceptions.*;
@@ -116,7 +115,10 @@ public class BGCommander{
     */
 
     public void addUser(String username, String pword){
-        client.addUser(username, pword);
+        User new_user = new User();
+		new_user.setUsername(username);
+		new_user.setPassword(pword);
+        client.addUser(new_user);
     }
 
     /**

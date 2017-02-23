@@ -66,14 +66,10 @@ public class Client{
 	*@param u instantiated User object to be added to Database.
  	*/
 	//stub
-	public void addUser(String username, String pword){
-		User new_user = new User();
-		new_user.setUsername(username);
-		new_user.setPassword(pword);
-		User u = new_user;
+	public void addUser(User u){
 		local.addUser(u.record());
 	}
-	
+
 
 
     /**
