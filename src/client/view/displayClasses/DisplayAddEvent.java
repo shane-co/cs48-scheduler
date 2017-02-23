@@ -18,7 +18,7 @@ import java.awt.EventQueue;
 
 import java.util.ArrayList;
 
-public class displayAddEvent {
+public class DisplayAddEvent {
 
 	private JSplitPane finalPane;
 	private JTextField textField;
@@ -27,7 +27,7 @@ public class displayAddEvent {
 	private JTextField textField_3;
 	private JTextArea textArea;
 
-	public displayAddEvent() {
+	public DisplayAddEvent() {
 		initialize();
 	}
 
