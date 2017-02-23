@@ -1,3 +1,7 @@
+package client.view.displayClasses;
+import client.commander.BGCommander;
+import client.app.obj.*;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
@@ -12,15 +16,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.EventQueue;
 
-public class DisplayAddEvent {
+import java.util.ArrayList;
+
+public class displayAddEvent {
 
 	private JSplitPane finalPane;
 	private JTextField textField;
 	private JTextField textField_1;
 	private JTextField textField_2;
 	private JTextField textField_3;
+	private JTextArea textArea;
 
-	public DisplayAddEvent() {
+	public displayAddEvent() {
 		initialize();
 	}
 
@@ -34,7 +41,7 @@ public class DisplayAddEvent {
 		bottomPanel.setBounds(100, 100, 250, 600);
 		bottomPanel.setLayout(new BorderLayout(0, 0));
 	  
-    //creates button to display event
+		//creates button to display event
 		JButton btnAddEvent = new JButton("Add Event");
 		bottomPanel.add(btnAddEvent);
 		finalPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, topPanel, bottomPanel);
@@ -57,7 +64,7 @@ public class DisplayAddEvent {
 		textField_1.setColumns(10);
 		
 		JTextPane txtpnStartDate = new JTextPane();
-		txtpnStartDate.setText("Start Date :");
+		txtpnStartDate.setText("Start Time :");
 		topPanel.add(txtpnStartDate);
 		
 		textField_2 = new JTextField();
@@ -65,17 +72,34 @@ public class DisplayAddEvent {
 		textField_2.setColumns(10);
 		
 		JTextPane txtpnEndDate = new JTextPane();
-		txtpnEndDate.setText("End Date :");
+		txtpnEndDate.setText("End Time :");
 		topPanel.add(txtpnEndDate);
-		btnAddEvent.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				String eventID = (String) textField.getText();
-				//method to add it to class
-			}
-		});
+		
 		textField_3 = new JTextField();
 		topPanel.add(textField_3);
 		textField_3.setColumns(10);
+		
+		JTextPane txtpnDescription = new JTextPane();
+		txtpnDescription.setText("Description :");
+		topPanel.add(txtpnDescription);
+		
+		textArea = new JTextArea();
+		topPanel.add(textArea);
+		
+		btnAddEvent.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				String eventID = textField.getText();
+				String day = textField_1.getText();
+				int intDay = Integer.parseInt(day);
+				String startTime = textField_2.getText();
+				int intStartTime = Integer.parseInt(day);
+				String endTime = textField_3.getText();
+				int intEndTime = Integer.parseInt(day);
+				String description = textArea.getText();
+				//ScheduleEvent event = new ScheduleEvent(intDay, intStartTime, intEndTime, description);
+				// .deleteEvent( event );
+			}
+		});
 		finalPane.setBounds(100, 100, 500, 600);
 		finalPane.setResizeWeight(0.8);
 	}
