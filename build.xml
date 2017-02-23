@@ -1,5 +1,8 @@
 <project default="compile">
-
+	
+  <presetdef name="javac">
+    <javac includeantruntime="false" />
+  </presetdef>
     <property environment="env"/>
     <property name="projectName" value="cs48_scheduler"/>
     <property name="mainClass" value="client.app.RunApp"/>

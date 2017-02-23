@@ -1,6 +1,8 @@
 package client.commander;
 
 import client.app.obj.ScheduleEvent;
+import client.app.obj.Schedule;
+import client.app.Client;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -13,19 +15,19 @@ public class ScheduleGenerator{
 * return an ArrayList of all possible combinations of events 
   */
 	private ArrayList<ScheduleEvent> theEvents;
-	private ArrayList<ArrayList<ScheduleEvent>> listOfSchedules;
+	private ArrayList<Schedule> theSchedules;
 	private int myEventsSize;
 	
 	//constructor
 	public ScheduleGenerator(ArrayList<ScheduleEvent> events){
 		theEvents = events;
 		myEventsSize = theEvents.size();
-		listOfSchedules = new ArrayList<ArrayList<ScheduleEvent>>();
+		theSchedules = new ArrayList<Schedule>();
 	}
 	
 	// checks if two ScheduleEvent's times collide
 	private boolean collision(ScheduleEvent ev1, ScheduleEvent ev2){
-		if(ev1.when_to_end() <= ev2.when_to_start())
+		if(ev1.when_to_end() < ev2.when_to_start())
 			return false;
 		return true;
 	}
@@ -50,12 +52,30 @@ public class ScheduleGenerator{
 		theEvents.add(temp);
 	}
 	
+	
 	public void Greedy(){
 		Sort();
-		Iterator<ScheduleEvent> iterator = theEvents.iterator();
-		while (iterator.hasNext()){
-			
+		ArrayList<ScheduleEvent> candidates =new ArrayList<ScheduleEvent>();
+		ArrayList<ScheduleEvent> possibleSchedule = new ArrayList<ScheduleEvent>();
+		for( int i = 0; i < myEventsSize; i++){
+			candidates.add(theEvents.get(i));
 		}
+		
+		
+		while(candidates.size() != 0){
+			ScheduleEvent interval = candidates.get(0);
+			candidates.remove(0);
+			while(candidates.size() != 0){
+				if(collision(interval, candidates.get(0)) == true)
+					candidates.remove(0);
+				else
+					break;
+			}
+			possibleSchedule.add(interval);
+			}
+		theSchedules.add(new Schedule(possibleSchedule, "identifier"));
+		
+		
 	}
 	
 

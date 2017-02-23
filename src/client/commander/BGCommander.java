@@ -90,7 +90,11 @@ public class BGCommander{
     *@param -- Lets leave this for the second iteration, for now just return all the events --
     *filters A set of filters to apply when searching for a ScheduleEvent
     */
-    //public ArrayList<ScheduleEvent> search(String orgName/*, ArrayList<String> filters*/){}
+    public ArrayList<ScheduleEvent> search(String orgName/*, ArrayList<String> filters*/){
+    	//CALL client parseRequest, still needs implementation of database.outputSearchResultString ignore filter
+    	String input = String.format("%s;%get", orgName);
+    	client.parseRequest(input);
+    }
 
     
     
