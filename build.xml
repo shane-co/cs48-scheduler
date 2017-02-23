@@ -5,9 +5,17 @@
     <property name="mainClass" value="client.app.RunApp"/>
     <property name="javadocDest" value="javadoc"/>
 
+    <path id="master-classpath">
+        <fileset dir="lib">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
     <target name="compile" description="compile entire application">
             <mkdir dir="build"/>
-            <javac srcdir="src" destdir="build"/>
+            <javac srcdir="src" destdir="build" includeantruntime="false">
+                <classpath refid="master-classpath"/>
+            </javac>
+
     </target>
 
     <target name="javadoc" depends="compile" description="generate javadoc for application" >
