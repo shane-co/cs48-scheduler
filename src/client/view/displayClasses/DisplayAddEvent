@@ -70,7 +70,7 @@ public class DisplayAddEvent {
 		btnAddEvent.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				String eventID = (String) textField.getText();
-				System.out.println(eventID);
+				//method to add it to class
 			}
 		});
 		textField_3 = new JTextField();
