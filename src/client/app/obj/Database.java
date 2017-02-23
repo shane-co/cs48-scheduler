@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.ListIterator;
 //local imports
 import client.app.exceptions.*;
-import client.app.obj.Filter;
 
 /**
 *Class representing a database store. Keeps all information about User objects and their corresponding Events.
@@ -91,24 +90,6 @@ public class Database{
     *@param u Element object representing the User as an XML record
     */
     public void addUser(Element u){
-        /* commented out code to be implemented in User object's record() function.
-		//create user with all fields needed.
-        Element user = doc.createElement("user");
-        Attr uname = doc.createAttribute("id");
-        uname.setValue(username);
-        user.setAttributeNode(uname);
-        Element pw = doc.createElement("pw");
-            pw.appendChild(doc.createTextNode(password));
-            user.appendChild(pw);
-        Element myEvents = doc.createElement("myEvents");
-        user.appendChild(myEvents);
-        Element myHostedEvents = doc.createElement("myHostedEvents");
-        user.appendChild(myHostedEvents);
-        Element mySchedules = doc.createElement("mySchedules");
-        user.appendChild(mySchedules);
-        Element myOrgs = doc.createElement("myOrgs");
-        user.appendChild(myOrgs);
-		*/
         users.appendChild(u); //add user to total list
     }
 
@@ -160,9 +141,11 @@ public class Database{
  	*/
 
 	public boolean verifyCredentials(String uname, String pw) throws ElementNotFoundException{
-		Element u = findElement(users, "user", uname);
-		String recordedPW = u.getElementsByTagName("pw").item(0).getTextContent();
-		return recordedPW.equals(pw);
+        try{
+            Element u = findElement(users, "user", uname);
+    		String recordedPW = u.getElementsByTagName("pw").item(0).getTextContent();
+    		return recordedPW.equals(pw);
+        }catch(ElementNotFoundException e){throw new UserNotFoundException();}
 	}
 
 	/**

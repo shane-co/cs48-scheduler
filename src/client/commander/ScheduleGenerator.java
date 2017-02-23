@@ -1,2 +1,2 @@
-package client.app.obj;
+package client.commander;
 public class ScheduleGenerator{}

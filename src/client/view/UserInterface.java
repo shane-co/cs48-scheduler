@@ -1,5 +1,6 @@
 package client.view;
 import client.app.obj.ScheduleEvent;				//this is temporary, should have methods and sub classes to do this
+import client.commander.BGCommander;
 
 import java.util.ArrayList;
 import java.awt.EventQueue;
@@ -19,107 +20,101 @@ public class UserInterface {
 	private String[] columnNames = {"ID", "DAY", "START DATE", "END DATE"};
 	private Object[][] data_1, data_2;
 	private DefaultTableModel model_1, model_2;
+    private BGCommander commander;
 
-	/**
-	 * Launch the application.
-	 */
-	//not sure how to get rid of this so that the main function can go elsewhere.
-	/*public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					UserInterface window = new UserInterface();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
-	/**
-	 * Create the application.
-	 */
+    public UserInterface(boolean stub){ //STUB parameter to be removed when UserInterface fixed. only here to allow overloading
+        commander = BGCommander.getBGCommander();
+        initialize();
+    }
 	public UserInterface() {
-		
 		initialize();
-		//myEvents = (events from account's information), going to be handled by another class
 	}
-
+    /**
+    *Function to launch the UserInterface and make the Window viewable
+    */
+    public void launch(){
+		try {
+			UserInterface window = new UserInterface();
+			window.returnFrame().setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
 	/**
-	 * Initialize the contents of the frame.
+	 * Initialize the contents of the frame. Needs to be re-examined. Should contain only display relevant information.
 	 */
 	private void initialize() {
 		this.test();
 		//creates frame, i.e. the window
 		frame = new JFrame();
-		frame.setBounds(100, 100, 2000, 1500);
+		frame.setBounds(100, 100, 1000, 400);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		
+
 		//creates first label, my events label
 		JLabel lblNewLabel = new JLabel("My Events");
-		lblNewLabel.setBounds(44, 76, 247, 100);
+		lblNewLabel.setBounds(5, 5, 100, 20);
 		frame.getContentPane().add(lblNewLabel);
-		
+
 		//second label
 		lblPossibleEventsTo = new JLabel("Possible Events to Subscribe to");
-		lblPossibleEventsTo.setBounds(1031, 110, 580, 33); 
+		lblPossibleEventsTo.setBounds(500, 5, 100, 20);
 		frame.getContentPane().add(lblPossibleEventsTo);
-		
+
 		//third label
 		JLabel lblChooseEventTo = new JLabel("Choose Event to Add");
-		lblChooseEventTo.setBounds(1035, 1137, 283, 33);
+		lblChooseEventTo.setBounds(300, 180, 283, 33);
 		frame.getContentPane().add(lblChooseEventTo);
-		
+
 		//formats array lists of events to be easily put into tables
 		data_1 = eventFormatting(myEvents);
 		data_2 = eventFormatting(posEvents);
-		
+
 		//creates first table
 		model_1 = new DefaultTableModel(data_1, columnNames);
 		table_1 = new JTable(model_1);
 		table_1.setEnabled(false);
 		table_1.setRowHeight(30);
-		
+
 		//allows the table to be scrolled down, also allows the columnNames to appear for some reason
 		scroll = new JScrollPane(table_1, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scroll.setLocation(54, 180);
+		scroll.setLocation(5, 30);
 		scroll.setEnabled(false);
-		scroll.setSize(743, 908);
+		scroll.setSize(400, 150);
 		frame.getContentPane().add(scroll);
-		
+
 		//creates second table
 		model_2 = new DefaultTableModel(data_2, columnNames);
 		table_2 = new JTable(model_2);
 		table_2.setEnabled(false);
 		table_2.setRowHeight(30);
-		
+
 		scroll_2 = new JScrollPane(table_2, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scroll_2.setLocation(1035, 180);
+		scroll_2.setLocation(500, 30);
 		scroll_2.setEnabled(false);
-		scroll_2.setSize(743, 908);
+		scroll_2.setSize(400, 150);
 		frame.getContentPane().add(scroll_2);
-		
-		
-		
+
+
+
 		//sets the input string to all the IDs in posEvents
 		String[] input = new String[posEvents.size()];
 		for(int i = 0; i < posEvents.size(); i++){
-			input[i] = posEvents.get(i).get_ID();		
+			input[i] = posEvents.get(i).get_ID();
 		}
-		
+
 		//this will allow a user to choose what event to add
 		JComboBox comboBox = new JComboBox(input);
-		comboBox.setBounds(1355, 1134, 423, 39);
-		
+		comboBox.setBounds(300, 200, 423, 39);
+
 		//listener implementation
 		comboBox.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				JComboBox comboBox = (JComboBox) e.getSource();
 				int index = comboBox.getSelectedIndex();
 				ScheduleEvent transfer = posEvents.get(index);
-				String [] insert = {transfer.get_ID(), Integer.toString(transfer.what_day()), 
+				String [] insert = {transfer.get_ID(), Integer.toString(transfer.what_day()),
 						Integer.toString(transfer.when_to_start()), Integer.toString(transfer.when_to_end())
 				};
 				myEvents.add(transfer);
@@ -130,9 +125,9 @@ public class UserInterface {
 			}
 		});
 		frame.getContentPane().add(comboBox);
-		
+
 	}
-	
+
 	//ended up not using Jason's test thing since it didn't work with what we have here
 	//so this is test segment
 	private void test(){
@@ -154,7 +149,7 @@ public class UserInterface {
 		posEvents.add(g);
 		posEvents.add(h);
 	}
-	
+
 	//takes an ArrayList and outputs object ready to have info stored in table
 	public static Object[][] eventFormatting(ArrayList<ScheduleEvent> listEvents){
 		Object[][] output = new String[listEvents.size()][4];
@@ -164,7 +159,7 @@ public class UserInterface {
 			output[i][1] = Integer.toString(e.what_day());
 			output[i][2] = Integer.toString(e.when_to_start());
 			output[i][3] = Integer.toString(e.when_to_end());
-			
+
 		}
 		return output;
 	}
@@ -173,4 +168,3 @@ public class UserInterface {
 		return frame;
 	}
 }
-
