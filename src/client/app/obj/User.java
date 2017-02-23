@@ -5,14 +5,8 @@ import client.app.obj.ScheduleEvent;
 import client.app.obj.Schedule;
 import client.app.obj.Database;
 import java.util.Iterator;
-import client.app.interfaces.Recordable;
+import client.app.interfaces.ScheduleObject;
 import java.util.ArrayList;
-//XML DOM imports
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
@@ -20,9 +14,10 @@ import org.w3c.dom.Element;
 *saved data after using the application. It's state is kept up to date in the LOCAL Database by the
 *Client
 */
-public class User implements Recordable{
+public class User extends ScheduleObject{
     //instance variables
     private String username;
+    private String password;
     private ArrayList<Schedule> mySchedules;
     private ArrayList<ScheduleEvent> myHostedEvents;
     private ArrayList<ScheduleEvent> myEvents;
@@ -36,6 +31,7 @@ public class User implements Recordable{
     }
   //Functions to add to instance variables;
     public void setUsername(String s){username=s;}
+    public void setPassword(String s){password=s;}
     public void addToMySchedules(Schedule s){
     	this.mySchedules.add(s);
     }
@@ -97,19 +93,46 @@ public class User implements Recordable{
     }
 
     //Accessor functions
+    public String getPassword(){return password;}
     public ArrayList<Schedule> getMySchedules(){return mySchedules;}
     public ArrayList<ScheduleEvent> getMyEvents(){return myEvents;}
     public ArrayList<ScheduleEvent> getMyHostedEvents(){return myHostedEvents;}
     public ArrayList<DatabaseConnection> getMyOrgs(){return myOrgs;}
 
-    //Recordable interface functions
+    //ScheduleObject methods
     public Element record(){
-        try{
-            Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-            return doc.createElement("STUB");
-        }catch(ParserConfigurationException p){}
-            return null;
+        return super.record(this); //inherited by Superclass
     }
-    public void load(Element root){}
+    public void load(Element root){ //recieves a "user" DOM Element Node.
+        username=root.getAttribute("id");
+        password=root.getAttribute("pw");
+        myEvents=new ArrayList<ScheduleEvent>();
+        myHostedEvents=new ArrayList<ScheduleEvent>();
+        mySchedules=new ArrayList<Schedule>();
+        myOrgs= new ArrayList<DatabaseConnection>();
+        Element field = (Element)root.getFirstChild();
+        do{
+            //process entries in a field
+            loadArrayList(field,field.getNodeName());
+            //get next field.
+            field=(Element)field.getNextSibling();
+        }while(field!=null);
+    }
+    private void loadArrayList(Element field,String tag){ //helper function to load series of DOM Elements
+        Element e = (Element)field.getFirstChild();
+        do{
+            switch(tag){
+                case("myEvents"): myEvents.add(new ScheduleEvent(e));
+                    break;
+                case("myHostedEvents"): myHostedEvents.add(new ScheduleEvent(e));
+                    break;
+                case("mySchedules"): mySchedules.add(new Schedule(e));
+                    break;
+                case("myOrgs"): myOrgs.add(new DatabaseConnection(e));
+                    break;
+            }
+            e=(Element)e.getNextSibling();
+        }while(e!=null);
+    }
 
 }

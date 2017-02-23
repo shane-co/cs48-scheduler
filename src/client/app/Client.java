@@ -14,6 +14,7 @@ import java.net.SocketAddress;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import javax.xml.transform.TransformerException;
 //ArrayList
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,6 +41,13 @@ public class Client{
         try{ss = new ServerSocket(port);}catch(IOException e){e.printStackTrace();}
         local = new Database();
         pub = false;
+    }
+
+    /**
+    *Function to determine whether Client has a User logged in yet or not.
+    */
+    public boolean isActive(){
+        return (currUser!=null);
     }
     /**
     *Function to set the currUser variable. Queries LOCAL Database with login credentials. Throws Exception if
@@ -152,7 +160,15 @@ public class Client{
     * @return ArrayList<ScheduleEvent>
     */
     public ArrayList<ScheduleEvent> getUserEvents(){
-        return currUser.getMyEvents();
+        if(currUser!=null)return currUser.getMyEvents();
+        else return null;
+    }
+
+    /*
+    *Function to exit application cleanly. Tells Database to write current DOM to file.
+    */
+    public void exitApp() throws TransformerException{
+        local.writeToFile();
     }
     //----------------------------SERVER FUNCTIONALITY---------------------------------------------
     /**
