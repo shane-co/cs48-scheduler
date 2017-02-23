@@ -15,8 +15,7 @@ public class UserInterface {
 	/**
 	 * Launch method.
 	 */
-	//public void launch(){
-	public static void main(String[] args){
+	public void launch(){
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
