@@ -73,6 +73,20 @@ public class BGCommander{
         //STUB
         return new ArrayList<Schedule>();
     }
+    
+    //Function to get a list of ScheduleEvents objects from current users return to UserInterface for display
+    public ArrayList<ScheduleEvent> getScheduleEvents(){
+        //STUB
+        return client.getUserEvents();
+    }
+    
+//     //Function to get a list of Schedule Objects from current users return to User Interface for display
+//     public ArrayList<Schedule> getScheduel(){
+//         //STUB
+//         return client.getUserSchedule();
+//     }
+    
+    
 
     /**
     *Function to generate a list of ScheduleEvent objects to return to UserInterface for display.
@@ -86,14 +100,21 @@ public class BGCommander{
     *Function to set the currentUser variable in Client. Uses Client to verify that credentials are present
     *and valid on local database. Modifies Client to update currentUser
     */
-    public void login(String username, String password){}
+
+    public void login(String username, String password){
+        client.setCurrUser(username,password);
+    }
+
 
     /**
     *Function to add a User to the application.
     *@param uname String representing the User's username
     *@param pword String representing the User's password
     */
-    public void addUser(String username, String pword){}
+
+    public void addUser(String username, String pword){
+        client.addUser(username, pword);
+    }
 
     /**
     *Function to subscribe a logged in User to a ScheduleEvent. Creates a ScheduleEvent object and passes that
@@ -101,13 +122,21 @@ public class BGCommander{
     *@param id A string that identifies this ScheduleEvent. Could be a id number, a name, or any other identifying information
     *@param
     */
-    public void subscribeEvent(String id, String day, String starthr, String endhr, String desc){}
+    public void subscribeEvent(String id, String day, String starthr, String endhr, String desc){
+        ScheduleEvent event = new ScheduleEvent(day, starthr, endhr, desc, id);
+        client.subscribe(event);
+    }
+
 
     /**
     *Function to unsubscribe a logged in User to a ScheduleEvent. Creates a null ScheduleEvent with only id
     *@param id a string identifier equal to the identifier of the Schedule to be deleted.
     */
-    public void unsubscribe(String id){}
+    public void unsubscribe(String id){
+       ScheduleEvent event = new ScheduleEvent(NULL, NULL, NULL, NULL, id);
+       client.unsubsribe(event);
+    }
+
 
     /**
     *Function to exit the application cleanly. Tells Client to exit application and write application state to file.
