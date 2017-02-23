@@ -5,7 +5,7 @@ import client.app.Client;
 import client.app.obj.ScheduleEvent;
 import client.app.obj.Schedule;
 import client.view.UserInterface;
-import client.app.obj.ScheduleGenerator;
+import client.commander.ScheduleGenerator;
 
 import java.util.ArrayList;
 import javax.xml.transform.TransformerException;
@@ -74,7 +74,6 @@ public class BGCommander{
         return new ArrayList<Schedule>();
     }
     
-    
     //Function to get a list of ScheduleEvents objects from current users return to UserInterface for display
     public ArrayList<ScheduleEvent> getScheduleEvents(){
         //STUB
@@ -88,7 +87,7 @@ public class BGCommander{
 //     }
     
     
-    
+
     /**
     *Function to generate a list of ScheduleEvent objects to return to UserInterface for display.
     *Uses Client to retrieve ScheduleEvent objects according to search filters, from another Organization
@@ -101,15 +100,18 @@ public class BGCommander{
     *Function to set the currentUser variable in Client. Uses Client to verify that credentials are present
     *and valid on local database. Modifies Client to update currentUser
     */
+
     public void login(String username, String password){
         client.setCurrUser(username,password);
     }
+
 
     /**
     *Function to add a User to the application.
     *@param uname String representing the User's username
     *@param pword String representing the User's password
     */
+
     public void addUser(String username, String pword){
         client.addUser(username, pword);
     }
@@ -125,6 +127,7 @@ public class BGCommander{
         client.subscribe(event);
     }
 
+
     /**
     *Function to unsubscribe a logged in User to a ScheduleEvent. Creates a null ScheduleEvent with only id
     *@param id a string identifier equal to the identifier of the Schedule to be deleted.
@@ -133,6 +136,7 @@ public class BGCommander{
        ScheduleEvent event = new ScheduleEvent(NULL, NULL, NULL, NULL, id);
        client.unsubsribe(event);
     }
+
 
     /**
     *Function to exit the application cleanly. Tells Client to exit application and write application state to file.

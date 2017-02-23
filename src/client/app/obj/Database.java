@@ -24,9 +24,8 @@ import java.util.ArrayList;
 import java.util.ListIterator;
 //local imports
 import client.app.exceptions.*;
-import client.app.obj.Filter;
 
-/*
+/**
 *Class representing a database store. Keeps all information about User objects and their corresponding Events.
 *Allows for program persistence after termination. Contains functions to modify an XML document as a record.
 * Used by Client to manipulate program state.
@@ -38,7 +37,7 @@ public class Database{
     private static Transformer transformer;
     private int usernum;
 
-    /*
+    /**
     *Helper functions to locate Elements in the NodeList provided.
     *@return int index of the User; -1 if not found
     */
@@ -60,7 +59,8 @@ public class Database{
 		return findElement(users, tag, elemid);
 	}
 
-    //Constructor. Checks for existence of appliation record. Loads it if available, makes new one if not.
+    /**Constructor. Checks for existence of appliation record. Loads it if available, makes new one if not.
+    */
     public Database(){
         try{
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -84,34 +84,16 @@ public class Database{
         } catch (Exception e){e.printStackTrace();}
     }
 
-    /*
+    /**
     *Function to add a new User to the data store. Creates XML structure for a new User with no subcscriptions.
     *DOES NOT check for User existence
     *@param u Element object representing the User as an XML record
     */
     public void addUser(Element u){
-        /* commented out code to be implemented in User object's record() function.
-		//create user with all fields needed.
-        Element user = doc.createElement("user");
-        Attr uname = doc.createAttribute("id");
-        uname.setValue(username);
-        user.setAttributeNode(uname);
-        Element pw = doc.createElement("pw");
-            pw.appendChild(doc.createTextNode(password));
-            user.appendChild(pw);
-        Element myEvents = doc.createElement("myEvents");
-        user.appendChild(myEvents);
-        Element myHostedEvents = doc.createElement("myHostedEvents");
-        user.appendChild(myHostedEvents);
-        Element mySchedules = doc.createElement("mySchedules");
-        user.appendChild(mySchedules);
-        Element myOrgs = doc.createElement("myOrgs");
-        user.appendChild(myOrgs);
-		*/
         users.appendChild(u); //add user to total list
     }
 
-    /*
+    /**
     *Function to modify the XML record of a specified User by either adding to or deleting from the main XML fields. (e.g. myEvents, myOrgs
     *mySchedules, myHostedEvents)
     *@param uname the username of the User to modify
@@ -147,76 +129,31 @@ public class Database{
         }
     }
 
-    public String outputSearchResultString(String uname, ArrayList<Filter>filters) throws UserNotFoundException{
+    public String outputSearchResultString(String uname, String filters) throws UserNotFoundException{
             //get element corresponding to tagname and val.
             //get all elements from myHostedEvents and apply filters.
             return ""; //STUB
     }
 
-	/*
+	/**
  	* Function to check login credentials against a User already stored in the database.
  	* @return bool true if valid credentials; false otw
  	*/
 
-	public boolean verifyCredentials(String uname, String pw){
-		Element u = findElement(users, "user", uname);
-		String recordedPW = u.getElementsByTagName("pw").item(0).getTextContent();
-		return recordedPW.equals(pw);
+	public boolean verifyCredentials(String uname, String pw) throws ElementNotFoundException{
+        try{
+            Element u = findElement(users, "user", uname);
+    		String recordedPW = u.getElementsByTagName("pw").item(0).getTextContent();
+    		return recordedPW.equals(pw);
+        }catch(ElementNotFoundException e){throw new UserNotFoundException();}
 	}
 
-	/*
+	/**
  	* Function to write the entire DOM model to local XML stored on the computer.
  	*/
     public static void writeToFile() throws TransformerException{
         transformer.transform(new DOMSource(doc), new StreamResult(record));
     }
 
-    public static void main(String argv[]){
-        Database tester = new Database();
-        ArrayList<String> list = new ArrayList<String>();
-        Element newev = doc.createElement("event");
-        Attr idnum = doc.createAttribute("id");
-        idnum.setValue("1");
-        Element timeblocks = doc.createElement("blocks");
-        Element dependencies = doc.createElement("deps");
-        Element start = doc.createElement("start");
-        Element end = doc.createElement("end");
-        newev.setAttributeNode(idnum);
-        newev.appendChild(start);
-        newev.appendChild(end);
-        newev.appendChild(dependencies);
-        newev.appendChild(timeblocks);
-        try{
-            tester.addUser("jared","aowruigh");
-            tester.modifyUser("jared", true, "myHostedEvents", newev);
-            tester.modifyUser("jared", true, "myHostedEvents", newev);
-            writeToFile();
-        } catch(Exception e){}
-        /*
-        list.add("start");
-        list.add("Apr 7 1995");
-        list.add("end");
-        list.add("Feb 2 2017");
-        list.add("desc");
-        list.add("STUB");
-        list.add("block");
-        list.add("STUB");
-        list.add("dep");
-        list.add("STUB");
 
-        tester.addUser("Jared","asdf");
-        System.out.println("added user");
-        try{
-            tester.subscribe("Jared", "2", list);
-        //System.out.println("added event");
-        writeToFile();
-        }
-        catch(Exception e){e.printStackTrace();}
-        /*try{
-            tester.unsubscribe("Jared", 1);
-        //System.out.println("added event");
-        writeToFile();
-        }
-        catch(Exception e){e.printStackTrace();}
-    */}
 }
