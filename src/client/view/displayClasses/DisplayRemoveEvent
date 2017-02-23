@@ -10,11 +10,11 @@ import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.awt.event.*;
 
-public class displayRemoveEvent {
+public class DisplayRemoveEvent {
 
 	private JPanel finalPanel;
 
-	public displayRemoveEvent() {
+	public DisplayRemoveEvent() {
 		initialize();
 	}
 
