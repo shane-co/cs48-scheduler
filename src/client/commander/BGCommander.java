@@ -2,6 +2,7 @@ package client.commander;
 
 //Imports
 import client.app.Client;
+
 import client.app.obj.*;
 import client.view.UserInterface;
 import client.commander.ScheduleGenerator;
@@ -23,10 +24,11 @@ public class BGCommander{
 
     /*
     *BGCommander Constructor. DO NOT USE TO INSTANTIATE BGCommander. Instead use getBGCommander() function.
+    *Passes myEvents through BGCommander method myEventArray
     */
     private BGCommander(){
         client = new Client();
-        gen = new ScheduleGenerator();
+        gen = new ScheduleGenerator(myEventArray());
     }
 
     /**
@@ -55,11 +57,13 @@ public class BGCommander{
 
     }
 
-    //TEMPORARY METHOD TO BE RE-IMPLEMENTED
+    /**
+     * calls upon the client to get User's eventArray
+     * @return myEvents
+     */
     public ArrayList<ScheduleEvent> myEventArray(){
-        return new ArrayList<ScheduleEvent>();
+        return client.getUserEvents();
     }
-
 
 
 
@@ -92,14 +96,24 @@ public class BGCommander{
     *Function to generate a list of ScheduleEvent objects to return to UserInterface for display.
     *Uses Client to retrieve ScheduleEvent objects according to search filters, from another Organization
     *@param orgName A string corresponding to the Organization name to search through
-    *@param filters A set of filters to apply when searching for a ScheduleEvent
+    *@param -- Lets leave this for the second iteration, for now just return all the events --
+    *filters A set of filters to apply when searching for a ScheduleEvent
     */
-    //public ArrayList<ScheduleEvent> search(String orgName, ArrayList<String> filters){}
+    public ArrayList<ScheduleEvent> search(String orgName/*, ArrayList<String> filters*/){
+    	//CALL client parseRequest, still needs implementation of database.outputSearchResultString ignore filter
+    	String input = String.format("%s;%get", orgName);
+    	client.parseRequest(input);
+    }
 
+    
+    
     /**
     *Function to set the currentUser variable in Client. Uses Client to verify that credentials are present
     *and valid on local database. Modifies Client to update currentUser
+     * @throws UserLoggedInException 
+     * @throws ElementNotFoundException 
     */
+
 
     public void login(String username, String password) throws ElementNotFoundException{
         try{
@@ -108,10 +122,13 @@ public class BGCommander{
     }
 
 
+    
+    
     /**
     *Function to add a User to the application.
     *@param uname String representing the User's username
     *@param pword String representing the User's password
+     * @throws UserLoggedInException 
     */
 
     public void addUser(String username, String pword){
@@ -121,12 +138,19 @@ public class BGCommander{
         client.addUser(new_user);
     }
 
+    
+    
     /**
     *Function to subscribe a logged in User to a ScheduleEvent. Creates a ScheduleEvent object and passes that
     *to Client for further processing.
     *@param id A string that identifies this ScheduleEvent. Could be a id number, a name, or any other identifying information
-    *@param
+    *@param day An integer ranging from 1-7 representing a day of the week
+    *@param starthr, integer ranging from 0 - 2400 representing the start time of the event
+    *@param endhr An integer ranging from 0 - 2400 representing the end time of an event
+    * @throws ElementNotFoundException 
+    * @throws UserNotFoundException 
     */
+
     public void subscribeEvent(String id, String day, String starthr, String endhr, String desc){
         ScheduleEvent event = new ScheduleEvent(Integer.parseInt(day), Integer.parseInt(starthr), Integer.parseInt(endhr), desc, id);
         try{
@@ -135,9 +159,13 @@ public class BGCommander{
     }
 
 
+    
+    
     /**
     *Function to unsubscribe a logged in User to a ScheduleEvent. Creates a null ScheduleEvent with only id
     *@param id a string identifier equal to the identifier of the Schedule to be deleted.
+     * @throws ElementNotFoundException 
+     * @throws UserNotFoundException 
     */
     public void unsubscribe(String id){
        ScheduleEvent event = new ScheduleEvent(0, 0, 0, "", id);
@@ -146,7 +174,8 @@ public class BGCommander{
        }catch(ElementNotFoundException e){}
     }
 
-
+    
+    
     /**
     *Function to exit the application cleanly. Tells Client to exit application and write application state to file.
     */
