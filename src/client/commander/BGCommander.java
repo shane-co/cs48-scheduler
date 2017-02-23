@@ -6,6 +6,7 @@ import client.app.obj.ScheduleEvent;
 import client.app.obj.Schedule;
 import client.view.UserInterface;
 import client.commander.ScheduleGenerator;
+import client.app.exceptions.*;
 
 import java.util.ArrayList;
 import javax.xml.transform.TransformerException;
@@ -73,20 +74,20 @@ public class BGCommander{
         //STUB
         return new ArrayList<Schedule>();
     }
-    
+
     //Function to get a list of ScheduleEvents objects from current users return to UserInterface for display
     public ArrayList<ScheduleEvent> getScheduleEvents(){
         //STUB
         return client.getUserEvents();
     }
-    
+
 //     //Function to get a list of Schedule Objects from current users return to User Interface for display
 //     public ArrayList<Schedule> getScheduel(){
 //         //STUB
 //         return client.getUserSchedule();
 //     }
-    
-    
+
+
 
     /**
     *Function to generate a list of ScheduleEvent objects to return to UserInterface for display.
@@ -101,8 +102,10 @@ public class BGCommander{
     *and valid on local database. Modifies Client to update currentUser
     */
 
-    public void login(String username, String password){
-        client.setCurrUser(username,password);
+    public void login(String username, String password) throws ElementNotFoundException{
+        try{
+            client.setCurrUser(username,password);
+        }catch(UserLoggedInException e){}
     }
 
 
@@ -123,8 +126,10 @@ public class BGCommander{
     *@param
     */
     public void subscribeEvent(String id, String day, String starthr, String endhr, String desc){
-        ScheduleEvent event = new ScheduleEvent(day, starthr, endhr, desc, id);
-        client.subscribe(event);
+        ScheduleEvent event = new ScheduleEvent(Integer.parseInt(day), Integer.parseInt(starthr), Integer.parseInt(endhr), desc, id);
+        try{
+            client.subscribe(event);
+        }catch(ElementNotFoundException e){}
     }
 
 
@@ -133,8 +138,10 @@ public class BGCommander{
     *@param id a string identifier equal to the identifier of the Schedule to be deleted.
     */
     public void unsubscribe(String id){
-       ScheduleEvent event = new ScheduleEvent(NULL, NULL, NULL, NULL, id);
-       client.unsubsribe(event);
+       ScheduleEvent event = new ScheduleEvent(0, 0, 0, "", id);
+       try{
+           client.unsubscribe(event);
+       }catch(ElementNotFoundException e){}
     }
 
 
