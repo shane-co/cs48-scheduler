@@ -2,14 +2,11 @@ package client.commander;
 
 //Imports
 import client.app.Client;
-import client.app.exceptions.ElementNotFoundException;
-import client.app.exceptions.UserLoggedInException;
-import client.app.exceptions.UserNotFoundException;
-import client.app.obj.ScheduleEvent;
-import client.app.obj.User;
-import client.app.obj.Schedule;
+
+import client.app.obj.*;
 import client.view.UserInterface;
 import client.commander.ScheduleGenerator;
+import client.app.exceptions.*;
 
 import java.util.ArrayList;
 import javax.xml.transform.TransformerException;
@@ -81,8 +78,20 @@ public class BGCommander{
         return new ArrayList<Schedule>();
     }
 
-    
-    
+    //Function to get a list of ScheduleEvents objects from current users return to UserInterface for display
+    public ArrayList<ScheduleEvent> getScheduleEvents(){
+        //STUB
+        return client.getUserEvents();
+    }
+
+//     //Function to get a list of Schedule Objects from current users return to User Interface for display
+//     public ArrayList<Schedule> getScheduel(){
+//         //STUB
+//         return client.getUserSchedule();
+//     }
+
+
+
     /**
     *Function to generate a list of ScheduleEvent objects to return to UserInterface for display.
     *Uses Client to retrieve ScheduleEvent objects according to search filters, from another Organization
@@ -104,9 +113,14 @@ public class BGCommander{
      * @throws UserLoggedInException 
      * @throws ElementNotFoundException 
     */
-    public void login(String username, String password) throws ElementNotFoundException, UserLoggedInException{
-    	client.setCurrUser(username, password);
+
+
+    public void login(String username, String password) throws ElementNotFoundException{
+        try{
+            client.setCurrUser(username,password);
+        }catch(UserLoggedInException e){}
     }
+
 
     
     
@@ -116,12 +130,12 @@ public class BGCommander{
     *@param pword String representing the User's password
      * @throws UserLoggedInException 
     */
-    public void addUser(String username, String pword) throws UserLoggedInException{
-    	//check to see if username is registered
-    	User newUser = new User();
-    	newUser.setPassword(pword);
-    	newUser.setUsername(username);
-    	client.addUser(newUser);
+
+    public void addUser(String username, String pword){
+        User new_user = new User();
+		new_user.setUsername(username);
+		new_user.setPassword(pword);
+        client.addUser(new_user);
     }
 
     
@@ -136,11 +150,14 @@ public class BGCommander{
     * @throws ElementNotFoundException 
     * @throws UserNotFoundException 
     */
-    public void subscribeEvent(String id, int day, int starthr, int endhr, String desc) throws UserNotFoundException, ElementNotFoundException{
-    	ScheduleEvent event = new ScheduleEvent(day, starthr, endhr, desc, id);
-    	client.subscribe(event);
-    	
+
+    public void subscribeEvent(String id, String day, String starthr, String endhr, String desc){
+        ScheduleEvent event = new ScheduleEvent(Integer.parseInt(day), Integer.parseInt(starthr), Integer.parseInt(endhr), desc, id);
+        try{
+            client.subscribe(event);
+        }catch(ElementNotFoundException e){}
     }
+
 
     
     
@@ -150,9 +167,11 @@ public class BGCommander{
      * @throws ElementNotFoundException 
      * @throws UserNotFoundException 
     */
-    public void unsubscribe(String id) throws UserNotFoundException, ElementNotFoundException{
-    	ScheduleEvent event = new ScheduleEvent(0, 0, 0, null, id);
-    	client.unsubscribe(event);
+    public void unsubscribe(String id){
+       ScheduleEvent event = new ScheduleEvent(0, 0, 0, "", id);
+       try{
+           client.unsubscribe(event);
+       }catch(ElementNotFoundException e){}
     }
 
     

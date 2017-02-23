@@ -22,7 +22,7 @@ public class TimeBlock extends ScheduleObject{
     public TimeBlock(Element e){
         load(e);
     }
-
+    public boolean is_occupied(){return se.size()!=0;}
     public void addEvent(ScheduleEvent ev){se.add(ev);}
     public void removeEvent(int position){se.remove(position);}
     public int getDay(){return day;}
