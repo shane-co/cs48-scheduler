@@ -5,6 +5,8 @@ import client.app.obj.*;
 import java.util.ArrayList;
 
 import java.awt.BorderLayout;
+
+import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.awt.event.*;
 
