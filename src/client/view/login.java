@@ -14,12 +14,15 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 import client.app.exceptions.*;
+import client.commander.BGCommander;
 
 public class login {
 
 	private JFrame frame;
 	private JTextField textFieldUN;
 	private JPasswordField passwordField;
+	private BGCommander command;
+	private UserInterface ui;
 
 	/**
 	 * Launch the application.
@@ -28,7 +31,9 @@ public class login {
 	/**
 	 * Create the application.
 	 */
-	public login() {
+	public login(UserInterface parent) {
+		command = BGCommander.getBGCommander();
+		ui=parent;
 		initialize();
 	}
 
@@ -65,31 +70,18 @@ public class login {
 		JButton btnlogin = new JButton("Log in");
 		btnlogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				UserInterface main = new UserInterface();
 				String Username=textFieldUN.getText();
 				String Password=passwordField.getText();
 				try{
-					main.command().login(Username, Password);
-					JOptionPane.showMessageDialog(null, "Correct Username and Password!");
-					frame.dispose();
-					main.launch();
+					command.login(Username, Password);
+					System.out.println( "Correct Username and Password!");
+					ui.refreshMyEvents();
 				}catch(ElementNotFoundException elem){
-					JOptionPane.showMessageDialog(null, "Incorrect Username or Password. Please Try Again!");
+					System.out.println( "Incorrect Username or Password. Please Try Again!");
 				}
-				/**
-				if (main.command().login(Username, Password))//login (as well as logout) function requires implementation.
-				{
-					//Here I just realized that maybe blending entire login into Userinterface would make more sense.
-					//Otherwise, I have to create a class of userinterface here which might cause conflicts against RunApp().
-					JOptionPane.showMessageDialog(null, "Correct Username and Password!");
-					frame.dispose();
-					main.launch();
+				catch(UserLoggedInException uex){
+					System.out.println( uex.getMsg());
 				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "Incorrect Username or Password. Please Try Again!");
-				}
-				*/
 			}
 		});
 		btnlogin.setForeground(Color.BLUE);
@@ -97,5 +89,7 @@ public class login {
 		btnlogin.setBounds(161, 176, 153, 27);
 		frame.getContentPane().add(btnlogin);
 	}
+
+	public JFrame returnFrame(){return frame;}
 
 }

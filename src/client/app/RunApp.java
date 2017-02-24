@@ -1,5 +1,6 @@
 package client.app;
 import client.view.UserInterface;
+import client.view.ScheduleDisplay;
 import client.commander.BGCommander;
 import client.app.obj.*;
 import client.app.exceptions.*;
@@ -18,7 +19,7 @@ public class RunApp{
                 System.out.println("Enter command: (\"help\" to display all commands)");
                 String input = System.console().readLine();
                 switch(input){
-                    case "help": System.out.println("addUser, login, showMyEvents, subscribe, unsubscribe, genSchedule, exit");
+                    case "help": System.out.println("addUser, login, showMyEvents, subscribe, unsubscribe, exit");
                         break;
                     case "addUser": System.out.println("Enter Username:"); String uname=System.console().readLine();
                         System.out.println("Enter password:"); String pword=System.console().readLine();
@@ -53,9 +54,12 @@ public class RunApp{
                         System.out.println("Enter Schedule identifier:"); id=System.console().readLine();
                         command.unsubscribe(id);
                     case "genSchedule":
-                        for(Schedule sched: command.genSchedule()){
-                            System.out.println("<implement schedule display>");
-                        }
+                            try{
+                                for(Schedule sched: command.genSchedule()){
+                                ScheduleDisplay display = new ScheduleDisplay(sched);
+                                display.setVisible(true);
+                                }
+                            }catch(UserNotFoundException ue){System.out.println(ue.getMsg());}
                         break;
                     case "exit":
                         command.exitApp();

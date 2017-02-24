@@ -1,6 +1,7 @@
 package client.view;
 import client.commander.BGCommander;
 import client.app.obj.*;
+import client.app.exceptions.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.BorderLayout;
@@ -10,8 +11,9 @@ public class DisplayMyEvents {
 
 	private JPanel finalPanel;
 	private BGCommander commander;
+	private final String[] columnNames = {"ID", "DAY", "START DATE", "END DATE"};
 
-	
+
 	public DisplayMyEvents() {
 		initialize();
 	}
@@ -25,20 +27,21 @@ public class DisplayMyEvents {
 		finalPanel = new JPanel();
 		finalPanel.setBounds(100, 100, 500, 600);
 		finalPanel.setLayout(new BorderLayout(0, 0));
-		
+
 		//makes a text pane
 		JTextPane txtpnMyEvents = new JTextPane();
 		txtpnMyEvents.setText("My Events");
 		txtpnMyEvents.setEditable(false);
 		finalPanel.add(txtpnMyEvents, BorderLayout.NORTH);
-		String[] columnNames = {"ID", "DAY", "START DATE", "END DATE"};
-		
-		//ArrayList<ScheduleEvent> events = commander.getScheduleEvents();
-		//Object[][] data_1 = eventFormatting(events);
-		
-		//this is a test line i have for testing without needing the bgcommander
-		Object[][] data_1 = {{"a", "b", "c", "d"}, {"e", "f", "g", "h"}};
-		
+
+		Object[][] data_1;
+		try{
+			ArrayList<ScheduleEvent> events = commander.getScheduleEvents();
+			data_1 = eventFormatting(events);
+		}catch(ElementNotFoundException e){
+		 	data_1 = eventFormatting(new ArrayList<ScheduleEvent>());
+		}
+
 		DefaultTableModel model_1 = new DefaultTableModel(data_1, columnNames);
 		JTable table_1 = new JTable(model_1);
 		table_1.setEnabled(false);
@@ -46,7 +49,7 @@ public class DisplayMyEvents {
 		JScrollPane scroll = new JScrollPane(table_1);
 		finalPanel.add(scroll, BorderLayout.CENTER);
 	}
-	
+
 	//will help make the information be formatted
 	public static Object[][] eventFormatting(ArrayList<ScheduleEvent> listEvents){
 		Object[][] output = new String[listEvents.size()][4];
@@ -60,9 +63,25 @@ public class DisplayMyEvents {
 		return output;
 	}
 
+	public void refresh(){
+		finalPanel.removeAll();
+		Object[][] data_1;
+		try{
+			ArrayList<ScheduleEvent> events = commander.getScheduleEvents();
+			data_1 = eventFormatting(events);
+		}catch(ElementNotFoundException e){
+		 	data_1 = eventFormatting(new ArrayList<ScheduleEvent>());
+		}
+
+		DefaultTableModel model_1 = new DefaultTableModel(data_1, columnNames);
+		JTable table_1 = new JTable(model_1);
+		table_1.setEnabled(false);
+		table_1.setRowHeight(30);
+		JScrollPane scroll = new JScrollPane(table_1);
+		finalPanel.add(scroll, BorderLayout.CENTER);
+	}
 	public JPanel returnFinalPanel(){
 		return finalPanel;
 	}
 
 }
-

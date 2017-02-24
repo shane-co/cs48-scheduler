@@ -98,7 +98,7 @@ public class Client{
     *Function to add a Schedule to User.mySchedules
     *@param s Schedule object to be added to currUser.
     */
-    public void addSchedule(Schedule s)throws ElementNotFoundException, UserNotFoundException{
+    public void addSchedule(Schedule s)throws ElementNotFoundException{
 		//update the currUser to include schedule.
 		currUser.addToMySchedules(s);
 		//update the local database to reflect new change.
@@ -108,7 +108,7 @@ public class Client{
     *Function to delete a Schedule to User.mySchedules
     *@param s Schedule object to be deleted to currUser.
     */
-    public void deleteSchedule(Schedule s)throws ElementNotFoundException, UserNotFoundException{
+    public void deleteSchedule(Schedule s)throws ElementNotFoundException{
 		//update the currUser to include schedule.
 		currUser.removeFromMySchedules(s);
 		//update the local database to reflect new change.
@@ -166,12 +166,10 @@ public class Client{
         if(currUser!=null)return currUser.getMyEvents();
         else throw new UserNotFoundException();
     }
-	
-    public ArrayList<Schedule> getUserSchedules(){
-	 if(currUser != null) 
-		 return currUser.getMySchedules();
-	 else
-		 return null;
+
+    public ArrayList<Schedule> getUserSchedules() throws UserNotFoundException{
+	 if(currUser != null) return currUser.getMySchedules();
+	 else throw new UserNotFoundException();
     }
 
     /*

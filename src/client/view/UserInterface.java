@@ -2,6 +2,7 @@ package client.view;
 
 import client.app.obj.ScheduleEvent;
 import client.commander.BGCommander;
+import client.view.*;
 
 import java.util.ArrayList;
 import java.awt.*;
@@ -13,6 +14,7 @@ import javax.swing.table.DefaultTableModel;
 public class UserInterface {
 	private JFrame frame;
 	private BGCommander commander;
+	private DisplayMyEvents myEventsDisplay;
 
 	public BGCommander command(){return commander;}
   /**
@@ -37,7 +39,7 @@ public class UserInterface {
 	private void initialize() {
 		//commander=BGCommander.getBGCommander();
 		frame = new JFrame("Del Planner");
-		frame.setBounds(100, 100, 1000, 600);
+		frame.setBounds(100, 100, 1200, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new GridLayout(1, 3));
 
@@ -49,8 +51,8 @@ public class UserInterface {
 		JPanel panelScheduleEvents = k.returnFinalPanel();
 		paneLeft.addTab("Schedule Display", panelScheduleEvents);*/
 
-		DisplayMyEvents j = new DisplayMyEvents();
-		JPanel panelMyEventsTop = j.returnFinalPanel();
+		myEventsDisplay = new DisplayMyEvents();
+		JPanel panelMyEventsTop = myEventsDisplay.returnFinalPanel();
 		DisplayRemoveEvent a = new DisplayRemoveEvent();
 		JPanel panelMyEventsBottomRight = a.returnFinalPanel();
 		DisplayAddEvent b = new DisplayAddEvent();
@@ -67,6 +69,8 @@ public class UserInterface {
 
 
 		JTabbedPane paneRight = new JTabbedPane(JTabbedPane.TOP);
+		login loginhandler = new login(this);
+		paneRight.addTab("Login",loginhandler.returnFrame().getContentPane());
 		JSplitPane splitPaneLR = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, paneLeft, paneRight);
 
 		//not completely done implementing
@@ -85,5 +89,8 @@ public class UserInterface {
 		frame.getContentPane().add(splitPaneLR);
 	}
 
+	public void refreshMyEvents(){
+		myEventsDisplay.refresh();
+		frame.repaint();
+	}
 }
-

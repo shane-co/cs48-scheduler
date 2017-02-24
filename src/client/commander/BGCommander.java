@@ -47,27 +47,27 @@ public class BGCommander{
     *Client to get myEvents from the current User
     *@return ArrayList containing all Schedule objects obtained by Events subscribed to by the current User
     */
-    public ArrayList<Schedule> genSchedule(){
-        //STUB
-        return new ArrayList<Schedule>();
+    public ArrayList<Schedule> genSchedule() throws UserNotFoundException{
+        gen = new ScheduleGenerator(client.getUserEvents());
+        return gen.getSchedules();
     }
 
     //Function to get a list of ScheduleEvents objects from current users return to UserInterface for display
     public ArrayList<ScheduleEvent> getScheduleEvents() throws UserNotFoundException{
         return client.getUserEvents();
     }
-	
+
     //Function to get a list of schedules
-    public ArrayList<Schedule> getSchedules(){
+    public ArrayList<Schedule> getSchedules() throws UserNotFoundException{
 	 return client.getUserSchedules();
     }
-	
+
     //Function to add a schdule to array
-    public void addSchedule(Schedule s){
-	  client.addSchedule(s);   
+    public void addSchedule(Schedule s) throws ElementNotFoundException{
+	  client.addSchedule(s);
     }
     //Function to delete a schedule from user array
-    public void deleteSchedule(Schedule s){
+    public void deleteSchedule(Schedule s)throws ElementNotFoundException{
 	    client.deleteSchedule(s);
     }
 
