@@ -28,7 +28,7 @@ public class BGCommander{
     */
     private BGCommander(){
         client = new Client();
-        gen = new ScheduleGenerator(myEventArray());
+        //gen = new ScheduleGenerator(myEventArray());
     }
 
     /**
@@ -101,17 +101,18 @@ public class BGCommander{
     */
     public ArrayList<ScheduleEvent> search(String orgName/*, ArrayList<String> filters*/){
     	//CALL client parseRequest, still needs implementation of database.outputSearchResultString ignore filter
-    	String input = String.format("%s;%get", orgName);
-    	client.parseRequest(input);
+    	//String input = String.format("%s;%get", orgName);
+    	//client.parseRequest(input);
+        return new ArrayList<ScheduleEvent>();
     }
 
-    
-    
+
+
     /**
     *Function to set the currentUser variable in Client. Uses Client to verify that credentials are present
     *and valid on local database. Modifies Client to update currentUser
-     * @throws UserLoggedInException 
-     * @throws ElementNotFoundException 
+     * @throws UserLoggedInException
+     * @throws ElementNotFoundException
     */
 
 
@@ -122,13 +123,13 @@ public class BGCommander{
     }
 
 
-    
-    
+
+
     /**
     *Function to add a User to the application.
     *@param uname String representing the User's username
     *@param pword String representing the User's password
-     * @throws UserLoggedInException 
+     * @throws UserLoggedInException
     */
 
     public void addUser(String username, String pword){
@@ -138,8 +139,8 @@ public class BGCommander{
         client.addUser(new_user);
     }
 
-    
-    
+
+
     /**
     *Function to subscribe a logged in User to a ScheduleEvent. Creates a ScheduleEvent object and passes that
     *to Client for further processing.
@@ -147,8 +148,8 @@ public class BGCommander{
     *@param day An integer ranging from 1-7 representing a day of the week
     *@param starthr, integer ranging from 0 - 2400 representing the start time of the event
     *@param endhr An integer ranging from 0 - 2400 representing the end time of an event
-    * @throws ElementNotFoundException 
-    * @throws UserNotFoundException 
+    * @throws ElementNotFoundException
+    * @throws UserNotFoundException
     */
 
     public void subscribeEvent(String id, String day, String starthr, String endhr, String desc){
@@ -159,13 +160,13 @@ public class BGCommander{
     }
 
 
-    
-    
+
+
     /**
     *Function to unsubscribe a logged in User to a ScheduleEvent. Creates a null ScheduleEvent with only id
     *@param id a string identifier equal to the identifier of the Schedule to be deleted.
-     * @throws ElementNotFoundException 
-     * @throws UserNotFoundException 
+     * @throws ElementNotFoundException
+     * @throws UserNotFoundException
     */
     public void unsubscribe(String id){
        ScheduleEvent event = new ScheduleEvent(0, 0, 0, "", id);
@@ -174,8 +175,8 @@ public class BGCommander{
        }catch(ElementNotFoundException e){}
     }
 
-    
-    
+
+
     /**
     *Function to exit the application cleanly. Tells Client to exit application and write application state to file.
     */
