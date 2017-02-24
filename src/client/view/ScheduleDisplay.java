@@ -88,6 +88,10 @@ public class ScheduleDisplay extends JFrame{
 		container.add(calendar);
 	}
 	
+	public AwtCalendar returnCalendar(){
+		return calendar;
+	}
+	
 	//This main function shows how to display the schedule.
 	//I think its useful later when we start implementing BGcommander
 	/*public static void main(String[] args)
