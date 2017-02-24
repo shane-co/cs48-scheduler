@@ -1,4 +1,5 @@
 package client.view;
+import client.commander.BGCommander;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
