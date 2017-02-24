@@ -39,8 +39,9 @@ public class DisplayScheduleDisplay {
 		comboBox.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				//int index = comboBox.getSelectedIndex();
-				//Calendar calendar = new ScheduleDisplay(list.get(index));
-				JPanel panel = new JPanel();
+				//ScheduleDisplay a = new ScheduleDisplay(list.get(index));
+				//Container container = a.returnContainer();
+				JPanel panel = new JPanel(/*container*/);
 				finalPanel.add(panel, BorderLayout.CENTER);
 			}
 		});
