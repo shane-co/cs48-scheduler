@@ -29,6 +29,7 @@ public class DisplayMyEvents {
 		//makes a text pane
 		JTextPane txtpnMyEvents = new JTextPane();
 		txtpnMyEvents.setText("My Events");
+		txtpnMyEvents.setEditable(false);
 		finalPanel.add(txtpnMyEvents, BorderLayout.NORTH);
 		String[] columnNames = {"ID", "DAY", "START DATE", "END DATE"};
 		
@@ -64,3 +65,4 @@ public class DisplayMyEvents {
 	}
 
 }
+
