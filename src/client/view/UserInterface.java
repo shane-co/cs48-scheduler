@@ -11,7 +11,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class UserInterface {
 	private JFrame frame;
-
+	private BGCommander commander;
 	/**
 	 * Launch method.
 	 */
@@ -36,6 +36,7 @@ public class UserInterface {
 	 * Initialize the contents of the panel.
 	 */
 	private void initialize() {
+		//commander=BGCommander.getBGCommander();
 		frame = new JFrame("Del Planner");
 		frame.setBounds(100, 100, 1000, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -51,9 +52,9 @@ public class UserInterface {
 		
 		DisplayMyEvents j = new DisplayMyEvents();
 		JPanel panelMyEventsTop = j.returnFinalPanel();
-		displayRemoveEvent a = new displayRemoveEvent();
-		JPanel panelMyEventsBottomRight = a.returnPanel();
-		displayAddEvent b = new displayAddEvent();
+		DisplayRemoveEvent a = new DisplayRemoveEvent();
+		JPanel panelMyEventsBottomRight = a.returnFinalPanel();
+		DisplayAddEvent b = new DisplayAddEvent();
 		JSplitPane panelMyEventsBottomLeft = b.returnPanel();
 		JSplitPane panelMyEventsBottom = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panelMyEventsBottomLeft, panelMyEventsBottomRight);
 		panelMyEventsBottom.setResizeWeight(0.5);
@@ -71,10 +72,10 @@ public class UserInterface {
 		
 		//not completely done implementing
 		/*displaySearchEvent c = new displaySearchEvent();
-		JPanel panel3 = c.returnFinalPanel(); 
-		paneRight.addTab("Search for Event", panel3);
+		JSplitPane panel3 = c.returnFinalPanel(); 
+		paneRight.addTab("Search for Event", panel3);*/
 		
-		JPanel panelGenerateSchedules2 = new JPanel();
+		/*JPanel panelGenerateSchedules2 = new JPanel();
 		paneRight.addTab("Generate Schedules", panelGenerateSchedules2);*/
 		
 		paneRight.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
