@@ -32,29 +32,33 @@ public class ScheduleGenerator{
 		return true;
 	}
 
-	//Arranges myEvents in order of their start time
+	//Arranges theEvents in order of their finish time
 	private void Sort(){
 		ArrayList<ScheduleEvent> theSortedEvents = new ArrayList<ScheduleEvent>();
 	for (int j = 0; j < myEventsSize; j++) {
-		int earliestStart = 2500;
-		int shortestIndex=0;
+		int earliestFinish = 2500;
+		int earliestIndex;
 		for(int i = 0; i< myEventsSize; i++){
-			if(earliestStart > theEvents.get(i).when_to_start() ){
-				earliestStart = theEvents.get(i).when_to_start();
-				shortestIndex = i;
+			if(earliestFinish > theEvents.get(i).when_to_end() ){
+				earliestFinish = theEvents.get(i).when_to_end();
+				earliestIndex = i;
 			}
 			}
-		theSortedEvents.add(theEvents.get(shortestIndex));
-		theEvents.get(shortestIndex).set_start(2500);
+		theSortedEvents.add(theEvents.get(earliestIndex));
+		theEvents.get(earliestIndex).set_start(2500);
 		}
 	theEvents.clear();
 	for(ScheduleEvent temp : theSortedEvents)
 		theEvents.add(temp);
 	}
 
+	/**
+	 * start with the candidates, choose the earliest interval, then remove the earliest interval
+	 * along with any other interval that collides with chosen interval. Repeat until candidates is empty.
+	 * produces an ArrayList<Schedule> theSchedules
+	 */
 
-	public void Greedy(){
-		Sort();
+	private void Greedy(){
 		ArrayList<ScheduleEvent> candidates =new ArrayList<ScheduleEvent>();
 		ArrayList<ScheduleEvent> possibleSchedule = new ArrayList<ScheduleEvent>();
 		for( int i = 0; i < myEventsSize; i++){
@@ -78,5 +82,14 @@ public class ScheduleGenerator{
 
 	}
 
+	/**
+	 * You will only call this method in BGCommander to return the arraylist of schedules
+	 * @return the optimal schedule of events,
+	 */
+	public ArrayList<Schedule> getSchedules(){
+		sort();
+		greedy();
+		return theSchedules;
+	}
 
 }

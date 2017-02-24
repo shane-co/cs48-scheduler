@@ -42,21 +42,6 @@ public class BGCommander{
         return command;
     }
 
-    //TEMPORARY METHOD TO BE REPLACED
-    public ArrayList<ScheduleEvent> demoArray(){
-        ArrayList<ScheduleEvent> Events = new ArrayList<ScheduleEvent>();
-        Events.add(new ScheduleEvent(2,1700, 2100, "dung", "ID1"));
-        Events.add(new ScheduleEvent(12, 800, 11, "A good ol' morning at the beach","ID1"));
-        Events.add(new ScheduleEvent(12, 1200, 2, "Beach clean-up","ID1"));
-        Events.add(new ScheduleEvent(15, 800, 1100, "dope","ID1"));
-        Events.add(new ScheduleEvent(15,1200, 1900, "superdope","ID1"));
-        Events.add(new ScheduleEvent(4,1100, 1300, "Koala","ID1"));
-        Events.add(new ScheduleEvent(7,500, 700, "biggie","ID1"));
-        Events.add(new ScheduleEvent(27,800, 1000, "smalls","ID1"));
-        return Events;
-
-    }
-
     /**
      * calls upon the client to get User's eventArray
      * @return myEvents
@@ -64,8 +49,6 @@ public class BGCommander{
     public ArrayList<ScheduleEvent> myEventArray(){
         return client.getUserEvents();
     }
-
-
 
     /**
     *Function to generate a list of Schedule objects to return to UserInterface for display.
@@ -83,14 +66,6 @@ public class BGCommander{
         //STUB
         return client.getUserEvents();
     }
-
-//     //Function to get a list of Schedule Objects from current users return to User Interface for display
-//     public ArrayList<Schedule> getScheduel(){
-//         //STUB
-//         return client.getUserSchedule();
-//     }
-
-
 
     /**
     *Function to generate a list of ScheduleEvent objects to return to UserInterface for display.
