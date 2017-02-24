@@ -49,10 +49,9 @@ public class DisplayAddEvent {
 		finalPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, topPanel, bottomPanel);
 		topPanel.setLayout(new GridLayout(0, 2, 0, 0));
 		
-		//creates text panel
 		final JTextPane txtpnEventId = new JTextPane();
-		txtpnEventId.setEditable(false);
 		txtpnEventId.setText("Event I.D. :");
+		txtpnEventId.setEditable(false);
 		topPanel.add(txtpnEventId);
 		
 		textField = new JTextField();
@@ -61,23 +60,26 @@ public class DisplayAddEvent {
 		
 		JTextPane txtpnDay = new JTextPane();
 		txtpnDay.setText("Day :");
+		txtpnDay.setEditable(false);
 		topPanel.add(txtpnDay);
 		
 		textField_1 = new JTextField();
 		topPanel.add(textField_1);
 		textField_1.setColumns(10);
 		
-		JTextPane txtpnStartDate = new JTextPane();
-		txtpnStartDate.setText("Start Time :");
-		topPanel.add(txtpnStartDate);
+		JTextPane txtpnStartTime = new JTextPane();
+		txtpnStartTime.setText("Start Time :");
+		txtpnStartTime.setEditable(false);
+		topPanel.add(txtpnStartTime);
 		
 		textField_2 = new JTextField();
 		topPanel.add(textField_2);
 		textField_2.setColumns(10);
 		
-		JTextPane txtpnEndDate = new JTextPane();
-		txtpnEndDate.setText("End Time :");
-		topPanel.add(txtpnEndDate);
+		JTextPane txtpnEndTime = new JTextPane();
+		txtpnEndTime.setText("End Time :");
+		txtpnEndTime.setEditable(false);
+		topPanel.add(txtpnEndTime);
 		
 		textField_3 = new JTextField();
 		topPanel.add(textField_3);
@@ -85,6 +87,7 @@ public class DisplayAddEvent {
 		
 		JTextPane txtpnDescription = new JTextPane();
 		txtpnDescription.setText("Description :");
+		txtpnDescription.setEditable(false);
 		topPanel.add(txtpnDescription);
 		
 		textArea = new JTextArea();
