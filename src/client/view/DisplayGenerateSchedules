@@ -1,0 +1,85 @@
+package client.view;
+import client.commander.BGCommander;
+import client.app.obj.*;
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
+import javax.swing.*;
+
+public class DisplayGenerateSchedules {
+	private JPanel finalPanel;
+	private JSplitPane centerTopPanel;
+	private JPanel subPanel;
+	private BGCommander commander;
+	//private Container container;
+	/**
+	 * Initialize
+	 */
+	public DisplayGenerateSchedules() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the panel.
+	 */
+	private void initialize() {
+		finalPanel = new JPanel();
+		subPanel = new JPanel();
+		JButton buttonGenerateSchedules = new JButton("Generate Schedules from Events");
+		finalPanel.setLayout(new BorderLayout(0, 0));
+		finalPanel.add(buttonGenerateSchedules, BorderLayout.NORTH);
+		buttonGenerateSchedules.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				JTextPane txtpnChoose = new JTextPane();
+				txtpnChoose.setText("Choose Schedule to Display");
+				//ArrayList<Schedule> generatedSchedules = commander.genSchedule();
+				//String[] listNames = new String[generatedSchedules.size()];
+				/*for(int i = 0; i < generatedSchedules.size(); i++ )
+					listNames[i] = generatedSchedules.get(i).getID();
+					*/
+				JComboBox comboBox = new JComboBox(/*listNames*/);
+				comboBox.addActionListener(new ActionListener(){
+					public void actionPerformed(ActionEvent e){
+						//int index = comboBox.getSelectedIndex();
+						//ScheduleDisplay a = new ScheduleDisplay(list.get(index));
+						//container = a.returnContainer();
+						JPanel panel = new JPanel(/*container*/);
+						subPanel.add(panel, BorderLayout.CENTER);
+					}
+				});
+				centerTopPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, txtpnChoose, comboBox);
+				subPanel.setLayout(new BorderLayout(0, 0));
+				subPanel.add(centerTopPanel, BorderLayout.NORTH);
+				finalPanel.add(subPanel, BorderLayout.CENTER);
+				
+				JButton addScheduleButton = new JButton("Add Schedule");
+				addScheduleButton.addActionListener(new ActionListener(){
+					public void actionPerformed(ActionEvent e){
+						//int index = comboBox.getSelectedIndex();
+						//commander.addSchedule(generatedSchedules.get(index));
+					}
+				});
+				finalPanel.add(addScheduleButton, BorderLayout.SOUTH);
+			}
+		});
+		
+		JTextPane txtpnChooseSchedule = new JTextPane();
+		txtpnChooseSchedule.setText("Choose Schedule to Display");
+		//ArrayList<Schedule> generatedSchedules = commander.genSchedule();
+				//String[] listNames = new String[list.size()];
+				/*for(int i = 0; i < list.size(); i++ )
+					listNames[i] = list.get(i).getID();
+					*/
+		JComboBox comboBox = new JComboBox();
+		JSplitPane topPanel = new JSplitPane();
+		JSplitPane topBottomPanel = new JSplitPane();
+		finalPanel.setBounds(100, 100, 500, 600);
+	}
+	
+	public JPanel returnFinalPanel(){
+		return finalPanel;
+	}
+
+}

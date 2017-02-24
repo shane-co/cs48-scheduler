@@ -1,4 +1,5 @@
 package client.view;
+
 import client.app.obj.ScheduleEvent;
 import client.commander.BGCommander;
 
@@ -12,8 +13,9 @@ import javax.swing.table.DefaultTableModel;
 public class UserInterface {
 	private JFrame frame;
 	private BGCommander commander;
+
 	public BGCommander command(){return commander;}
-	/**
+  /**
 	 * Launch method.
 	 */
 	public void launch(){
@@ -84,3 +86,4 @@ public class UserInterface {
 	}
 
 }
+
