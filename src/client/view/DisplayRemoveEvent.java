@@ -29,6 +29,7 @@ public class DisplayRemoveEvent {
 		
 		JTextPane txtpnChooseEventTo = new JTextPane();
 		txtpnChooseEventTo.setText("Choose Event to Remove");
+		txtpnChooseEventTo.setEditable(false);
 		finalPanel.add(txtpnChooseEventTo);
 		
 		JPanel panel = new JPanel();
