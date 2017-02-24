@@ -9,7 +9,7 @@ public class DisplayGenerateSchedules {
 	private JPanel finalPanel;
 	private JSplitPane centerTopPanel;
 	private JPanel subPanel;
-	//private Calendar calendar;
+	//private Container container;
 	/**
 	 * Initialize
 	 */
@@ -39,8 +39,9 @@ public class DisplayGenerateSchedules {
 				comboBox.addActionListener(new ActionListener(){
 					public void actionPerformed(ActionEvent e){
 						//int index = comboBox.getSelectedIndex();
-						//calendar = new ScheduleDisplay(list.get(index));
-						JPanel panel = new JPanel(/*calendar*/);
+						//ScheduleDisplay a = new ScheduleDisplay(list.get(index));
+						//container = a.returnContainer();
+						JPanel panel = new JPanel(/*container*/);
 						subPanel.add(panel, BorderLayout.CENTER);
 					}
 				});
