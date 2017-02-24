@@ -1,8 +1,10 @@
 package client.view;
 import client.commander.BGCommander;
+import client.app.obj.*;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
