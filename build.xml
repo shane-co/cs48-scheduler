@@ -1,5 +1,5 @@
 <project default="compile">
-	
+
   <presetdef name="javac">
     <javac includeantruntime="false" />
   </presetdef>
@@ -39,4 +39,8 @@
             <arg value="--no-ui"/>
         </java>
     </target>
+
+	<target name="reset" description="reset the application for a clean run. Deletes data store">
+		<delete file="record.xml"/>
+	</target>
 </project>

@@ -28,7 +28,6 @@ public class BGCommander{
     */
     private BGCommander(){
         client = new Client();
-        //gen = new ScheduleGenerator(myEventArray());
     }
 
     /**
@@ -43,14 +42,6 @@ public class BGCommander{
     }
 
     /**
-     * calls upon the client to get User's eventArray
-     * @return myEvents
-     */
-    public ArrayList<ScheduleEvent> myEventArray(){
-        return client.getUserEvents();
-    }
-
-    /**
     *Function to generate a list of Schedule objects to return to UserInterface for display.
     *Uses internal ScheduleGenerator object to perform schedule generation algorithm and uses
     *Client to get myEvents from the current User
@@ -62,8 +53,7 @@ public class BGCommander{
     }
 
     //Function to get a list of ScheduleEvents objects from current users return to UserInterface for display
-    public ArrayList<ScheduleEvent> getScheduleEvents(){
-        //STUB
+    public ArrayList<ScheduleEvent> getScheduleEvents() throws UserNotFoundException{
         return client.getUserEvents();
     }
 
@@ -81,24 +71,15 @@ public class BGCommander{
         return new ArrayList<ScheduleEvent>();
     }
 
-
-
     /**
     *Function to set the currentUser variable in Client. Uses Client to verify that credentials are present
     *and valid on local database. Modifies Client to update currentUser
      * @throws UserLoggedInException
      * @throws ElementNotFoundException
     */
-
-
-    public void login(String username, String password) throws ElementNotFoundException{
-        try{
+    public void login(String username, String password) throws ElementNotFoundException, UserLoggedInException{
             client.setCurrUser(username,password);
-        }catch(UserLoggedInException e){}
     }
-
-
-
 
     /**
     *Function to add a User to the application.
@@ -106,15 +87,12 @@ public class BGCommander{
     *@param pword String representing the User's password
      * @throws UserLoggedInException
     */
-
     public void addUser(String username, String pword){
         User new_user = new User();
 		new_user.setUsername(username);
 		new_user.setPassword(pword);
         client.addUser(new_user);
     }
-
-
 
     /**
     *Function to subscribe a logged in User to a ScheduleEvent. Creates a ScheduleEvent object and passes that
@@ -126,16 +104,14 @@ public class BGCommander{
     * @throws ElementNotFoundException
     * @throws UserNotFoundException
     */
-
-    public void subscribeEvent(String id, String day, String starthr, String endhr, String desc){
-        ScheduleEvent event = new ScheduleEvent(Integer.parseInt(day), Integer.parseInt(starthr), Integer.parseInt(endhr), desc, id);
-        try{
-            client.subscribe(event);
-        }catch(ElementNotFoundException e){}
+    public void subscribeEvent(String id, String day, String starthr, String endhr, String desc)throws FormatException,ElementNotFoundException{
+        int d = Integer.parseInt(day); int s = Integer.parseInt(starthr); int e =Integer.parseInt(endhr);
+        if(d>7||d<1)throw new FormatException("day");
+        else if(s>24||s<0) throw new FormatException("start");
+        else if(e>24||e<0) throw new FormatException("end");
+        ScheduleEvent event = new ScheduleEvent(d,s,e, desc, id);
+        client.subscribe(event);
     }
-
-
-
 
     /**
     *Function to unsubscribe a logged in User to a ScheduleEvent. Creates a null ScheduleEvent with only id
@@ -149,8 +125,6 @@ public class BGCommander{
            client.unsubscribe(event);
        }catch(ElementNotFoundException e){}
     }
-
-
 
     /**
     *Function to exit the application cleanly. Tells Client to exit application and write application state to file.
