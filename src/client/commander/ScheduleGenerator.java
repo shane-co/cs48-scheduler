@@ -37,7 +37,7 @@ public class ScheduleGenerator{
 		ArrayList<ScheduleEvent> theSortedEvents = new ArrayList<ScheduleEvent>();
 	for (int j = 0; j < myEventsSize; j++) {
 		int earliestFinish = 2500;
-		int earliestIndex;
+		int earliestIndex=0;
 		for(int i = 0; i< myEventsSize; i++){
 			if(earliestFinish > theEvents.get(i).when_to_end() ){
 				earliestFinish = theEvents.get(i).when_to_end();
