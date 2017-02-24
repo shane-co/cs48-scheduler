@@ -16,16 +16,12 @@ public class UserInterface {
 	 * Launch method.
 	 */
 	public void launch(){
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					UserInterface uiWindow = new UserInterface();
-					uiWindow.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		try {
+			UserInterface uiWindow = new UserInterface();
+			uiWindow.frame.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public UserInterface() {
@@ -62,9 +58,9 @@ public class UserInterface {
 		panelMyEventsBoth.setResizeWeight(0.5);
 		paneLeft.addTab("My Events", panelMyEventsBoth);
 		
-		//not completely done implementing
-		/*JPanel panelGenerateSchedules = new JPanel();
-		paneLeft.addTab("Generate Schedules", panelGenerateSchedules);*/
+		DisplayGenerateSchedules z = new DisplayGenerateSchedules();
+		JPanel panelGenerateSchedules = z.returnFinalPanel();
+		paneLeft.addTab("Generate Schedules", panelGenerateSchedules);
 		
 		
 		JTabbedPane paneRight = new JTabbedPane(JTabbedPane.TOP);
@@ -83,7 +79,7 @@ public class UserInterface {
 		splitPaneLR.setOneTouchExpandable(true);
 
 		splitPaneLR.setResizeWeight(0.5);
-		frame.getContentPane().add(splitPaneLR);
+		frame.getContentPane().add(paneLeft);
 	}
 
 }
