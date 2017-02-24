@@ -1,6 +1,8 @@
 package client.view;
 import client.commander.BGCommander;
 import client.app.obj.*;
+import client.app.exceptions.ElementNotFoundException;
+import client.app.exceptions.FormatException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -27,8 +29,10 @@ public class DisplayAddEvent {
 	private JTextField textField_3;
 	private JTextArea textArea;
 	private BGCommander commander;
+	private UserInterface ui;
 
-	public DisplayAddEvent() {
+	public DisplayAddEvent(UserInterface parent) {
+		ui=parent;
 		initialize();
 	}
 
@@ -42,57 +46,57 @@ public class DisplayAddEvent {
 		JPanel bottomPanel = new JPanel();
 		bottomPanel.setBounds(100, 100, 250, 600);
 		bottomPanel.setLayout(new BorderLayout(0, 0));
-	  
+
 		//creates button to display event
 		JButton btnAddEvent = new JButton("Add Event");
 		bottomPanel.add(btnAddEvent);
 		finalPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, topPanel, bottomPanel);
 		topPanel.setLayout(new GridLayout(0, 2, 0, 0));
-		
+
 		final JTextPane txtpnEventId = new JTextPane();
 		txtpnEventId.setText("Event I.D. :");
 		txtpnEventId.setEditable(false);
 		topPanel.add(txtpnEventId);
-		
+
 		textField = new JTextField();
 		topPanel.add(textField);
 		textField.setColumns(10);
-		
+
 		JTextPane txtpnDay = new JTextPane();
 		txtpnDay.setText("Day :");
 		txtpnDay.setEditable(false);
 		topPanel.add(txtpnDay);
-		
+
 		textField_1 = new JTextField();
 		topPanel.add(textField_1);
 		textField_1.setColumns(10);
-		
+
 		JTextPane txtpnStartTime = new JTextPane();
 		txtpnStartTime.setText("Start Time :");
 		txtpnStartTime.setEditable(false);
 		topPanel.add(txtpnStartTime);
-		
+
 		textField_2 = new JTextField();
 		topPanel.add(textField_2);
 		textField_2.setColumns(10);
-		
+
 		JTextPane txtpnEndTime = new JTextPane();
 		txtpnEndTime.setText("End Time :");
 		txtpnEndTime.setEditable(false);
 		topPanel.add(txtpnEndTime);
-		
+
 		textField_3 = new JTextField();
 		topPanel.add(textField_3);
 		textField_3.setColumns(10);
-		
+
 		JTextPane txtpnDescription = new JTextPane();
 		txtpnDescription.setText("Description :");
 		txtpnDescription.setEditable(false);
 		topPanel.add(txtpnDescription);
-		
+
 		textArea = new JTextArea();
 		topPanel.add(textArea);
-		
+
 		btnAddEvent.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				String eventID = textField.getText();
@@ -104,17 +108,20 @@ public class DisplayAddEvent {
 				int intEndTime = Integer.parseInt(day);
 				String description = textArea.getText();
 				ScheduleEvent event = new ScheduleEvent(intDay, intStartTime, intEndTime, eventID, description);
-				commander.subscribeEvent(eventID, day, startTime, endTime, description);
+				try{commander.subscribeEvent(eventID, day, startTime, endTime, description);}
+				catch(ElementNotFoundException enfe){enfe.printMsg();}
+				catch(FormatException fe){System.out.println(fe.getMsg());}
+				ui.refreshMyEvents();
 			}
 		});
 		finalPane.setBounds(100, 100, 500, 600);
 		finalPane.setResizeWeight(0.8);
 	}
-	
+
 	public JSplitPane returnPanel(){
-  
+
 		return finalPane;
-    
+
 	}
 
 }

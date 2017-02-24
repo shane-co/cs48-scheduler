@@ -15,7 +15,8 @@ public class UserInterface {
 	private JFrame frame;
 	private BGCommander commander;
 	private DisplayMyEvents myEventsDisplay;
-
+	private DisplayAddEvent addEventDisplay;
+	private DisplayRemoveEvent removeEventDisplay;
 	public BGCommander command(){return commander;}
   /**
 	 * Launch method.
@@ -53,10 +54,10 @@ public class UserInterface {
 
 		myEventsDisplay = new DisplayMyEvents();
 		JPanel panelMyEventsTop = myEventsDisplay.returnFinalPanel();
-		DisplayRemoveEvent a = new DisplayRemoveEvent();
-		JPanel panelMyEventsBottomRight = a.returnFinalPanel();
-		DisplayAddEvent b = new DisplayAddEvent();
-		JSplitPane panelMyEventsBottomLeft = b.returnPanel();
+		removeEventDisplay = new DisplayRemoveEvent(this);
+		JPanel panelMyEventsBottomRight = removeEventDisplay.returnFinalPanel();
+		addEventDisplay = new DisplayAddEvent(this);
+		JSplitPane panelMyEventsBottomLeft = addEventDisplay.returnPanel();
 		JSplitPane panelMyEventsBottom = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panelMyEventsBottomLeft, panelMyEventsBottomRight);
 		panelMyEventsBottom.setResizeWeight(0.5);
 		JSplitPane panelMyEventsBoth = new JSplitPane(JSplitPane.VERTICAL_SPLIT, panelMyEventsTop, panelMyEventsBottom);
@@ -91,6 +92,7 @@ public class UserInterface {
 
 	public void refreshMyEvents(){
 		myEventsDisplay.refresh();
+		removeEventDisplay.refresh();
 		frame.repaint();
 	}
 }
