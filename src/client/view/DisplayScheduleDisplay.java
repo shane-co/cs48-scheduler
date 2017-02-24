@@ -12,7 +12,7 @@ public class DisplayScheduleDisplay {
 
 	private JPanel finalPanel;
 	private JComboBox comboBox;
-
+	//private Container container;
 	public DisplayScheduleDisplay() {
 		initialize();
 	}
@@ -40,7 +40,7 @@ public class DisplayScheduleDisplay {
 			public void actionPerformed(ActionEvent e){
 				//int index = comboBox.getSelectedIndex();
 				//ScheduleDisplay a = new ScheduleDisplay(list.get(index));
-				//Container container = a.returnContainer();
+				//container = a.returnContainer();
 				JPanel panel = new JPanel(/*container*/);
 				finalPanel.add(panel, BorderLayout.CENTER);
 			}
