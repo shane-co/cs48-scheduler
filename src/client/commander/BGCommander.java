@@ -56,6 +56,20 @@ public class BGCommander{
     public ArrayList<ScheduleEvent> getScheduleEvents() throws UserNotFoundException{
         return client.getUserEvents();
     }
+	
+    //Function to get a list of schedules
+    public ArrayList<Schedule> getSchedules(){
+	 return client.getUserSchedules();
+    }
+	
+    //Function to add a schdule to array
+    public void addSchedule(Schedule s){
+	  client.addSchedule(s);   
+    }
+    //Function to delete a schedule from user array
+    public void deleteSchedule(Schedule s){
+	    client.deleteSchedule(s);
+    }
 
     /**
     *Function to generate a list of ScheduleEvent objects to return to UserInterface for display.

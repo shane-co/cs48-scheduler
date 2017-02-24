@@ -166,6 +166,13 @@ public class Client{
         if(currUser!=null)return currUser.getMyEvents();
         else throw new UserNotFoundException();
     }
+	
+    public ArrayList<Schedule> getUserSchedules(){
+	 if(currUser != null) 
+		 return currUser.getMySchedules();
+	 else
+		 return null;
+    }
 
     /*
     *Function to exit application cleanly. Tells Database to write current DOM to file.
