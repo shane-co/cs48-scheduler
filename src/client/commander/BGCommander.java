@@ -80,6 +80,11 @@ public class BGCommander{
         return client.getUserEvents();
     }
 	
+    //Function to get a list of schedules
+    public ArrayList<Schedule> getSchedules(){
+	 return client.getUserSchedules();
+    }
+	
     //Function to delete a schedule from user array
     public void deleteSchedule(Schedule s){
 	    client.deleteSchedule(s);
