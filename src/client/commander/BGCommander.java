@@ -79,6 +79,11 @@ public class BGCommander{
         //STUB
         return client.getUserEvents();
     }
+	
+    //Function to delete a schedule from user array
+    public void deleteSchedule(Schedule s){
+	    client.deleteSchedule(s);
+    }
 
 //     //Function to get a list of Schedule Objects from current users return to User Interface for display
 //     public ArrayList<Schedule> getScheduel(){
