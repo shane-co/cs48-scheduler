@@ -10,12 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 
-import java.awt.GridLayout;
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.EventQueue;
-
+import java.awt.*;
 import java.util.ArrayList;
 
 public class DisplayAddEvent {
