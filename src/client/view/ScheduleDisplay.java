@@ -88,8 +88,8 @@ public class ScheduleDisplay extends JFrame{
 		container.add(calendar);
 	}
 	
-	public AwtCalendar returnCalendar(){
-		return calendar;
+	public Container returnContainer(){
+		return container;
 	}
 	
 	//This main function shows how to display the schedule.
