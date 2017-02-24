@@ -13,6 +13,7 @@ public class DisplayScheduleDisplay {
 
 	private JPanel finalPanel;
 	private JComboBox comboBox;
+	private BGCommander commander;
 	//private Container container;
 	public DisplayScheduleDisplay() {
 		initialize();
@@ -66,10 +67,7 @@ public class DisplayScheduleDisplay {
 			}
 		});
 		
-		finalPanel.add(bottomPanel, BorderLayout.SOUTH);
-		
-		
-		
+		finalPanel.add(bottomPanel, BorderLayout.SOUTH);	
 	}
 	
 	public JPanel returnFinalPanel(){
