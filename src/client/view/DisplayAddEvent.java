@@ -49,7 +49,9 @@ public class DisplayAddEvent {
 		finalPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, topPanel, bottomPanel);
 		topPanel.setLayout(new GridLayout(0, 2, 0, 0));
 		
+		//creates text panel
 		final JTextPane txtpnEventId = new JTextPane();
+		txtpnEventId.setEditable(false);
 		txtpnEventId.setText("Event I.D. :");
 		topPanel.add(txtpnEventId);
 		
