@@ -33,7 +33,7 @@ public class ScheduleGenerator{
 	}
 
 	//Arranges theEvents in order of their finish time
-	private void Sort(){
+	private void sort(){
 		ArrayList<ScheduleEvent> theSortedEvents = new ArrayList<ScheduleEvent>();
 	for (int j = 0; j < myEventsSize; j++) {
 		int earliestFinish = 2500;
@@ -58,7 +58,7 @@ public class ScheduleGenerator{
 	 * produces an ArrayList<Schedule> theSchedules
 	 */
 
-	private void Greedy(){
+	private void greedy(){
 		ArrayList<ScheduleEvent> candidates =new ArrayList<ScheduleEvent>();
 		ArrayList<ScheduleEvent> possibleSchedule = new ArrayList<ScheduleEvent>();
 		for( int i = 0; i < myEventsSize; i++){
