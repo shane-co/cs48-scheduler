@@ -85,6 +85,10 @@ public class BGCommander{
 	 return client.getUserSchedules();
     }
 	
+    //Function to add a schdule to array
+    public void addSchedule(Schedule s){
+	  client.addSchedule(s);   
+    }
     //Function to delete a schedule from user array
     public void deleteSchedule(Schedule s){
 	    client.deleteSchedule(s);
