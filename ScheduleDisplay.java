@@ -41,7 +41,7 @@ import java.util.ArrayList;
 public class ScheduleDisplay extends JFrame{
 	private AwtCalendar calendar;
 	Container container = this.getContentPane();
-	public ScheduleDisplay(client.app.obj.Schedule s) 
+	public ScheduleDisplay(/*client.app.obj.Schedule s*/) 
 	{
 		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -53,8 +53,8 @@ public class ScheduleDisplay extends JFrame{
 		calendar.setCurrentView(CalendarView.Timetable);
 		calendar.setTheme(ThemeType.Light);
 		for (int i =0; i<7; i++)
-			calendar.getTimetableSettings().getDates().add(new DateTime(2017,s.get_month(),s.get_day()).addDays(i));
-		
+			//calendar.getTimetableSettings().getDates().add(new DateTime(2017,s.get_month(),s.get_day()).addDays(i));
+			calendar.getTimetableSettings().getDates().add(DateTime.today().addDays(i));
 		calendar.getTimetableSettings().setItemOffset(0);
 		calendar.getTimetableSettings().setShowItemSpans(null);
 		calendar.getTimetableSettings().setSnapInterval(Duration.fromMinutes(1));
@@ -63,10 +63,18 @@ public class ScheduleDisplay extends JFrame{
 		calendar.getTimetableSettings().setVisibleColumns(3);
 		calendar.endInit();
 		
-		//calendar.setEnableDragCreate(true);
+		calendar.setEnableDragCreate(true);
 		
-		//create events on schedule
-		for (int i=0; i<s.size_of_TimeBlock(); ++i)
+		Appointment app = new Appointment();
+        app.setHeaderText("Test Event1");
+        app.setDescriptionText("This event always happens \"today\" from 5:00-6:00 PM");
+        app.setStartTime(DateTime.today().addHours(17));
+        app.setEndTime(DateTime.today().addHours(19));
+        calendar.getSchedule().getItems().add(app);
+        //calendar.getSchedule().getItems().remove(app);
+		
+        //create events on schedule
+		/*for (int i=0; i<s.size_of_TimeBlock(); ++i)
 		{
 			TimeBlock t=s.get_TimeBlock(i);
 			if (t.is_occupied()) 
@@ -82,21 +90,25 @@ public class ScheduleDisplay extends JFrame{
 				}
 			}
 		}
-        
+        */
 
 
 		container.add(calendar);
 	}
 	
+	public Container returnContainer(){
+		return container;
+	}
+	
 	//This main function shows how to display the schedule.
 	//I think its useful later when we start implementing BGcommander
-	/*public static void main(String[] args)
+	public static void main(String[] args)
 	{
 		SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 ScheduleDisplay window = null;
                 try {
-                    window = new ScheduleDisplay(A Schedule Object);
+                    window = new ScheduleDisplay();
                     window.setVisible(true);
                 }
                 catch (Exception exp) {
@@ -105,5 +117,5 @@ public class ScheduleDisplay extends JFrame{
         });
 
 	}
-	*/
+	
 }
