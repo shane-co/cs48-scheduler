@@ -50,7 +50,8 @@ public class UserInterface {
 		paneLeft.addTab("Schedule Display", panelScheduleEvents);*/
 
 		DisplayMyEvents j = new DisplayMyEvents();
-		JPanel panelMyEventsTop = j.returnFinalPanel();
+		JSplitPane panelMyEventsDisplay = myEventsDisplay.returnFinalPanel();
+		/*JPanel panelMyEventsTop = j.returnFinalPanel();
 		DisplayRemoveEvent a = new DisplayRemoveEvent();
 		JPanel panelMyEventsBottomRight = a.returnFinalPanel();
 		DisplayAddEvent b = new DisplayAddEvent();
@@ -58,8 +59,8 @@ public class UserInterface {
 		JSplitPane panelMyEventsBottom = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panelMyEventsBottomLeft, panelMyEventsBottomRight);
 		panelMyEventsBottom.setResizeWeight(0.5);
 		JSplitPane panelMyEventsBoth = new JSplitPane(JSplitPane.VERTICAL_SPLIT, panelMyEventsTop, panelMyEventsBottom);
-		panelMyEventsBoth.setResizeWeight(0.5);
-		paneLeft.addTab("My Events", panelMyEventsBoth);
+		panelMyEventsBoth.setResizeWeight(0.5);*/
+		paneLeft.addTab("My Events", panelMyEventsDisplay);
 
 		//not completely done implementing
 		/*JPanel panelGenerateSchedules = new JPanel();
