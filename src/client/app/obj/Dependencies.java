@@ -3,6 +3,7 @@ package client.app.obj;
 import client.app.interfaces.ScheduleObject;
 //ScheduleObject imports
 import org.w3c.dom.Element;
+import org.w3c.dom.Document;
 
 
 public class Dependencies extends ScheduleObject{
@@ -38,11 +39,13 @@ public class Dependencies extends ScheduleObject{
 	}
 
 	//ScheduleObject methods
-	public Element record(){
-        return super.record(this); //inherited by Superclass
+	public Element record(Document doc){
+        return super.record(this,doc); //inherited by Superclass
     }
-	public void load(Element e){
-		prerequiste=e.getFirstChild().getTextContent();
-		object=e.getLastChild().getTextContent();
+	public void load(Element root){
+		if(root!=null){
+			prerequiste=root.getFirstChild().getTextContent();
+			object=root.getLastChild().getTextContent();
+		}
 	}
 }

@@ -1,6 +1,7 @@
 package client.app.obj;
 import client.app.interfaces.ScheduleObject;
 import org.w3c.dom.Element;
+import org.w3c.dom.Document;
 /*
 *Class representing an Internet connection to a remote Database.
 */
@@ -28,12 +29,21 @@ public class DatabaseConnection extends ScheduleObject{
         if(p<65535) port=p;
     }
 
-    //ScheduleObject methods
-    public Element record(){
-        return super.record(this);
+    @Override public boolean equals(Object o){
+        if(this==o)return true;
+        if(o==null)return false;
+        if(!(o instanceof DatabaseConnection)) return false;
+        DatabaseConnection other = (DatabaseConnection) o;
+        return other.getIP().equals(IP);
     }
-    public void load(Element e){
-        IP=e.getAttribute("ip");
-        port=Integer.parseInt(e.getAttribute("port"));
+    //ScheduleObject methods
+    public Element record(Document doc){
+        return super.record(this,doc);
+    }
+    public void load(Element root){
+        if(root!=null){
+            IP=root.getAttribute("ip");
+            port=Integer.parseInt(root.getAttribute("port"));
+        }
     }
 }

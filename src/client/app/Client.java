@@ -65,10 +65,12 @@ public class Client{
  	*Function to add User object to local Database. Allows user to sign in with registered credentials
 	*@param u instantiated User object to be added to Database.
  	*/
-	public void addUser(User u) throws UserLoggedInException{
-		if(currUser!=null) throw new UserLoggedInException();
-		local.addUser(u.record());
+
+	public void addUser(User u){
+		local.addUser(u.record(local.getDocument()));
 	}
+
+
 
     /**
     *Function to add an event to currUser.myEvents. Queries the Database found at DatabaseConnection db. Effectively completes the "subscription" process of the currUser to this Event.
@@ -78,7 +80,7 @@ public class Client{
 		//update the currUser to include subscription.
 		currUser.addToMyEvents(e);
 		//update the local database to reflect new change.
-		local.modifyUser(currUser.getUsername(), true, "myEvents", e.record());
+		local.modifyUser(currUser.getUsername(), true, "myEvents", e.record(local.getDocument()));
 	}
 
     /**
@@ -89,28 +91,28 @@ public class Client{
 		//update the currUser to remove subscription
 		currUser.removeFromMyEvents(e);
 		//update the local database to reflect the change
-		local.modifyUser(currUser.getUsername(), false, "myEvents", e.record());
+		local.modifyUser(currUser.getUsername(), false, "myEvents", e.record(local.getDocument()));
 	}
 
     /**
     *Function to add a Schedule to User.mySchedules
     *@param s Schedule object to be added to currUser.
     */
-    public void addSchedule(Schedule s)throws ElementNotFoundException, UserNotFoundException{
+    public void addSchedule(Schedule s)throws ElementNotFoundException{
 		//update the currUser to include schedule.
 		currUser.addToMySchedules(s);
 		//update the local database to reflect new change.
-		local.modifyUser(currUser.getUsername(), true, "mySchedules", s.record());
+		local.modifyUser(currUser.getUsername(), true, "mySchedules", s.record(local.getDocument()));
 	}
     /**
     *Function to delete a Schedule to User.mySchedules
     *@param s Schedule object to be deleted to currUser.
     */
-    public void deleteSchedule(Schedule s)throws ElementNotFoundException, UserNotFoundException{
+    public void deleteSchedule(Schedule s)throws ElementNotFoundException{
 		//update the currUser to include schedule.
 		currUser.removeFromMySchedules(s);
 		//update the local database to reflect new change.
-		local.modifyUser(currUser.getUsername(), false, "mySchedules", s.record());
+		local.modifyUser(currUser.getUsername(), false, "mySchedules", s.record(local.getDocument()));
 	}
 
     /**
@@ -121,7 +123,7 @@ public class Client{
 		//update the currUser to include schedule.
 		currUser.addDatabaseConnection(newOrg);
 		//update the local database to reflect new change.
-		local.modifyUser(currUser.getUsername(), true, "myOrgs", newOrg.record());
+		local.modifyUser(currUser.getUsername(), true, "myOrgs", newOrg.record(local.getDocument()));
 	}
 
     /**
@@ -132,7 +134,7 @@ public class Client{
 		//update the currUser to include schedule.
 		currUser.removeDatabaseConnection(org);
 		//update the local database to reflect new change.
-		local.modifyUser(currUser.getUsername(), false, "myOrgs", org.record());
+		local.modifyUser(currUser.getUsername(), false, "myOrgs", org.record(local.getDocument()));
     }
     /**
     *Function to add a ScheduleEvent to currUser.myHostedEvents. Makes a ScheduleEvent available to be subscibed to.
@@ -142,7 +144,7 @@ public class Client{
 		//update the currUser to include schedule.
 		currUser.addHostedEvent(e);
 		//update the local database to reflect new change.
-		local.modifyUser(currUser.getUsername(), true, "myHostedEvents", e.record());
+		local.modifyUser(currUser.getUsername(), true, "myHostedEvents", e.record(local.getDocument()));
 	}
     /**
     *Function to remove a ScheduleEvent from currUser.myHostedEvents.
@@ -152,7 +154,7 @@ public class Client{
 		//update the currUser to include schedule.
 		currUser.removeHostedEvent(e);
 		//update the local database to reflect new change.
-		local.modifyUser(currUser.getUsername(), false, "myHostedEvents", e.record());
+		local.modifyUser(currUser.getUsername(), false, "myHostedEvents", e.record(local.getDocument()));
 	}
 
 
@@ -160,9 +162,14 @@ public class Client{
     *Function to retrieve ArrayList of the currUser's myEvents.
     * @return ArrayList<ScheduleEvent>
     */
-    public ArrayList<ScheduleEvent> getUserEvents(){
+    public ArrayList<ScheduleEvent> getUserEvents() throws UserNotFoundException{
         if(currUser!=null)return currUser.getMyEvents();
-        else return null;
+        else throw new UserNotFoundException();
+    }
+
+    public ArrayList<Schedule> getUserSchedules() throws UserNotFoundException{
+	 if(currUser != null) return currUser.getMySchedules();
+	 else throw new UserNotFoundException();
     }
 
     /*

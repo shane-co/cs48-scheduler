@@ -5,4 +5,5 @@ public class UserLoggedInException extends Exception{
     public UserLoggedInException(){
         errMsg="User already logged in.";
     }
+    public String getMsg(){return errMsg;}
 }

@@ -7,5 +7,9 @@
 	<buildSpec>
 	</buildSpec>
 	<natures>
+<<<<<<< HEAD
+=======
+		<nature>org.eclipse.jdt.core.javanature</nature>
+>>>>>>> f24f73b2ed55d1d3064f10c312c5e3c8bab3a1a8
 	</natures>
 </projectDescription>

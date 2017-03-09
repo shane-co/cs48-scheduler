@@ -1,7 +1,9 @@
 package client.app;
 import client.view.UserInterface;
+import client.view.ScheduleDisplay;
 import client.commander.BGCommander;
 import client.app.obj.*;
+import client.app.exceptions.*;
 
 public class RunApp{
     private static boolean end;
@@ -17,20 +19,25 @@ public class RunApp{
                 System.out.println("Enter command: (\"help\" to display all commands)");
                 String input = System.console().readLine();
                 switch(input){
-                    case "help": System.out.println("addUser, login, showMyEvents, subscribe, unsubscribe, genSchedule");
+                    case "help": System.out.println("addUser, login, showMyEvents, subscribe, unsubscribe, exit");
                         break;
                     case "addUser": System.out.println("Enter Username:"); String uname=System.console().readLine();
                         System.out.println("Enter password:"); String pword=System.console().readLine();
-                        command.addUser(uname, pword);
+                            command.addUser(uname, pword);
                         break;
                     case "login": System.out.println("Enter Username:"); uname=System.console().readLine();
                         System.out.println("Enter password:"); pword=System.console().readLine();
-                        command.login(uname,pword);
+                        try{
+                            command.login(uname,pword);
+                        }catch(ElementNotFoundException ex){System.out.println(ex.getMsg());}
+                        catch(UserLoggedInException uex){System.out.println(uex.getMsg());}
                         break;
                     case "showMyEvents":
-                        for(ScheduleEvent s: command.myEventArray()){
-                            System.out.println(s.display());
-                        }
+                        try{
+                            for(ScheduleEvent s: command.getScheduleEvents()){
+                            System.out.println(s.get_ID()+" Day:"+s.what_day()+" Start:"+s.when_to_start()+" End:"+s.when_to_end()+" "+s.get_descpt());
+                            }
+                        }catch(UserNotFoundException ex){System.out.println(ex.getMsg());}
                         break;
                     case "subscribe":
                         System.out.println("Enter name of ScheduleEvent:"); String id=System.console().readLine();
@@ -38,15 +45,21 @@ public class RunApp{
                         System.out.println("Enter start hour (0-23):"); String start=System.console().readLine();
                         System.out.println("Enter end hour (0-23):"); String end=System.console().readLine();
                         System.out.println("Enter description:"); String desc = System.console().readLine();
-                        command.subscribeEvent(id,day,start,end,desc);
+                        try{
+                            command.subscribeEvent(id,day,start,end,desc);
+                        }catch(FormatException f){System.out.println(f.getMsg());}
+                        catch(ElementNotFoundException e){System.out.println(e.getMsg());}
                         break;
                     case "unsubscribe":
                         System.out.println("Enter Schedule identifier:"); id=System.console().readLine();
                         command.unsubscribe(id);
                     case "genSchedule":
-                        for(Schedule sched: command.genSchedule()){
-                            System.out.println("<implement schedule display>");
-                        }
+                            try{
+                                for(Schedule sched: command.genSchedule()){
+                                ScheduleDisplay display = new ScheduleDisplay(sched);
+                                display.setVisible(true);
+                                }
+                            }catch(UserNotFoundException ue){System.out.println(ue.getMsg());}
                         break;
                     case "exit":
                         command.exitApp();

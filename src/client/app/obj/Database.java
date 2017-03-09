@@ -143,7 +143,7 @@ public class Database{
 	public boolean verifyCredentials(String uname, String pw) throws ElementNotFoundException{
         try{
             Element u = findElement(users, "user", uname);
-    		String recordedPW = u.getElementsByTagName("pw").item(0).getTextContent();
+    		String recordedPW = u.getAttribute("pw");
     		return recordedPW.equals(pw);
         }catch(ElementNotFoundException e){throw new UserNotFoundException();}
 	}
@@ -155,5 +155,5 @@ public class Database{
         transformer.transform(new DOMSource(doc), new StreamResult(record));
     }
 
-
+    public Document getDocument(){return doc;}
 }

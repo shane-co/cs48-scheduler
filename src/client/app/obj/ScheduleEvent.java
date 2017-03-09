@@ -9,6 +9,7 @@ import client.app.interfaces.ScheduleObject;
 import java.util.ArrayList;
 //ScheduleEvent imports
 import org.w3c.dom.Element;
+import org.w3c.dom.Document;
 
 /**
 *Class representing an event. Basic object that a user will subscribe to. Is created by Organizations and has event dependencies,
@@ -34,6 +35,7 @@ public class ScheduleEvent extends ScheduleObject{
 
     public ScheduleEvent(int d,int s, int e, String dp,String i)
     {
+        deps=new ArrayList<Dependencies>();
     	day=d;
     	start=s;
     	end=e;
@@ -58,23 +60,29 @@ public class ScheduleEvent extends ScheduleObject{
     public int num_deps(){return deps.size();}
     public Dependencies getDependency(int index){return deps.get(index);}
 
-    //STUB METHOD
-    public String display(){return "STUB";}
-
+    @Override public boolean equals(Object o){
+        if(this==o)return true;
+        if(o==null)return false;
+        if(!(o instanceof ScheduleEvent)) return false;
+        ScheduleEvent other = (ScheduleEvent) o;
+        return other.get_ID().equals(id);
+    }
     //ScheduleObject methods
-    public Element record(){
-        return super.record(this); //inherited by Superclass
+    public Element record(Document doc){
+        return super.record(this,doc); //inherited by Superclass
     }
     public void load(Element root){
-        id=root.getAttribute("id");
-        day=Integer.parseInt(root.getAttribute("day"));
-        start=Integer.parseInt(root.getAttribute("start"));
-        end=Integer.parseInt(root.getAttribute("end"));
-        description=root.getFirstChild().getTextContent();
-        Element d = (Element)root.getLastChild().getFirstChild();
-        do{
-            deps.add(new Dependencies(d));
-            d= (Element)d.getNextSibling();
-        }while(d!=null);
+        if(root!=null){
+            id=root.getAttribute("id");
+            day=Integer.parseInt(root.getAttribute("day"));
+            start=Integer.parseInt(root.getAttribute("start"));
+            end=Integer.parseInt(root.getAttribute("end"));
+            description=root.getFirstChild().getTextContent();
+            Element d = (Element)root.getLastChild().getFirstChild();
+            while(d!=null){
+                deps.add(new Dependencies(d));
+                d= (Element)d.getNextSibling();
+            }
+        }
     }
 }

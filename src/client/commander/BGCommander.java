@@ -2,14 +2,11 @@ package client.commander;
 
 //Imports
 import client.app.Client;
-import client.app.exceptions.ElementNotFoundException;
-import client.app.exceptions.UserLoggedInException;
-import client.app.exceptions.UserNotFoundException;
-import client.app.obj.ScheduleEvent;
-import client.app.obj.User;
-import client.app.obj.Schedule;
+
+import client.app.obj.*;
 import client.view.UserInterface;
 import client.commander.ScheduleGenerator;
+import client.app.exceptions.*;
 
 import java.util.ArrayList;
 import javax.xml.transform.TransformerException;
@@ -31,7 +28,6 @@ public class BGCommander{
     */
     private BGCommander(){
         client = new Client();
-        gen = new ScheduleGenerator(myEventArray());
     }
 
     /**
@@ -45,44 +41,36 @@ public class BGCommander{
         return command;
     }
 
-    //TEMPORARY METHOD TO BE REPLACED
-    public ArrayList<ScheduleEvent> demoArray(){
-        ArrayList<ScheduleEvent> Events = new ArrayList<ScheduleEvent>();
-        Events.add(new ScheduleEvent(2,1700, 2100, "dung", "ID1"));
-        Events.add(new ScheduleEvent(12, 800, 11, "A good ol' morning at the beach","ID1"));
-        Events.add(new ScheduleEvent(12, 1200, 2, "Beach clean-up","ID1"));
-        Events.add(new ScheduleEvent(15, 800, 1100, "dope","ID1"));
-        Events.add(new ScheduleEvent(15,1200, 1900, "superdope","ID1"));
-        Events.add(new ScheduleEvent(4,1100, 1300, "Koala","ID1"));
-        Events.add(new ScheduleEvent(7,500, 700, "biggie","ID1"));
-        Events.add(new ScheduleEvent(27,800, 1000, "smalls","ID1"));
-        return Events;
-
-    }
-
-    /**
-     * calls upon the client to get User's eventArray
-     * @return myEvents
-     */
-    public ArrayList<ScheduleEvent> myEventArray(){
-        return client.getUserEvents();
-    }
-
-
-
     /**
     *Function to generate a list of Schedule objects to return to UserInterface for display.
     *Uses internal ScheduleGenerator object to perform schedule generation algorithm and uses
     *Client to get myEvents from the current User
     *@return ArrayList containing all Schedule objects obtained by Events subscribed to by the current User
     */
-    public ArrayList<Schedule> genSchedule(){
-        //STUB
-        return new ArrayList<Schedule>();
+    public ArrayList<Schedule> genSchedule() throws UserNotFoundException{
+        gen = new ScheduleGenerator(client.getUserEvents());
+        return gen.getSchedules();
     }
 
-    
-    
+    //Function to get a list of ScheduleEvents objects from current users return to UserInterface for display
+    public ArrayList<ScheduleEvent> getScheduleEvents() throws UserNotFoundException{
+        return client.getUserEvents();
+    }
+
+    //Function to get a list of schedules
+    public ArrayList<Schedule> getSchedules() throws UserNotFoundException{
+	 return client.getUserSchedules();
+    }
+
+    //Function to add a schdule to array
+    public void addSchedule(Schedule s) throws ElementNotFoundException{
+	  client.addSchedule(s);
+    }
+    //Function to delete a schedule from user array
+    public void deleteSchedule(Schedule s)throws ElementNotFoundException{
+	    client.deleteSchedule(s);
+    }
+
     /**
     *Function to generate a list of ScheduleEvent objects to return to UserInterface for display.
     *Uses Client to retrieve ScheduleEvent objects according to search filters, from another Organization
@@ -90,38 +78,36 @@ public class BGCommander{
     *@param -- Lets leave this for the second iteration, for now just return all the events --
     *filters A set of filters to apply when searching for a ScheduleEvent
     */
-    //public ArrayList<ScheduleEvent> search(String orgName/*, ArrayList<String> filters*/){}
+    public ArrayList<ScheduleEvent> search(String orgName/*, ArrayList<String> filters*/){
+    	//CALL client parseRequest, still needs implementation of database.outputSearchResultString ignore filter
+    	//String input = String.format("%s;%get", orgName);
+    	//client.parseRequest(input);
+        return new ArrayList<ScheduleEvent>();
+    }
 
-    
-    
     /**
     *Function to set the currentUser variable in Client. Uses Client to verify that credentials are present
     *and valid on local database. Modifies Client to update currentUser
-     * @throws UserLoggedInException 
-     * @throws ElementNotFoundException 
+     * @throws UserLoggedInException
+     * @throws ElementNotFoundException
     */
     public void login(String username, String password) throws ElementNotFoundException, UserLoggedInException{
-    	client.setCurrUser(username, password);
+            client.setCurrUser(username,password);
     }
 
-    
-    
     /**
     *Function to add a User to the application.
     *@param uname String representing the User's username
     *@param pword String representing the User's password
-     * @throws UserLoggedInException 
+     * @throws UserLoggedInException
     */
-    public void addUser(String username, String pword) throws UserLoggedInException{
-    	//check to see if username is registered
-    	User newUser = new User();
-    	newUser.setPassword(pword);
-    	newUser.setUsername(username);
-    	client.addUser(newUser);
+    public void addUser(String username, String pword){
+        User new_user = new User();
+		new_user.setUsername(username);
+		new_user.setPassword(pword);
+        client.addUser(new_user);
     }
 
-    
-    
     /**
     *Function to subscribe a logged in User to a ScheduleEvent. Creates a ScheduleEvent object and passes that
     *to Client for further processing.
@@ -129,30 +115,31 @@ public class BGCommander{
     *@param day An integer ranging from 1-7 representing a day of the week
     *@param starthr, integer ranging from 0 - 2400 representing the start time of the event
     *@param endhr An integer ranging from 0 - 2400 representing the end time of an event
-    * @throws ElementNotFoundException 
-    * @throws UserNotFoundException 
+    * @throws ElementNotFoundException
+    * @throws UserNotFoundException
     */
-    public void subscribeEvent(String id, int day, int starthr, int endhr, String desc) throws UserNotFoundException, ElementNotFoundException{
-    	ScheduleEvent event = new ScheduleEvent(day, starthr, endhr, desc, id);
-    	client.subscribe(event);
-    	
+    public void subscribeEvent(String id, String day, String starthr, String endhr, String desc)throws FormatException,ElementNotFoundException{
+        int d = Integer.parseInt(day); int s = Integer.parseInt(starthr); int e =Integer.parseInt(endhr);
+        if(d>7||d<1)throw new FormatException("day");
+        else if(s>24||s<0) throw new FormatException("start");
+        else if(e>24||e<0) throw new FormatException("end");
+        ScheduleEvent event = new ScheduleEvent(d,s,e, desc, id);
+        client.subscribe(event);
     }
 
-    
-    
     /**
     *Function to unsubscribe a logged in User to a ScheduleEvent. Creates a null ScheduleEvent with only id
     *@param id a string identifier equal to the identifier of the Schedule to be deleted.
-     * @throws ElementNotFoundException 
-     * @throws UserNotFoundException 
+     * @throws ElementNotFoundException
+     * @throws UserNotFoundException
     */
-    public void unsubscribe(String id) throws UserNotFoundException, ElementNotFoundException{
-    	ScheduleEvent event = new ScheduleEvent(0, 0, 0, null, id);
-    	client.unsubscribe(event);
+    public void unsubscribe(String id){
+       ScheduleEvent event = new ScheduleEvent(0, 0, 0, "", id);
+       try{
+           client.unsubscribe(event);
+       }catch(ElementNotFoundException e){}
     }
 
-    
-    
     /**
     *Function to exit the application cleanly. Tells Client to exit application and write application state to file.
     */

@@ -5,4 +5,5 @@ public class ElementNotFoundException extends Exception{
         errMsg="Element does not exist in Database.";
     }
     public String getMsg(){return errMsg;}
+    public void printMsg(){System.out.println(errMsg);}
 }
