@@ -39,7 +39,7 @@ public class ScheduleDisplay extends JPanel{
 		this.setBounds(100, 100, 500, 600);
 		this.setLayout(new BorderLayout(0, 0));
 
-s		calendar=new AwtCalendar();
+		calendar=new AwtCalendar();
 		calendar.beginInit();
 		calendar.setCurrentView(CalendarView.Timetable);
 		calendar.setTheme(ThemeType.Light);
