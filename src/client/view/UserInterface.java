@@ -63,6 +63,7 @@ public class UserInterface {
 		JSplitPane panelMyEventsBoth = new JSplitPane(JSplitPane.VERTICAL_SPLIT, panelMyEventsTop, panelMyEventsBottom);
 		panelMyEventsBoth.setResizeWeight(0.5);
 		paneLeft.addTab("My Events", panelMyEventsBoth);
+		paneLeft.addTab("My Schedules", new JPanel());
 
 		//not completely done implementing
 		/*JPanel panelGenerateSchedules = new JPanel();
