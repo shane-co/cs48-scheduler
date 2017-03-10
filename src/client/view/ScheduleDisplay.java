@@ -33,18 +33,19 @@ import java.util.ArrayList;
 */
 public class ScheduleDisplay extends JPanel{
 	private AwtCalendar calendar;
-	public ScheduleDisplay(/*Schedule s*/)
+
+	public ScheduleDisplay(client.app.obj.Schedule s)
 	{
 		this.setBounds(100, 100, 500, 600);
 		this.setLayout(new BorderLayout(0, 0));
 
-		calendar=new AwtCalendar();
+s		calendar=new AwtCalendar();
 		calendar.beginInit();
 		calendar.setCurrentView(CalendarView.Timetable);
 		calendar.setTheme(ThemeType.Light);
 		for (int i =1; i<7; i++)
 			//calendar.getTimetableSettings().getDates().add(new DateTime(2017,s.get_month(),s.get_day()).addDays(i));
-			calendar.getTimetableSettings().getDates().add(DateTime.today().addDays(i));
+			calendar.getTimetableSettings().getDates().add(new DateTime(2017,s.get_month(),s.get_day()).addDays(i));
 		calendar.getTimetableSettings().setItemOffset(0);
 		calendar.getTimetableSettings().setShowItemSpans(null);
 		calendar.getTimetableSettings().setSnapInterval(Duration.fromMinutes(1));
@@ -55,14 +56,20 @@ public class ScheduleDisplay extends JPanel{
 
 		calendar.setEnableDragCreate(true);
 
-		Appointment app = new Appointment();
-        app.setHeaderText("Test Event1");
-        app.setDescriptionText("This event always happens \"today\" from 5:00-6:00 PM");
-        app.setStartTime(DateTime.today().addHours(17));
-        app.setEndTime(DateTime.today().addHours(19));
-        calendar.getSchedule().getItems().add(app);
 
-
+		for (int i=0; i<s.get_ScheduleEvents().size();i++)
+		{
+			for (int j=0; j<s.get_ScheduleEvents().get(i).duration().size(); j++)
+			{
+				TimeBlock t= new TimeBlock(s.get_ScheduleEvents().get(i).duration().get(j).getDay(),s.get_ScheduleEvents().get(i).duration().get(j).getStart());
+				Appointment app = new Appointment();
+				app.setHeaderText(s.get_ScheduleEvents().get(i).get_ID());
+				app.setDescriptionText(s.get_ScheduleEvents().get(i).get_descpt());
+				app.setStartTime(new DateTime(2017,s.get_month(),s.get_day()).addDays(t.getDay()-1).addHours(t.getStart()));
+				app.setEndTime(new DateTime(2017,s.get_month(),s.get_day()).addDays(t.getDay()-1).addHours(t.getStart()+1));
+				calendar.getSchedule().getItems().add(app);
+			}
+		}
 		this.add(calendar, BorderLayout.CENTER);
 	}
 
