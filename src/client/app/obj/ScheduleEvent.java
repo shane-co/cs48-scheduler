@@ -30,6 +30,8 @@ public class ScheduleEvent extends ScheduleObject{
     }
 
     public ScheduleEvent(Element root){
+        deps = new ArrayList<Dependencies>();
+        duration = new ArrayList<TimeBlock>();
         load(root);
     }
 
@@ -39,9 +41,12 @@ public class ScheduleEvent extends ScheduleObject{
     public ArrayList<Dependencies> getDependencies(){return deps;}
 
     public boolean conflicts(ScheduleEvent compare){
-        return duration.equals(compare.duration());
+        for(TimeBlock t : compare.duration()){
+            if(duration.contains(t)) return true;
+        }
+        return false;
     }
-    
+
     @Override public boolean equals(Object o){
         if(this==o)return true;
         if(o==null)return false;
@@ -57,12 +62,14 @@ public class ScheduleEvent extends ScheduleObject{
         if(root!=null){
             id=root.getAttribute("id");
             description=root.getFirstChild().getTextContent();
-            Element dpnd = (Element)root.getFirstChild().getNextSibling().getFirstChild();
+            Element depelem = (Element)root.getFirstChild().getNextSibling();
+            Element dpnd = (Element)depelem.getFirstChild();
             while(dpnd!=null){
                 deps.add(new Dependencies(dpnd));
                 dpnd= (Element)dpnd.getNextSibling();
             }
-            Element drtn = (Element)root.getLastChild().getFirstChild();
+            Element drtn = (Element)depelem.getNextSibling().getFirstChild();
+            System.out.println("here");
             while(drtn!=null){
                  duration.add(new TimeBlock(drtn));
                  drtn=(Element)drtn.getNextSibling();

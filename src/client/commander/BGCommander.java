@@ -58,6 +58,9 @@ public class BGCommander{
         return client.getUserEvents();
     }
 
+    public ArrayList<ScheduleEvent> getHosted() throws UserNotFoundException{
+        return new ArrayList<ScheduleEvent>();
+    }
     //Function to get a list of schedules
     public ArrayList<Schedule> getSchedules() throws UserNotFoundException{
 	 return client.getUserSchedules();
@@ -148,6 +151,36 @@ public class BGCommander{
        try{
            client.unsubscribe(event);
        }catch(ElementNotFoundException e){}
+    }
+
+    // command.createHostedEvent()
+    public void createHostedEvent(ArrayList<ArrayList<Integer>> duration, String id, String desc){
+        ArrayList<TimeBlock> evduration = new ArrayList<TimeBlock>();
+        for(int i=0; i<7; i++){
+            for(int j: duration.get(i)){
+                if(j>0){
+                    evduration.add(new TimeBlock(i,j));
+                }
+            }
+        }
+        try{
+            ScheduleEvent newev = new ScheduleEvent(new ArrayList<Dependencies>(), evduration, desc, id);
+            client.createEvent(newev);
+        }catch(ElementNotFoundException e){}
+    }
+
+    public void deleteHostedEvent(String id){
+        ScheduleEvent event = new ScheduleEvent(new ArrayList<Dependencies>(), new ArrayList<TimeBlock>(), "", id);
+        try{
+            client.deleteEvent(event);
+        }catch(ElementNotFoundException e){}
+    }
+
+    public void addOrganization(String id, String ip, int port){
+
+    }
+    public void deleteOrganization(String id){
+        
     }
 
     /**

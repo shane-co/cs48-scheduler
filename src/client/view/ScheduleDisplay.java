@@ -37,12 +37,12 @@ public class ScheduleDisplay extends JPanel{
 	{
 		this.setBounds(100, 100, 500, 600);
 		this.setLayout(new BorderLayout(0, 0));
-		
+
 		calendar=new AwtCalendar();
 		calendar.beginInit();
 		calendar.setCurrentView(CalendarView.Timetable);
 		calendar.setTheme(ThemeType.Light);
-		for (int i =0; i<7; i++)
+		for (int i =1; i<7; i++)
 			//calendar.getTimetableSettings().getDates().add(new DateTime(2017,s.get_month(),s.get_day()).addDays(i));
 			calendar.getTimetableSettings().getDates().add(DateTime.today().addDays(i));
 		calendar.getTimetableSettings().setItemOffset(0);

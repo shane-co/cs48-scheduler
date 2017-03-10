@@ -6,6 +6,7 @@ import org.w3c.dom.Document;
 *Class representing an Internet connection to a remote Database.
 */
 public class DatabaseConnection extends ScheduleObject{
+    private String id;
     private String IP;
     private int port;
 
@@ -14,14 +15,15 @@ public class DatabaseConnection extends ScheduleObject{
         return true;
     }
 
-    public DatabaseConnection(String ip, int p){
-        IP = ip; port = p;
+    public DatabaseConnection(String i, String ip, int p){
+        id=i; IP = ip; port = p;
     }
     public DatabaseConnection(Element root){
         load(root);
     }
     public String getIP(){return IP;}
     public int getPort(){return port;}
+    public String getID(){return id;}
     public void setIP(String newIP){
         if(validAddress(newIP)) IP = newIP;
     }
@@ -42,6 +44,7 @@ public class DatabaseConnection extends ScheduleObject{
     }
     public void load(Element root){
         if(root!=null){
+            id=root.getAttribute("id");
             IP=root.getAttribute("ip");
             port=Integer.parseInt(root.getAttribute("port"));
         }

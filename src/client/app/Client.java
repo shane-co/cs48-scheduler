@@ -150,7 +150,8 @@ public class Client{
     *@param e ScheduleEvent object that the User has created.
     */
     public void createEvent(ScheduleEvent e)throws ElementNotFoundException, UserNotFoundException{
-		//update the currUser to include schedule.
+        if(currUser==null)throw new UserNotFoundException();
+        //update the currUser to include schedule.
 		currUser.addHostedEvent(e);
 		//update the local database to reflect new change.
 		local.modifyUser(currUser.getUsername(), true, "myHostedEvents", e.record(local.getDocument()));

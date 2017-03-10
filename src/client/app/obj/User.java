@@ -94,13 +94,13 @@ public class User extends ScheduleObject{
             mySchedules=new ArrayList<Schedule>();
             myOrgs= new ArrayList<DatabaseConnection>();
             Element field = (Element)root.getFirstChild();
-            do{
+            while(field!=null){
                 //process entries in a field
                 loadArrayList(field,field.getNodeName());
                 System.out.println("loaded: "+field);
                 //get next field.
                 field=(Element)field.getNextSibling();
-            }while(field!=null);
+            }
         }
     }
     private void loadArrayList(Element field,String tag){ //helper function to load series of DOM Elements

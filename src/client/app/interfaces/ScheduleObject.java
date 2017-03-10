@@ -92,8 +92,10 @@ public abstract class ScheduleObject{
         else if(o instanceof DatabaseConnection){
             DatabaseConnection d = (DatabaseConnection) o;
             Element dc = doc.createElement("org");
+            Attr id = doc.createAttribute("id");
             Attr ip = doc.createAttribute("ip");
             Attr port = doc.createAttribute("port");
+            id.setValue(d.getID());
             ip.setValue(d.getIP());
             port.setValue(Integer.toString(d.getPort()));
             dc.setAttributeNode(ip);
