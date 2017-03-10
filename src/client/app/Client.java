@@ -235,7 +235,7 @@ public class Client{
                 User queried = new User(local.findUser("user",orgName));
                 String result = "";
                 for(ScheduleEvent h : queried.getMyHostedEvents()){
-
+                    result+=h.toString()+"$";
                 }
             } catch (ElementNotFoundException e){}
             catch (IOException i){}
