@@ -72,7 +72,7 @@ public class UserInterface {
 
 		JTabbedPane paneRight = new JTabbedPane(JTabbedPane.TOP);
 		login loginhandler = new login(this);
-		paneRight.addTab("Login",loginhandler.returnFrame().getContentPane());
+		paneRight.addTab("Login",loginhandler.returnPanel());
 		JSplitPane splitPaneLR = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, paneLeft, paneRight);
 
 		//not completely done implementing

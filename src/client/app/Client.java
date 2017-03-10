@@ -60,6 +60,15 @@ public class Client{
 			currUser.load(local.findUser("user",uname));
 		}
 	}
+    /**
+    *Function to setCurrentUser to null
+    */
+    public void logout() throws TransformerException{
+        if(currUser!=null){
+            local.writeToFile();
+            currUser=null;
+        }
+    }
 
 	/**
  	*Function to add User object to local Database. Allows user to sign in with registered credentials

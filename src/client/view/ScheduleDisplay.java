@@ -41,13 +41,13 @@ import java.util.ArrayList;
 public class ScheduleDisplay extends JFrame{
 	private AwtCalendar calendar;
 	Container container = this.getContentPane();
-	public ScheduleDisplay(/*client.app.obj.Schedule s*/) 
+	public ScheduleDisplay(/*client.app.obj.Schedule s*/)
 	{
-		
+
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setTitle("MyScheduel");
+		setTitle("MySchedule");
 		setMinimumSize(new Dimension(800,600));
-		
+
 		calendar=new AwtCalendar();
 		calendar.beginInit();
 		calendar.setCurrentView(CalendarView.Timetable);
@@ -62,9 +62,9 @@ public class ScheduleDisplay extends JFrame{
 		calendar.getTimetableSettings().setEndTime(1380);
 		calendar.getTimetableSettings().setVisibleColumns(3);
 		calendar.endInit();
-		
+
 		calendar.setEnableDragCreate(true);
-		
+
 		Appointment app = new Appointment();
         app.setHeaderText("Test Event1");
         app.setDescriptionText("This event always happens \"today\" from 5:00-6:00 PM");
@@ -72,12 +72,12 @@ public class ScheduleDisplay extends JFrame{
         app.setEndTime(DateTime.today().addHours(19));
         calendar.getSchedule().getItems().add(app);
         //calendar.getSchedule().getItems().remove(app);
-		
+
         //create events on schedule
 		/*for (int i=0; i<s.size_of_TimeBlock(); ++i)
 		{
 			TimeBlock t=s.get_TimeBlock(i);
-			if (t.is_occupied()) 
+			if (t.is_occupied())
 			{
 				for (int j=0; j<t.numberOfEvents();++j)
 				{
@@ -95,11 +95,11 @@ public class ScheduleDisplay extends JFrame{
 
 		container.add(calendar);
 	}
-	
+
 	public Container returnContainer(){
 		return container;
 	}
-	
+
 	//This main function shows how to display the schedule.
 	//I think its useful later when we start implementing BGcommander
 	public static void main(String[] args)
@@ -117,5 +117,5 @@ public class ScheduleDisplay extends JFrame{
         });
 
 	}
-	
+
 }

@@ -98,6 +98,14 @@ public class BGCommander{
     }
 
     /**
+    *Function to logout the currentUser in Client and set currentUser to null
+    */
+    public void logout(){
+        try{
+            client.logout();
+        }catch(TransformerException t){System.out.println("Couldn't write to File");}
+    }
+    /**
     *Function to add a User to the application.
     *@param uname String representing the User's username
     *@param pword String representing the User's password
