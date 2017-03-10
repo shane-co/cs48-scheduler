@@ -6,7 +6,6 @@ import java.util.Random;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-
 public class ScheduleGenerator{
 	private ArrayList<ScheduleEvent> events; //input array
 	private int number_of_events; //number of different events (same event with different duration count as one event)

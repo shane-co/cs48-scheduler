@@ -15,23 +15,24 @@ import org.w3c.dom.Document;
 */
 public class TimeBlock extends ScheduleObject{
     //instance variables
-    private int day;
-	private int start;
-    private ArrayList<ScheduleEvent> se;
-
+    private int day; //day of the week 1-7
+	private int start; // an hour 0-24;
 
     public TimeBlock(int d,int s){day=d; start=s;}
     public TimeBlock(Element e){
         load(e);
     }
-    public boolean is_occupied(){return se.size()!=0;}
-    public void addEvent(ScheduleEvent ev){se.add(ev);}
-    public void removeEvent(int position){se.remove(position);}
+
     public int getDay(){return day;}
     public int getStart(){return start;}
-    public int numberOfEvents(){return se.size();}
-    public ScheduleEvent getEvent(int index){return se.get(index);}
 
+    @Override public boolean equals(Object o){
+        if(this==o)return true;
+        if(o==null)return false;
+        if(!(o instanceof TimeBlock)) return false;
+        TimeBlock other = (TimeBlock) o;
+        return (other.getDay()==day && other.getStart()==start);
+    }
     //ScheduleObject Methods
     public Element record(Document doc){
         return super.record(this,doc); //inherited from Superclass
@@ -40,11 +41,6 @@ public class TimeBlock extends ScheduleObject{
         if(root!=null){
             day=Integer.parseInt(root.getAttribute("day"));
             start=Integer.parseInt(root.getAttribute("start"));
-            Element ev = (Element)root.getFirstChild().getFirstChild();
-            do{
-                se.add(new ScheduleEvent(ev));
-                ev=(Element)ev.getNextSibling();
-            }while(ev!=null);
         }
     }
 }

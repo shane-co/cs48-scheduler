@@ -83,6 +83,7 @@ public class BGCommander{
     	//String input = String.format("%s;%get", orgName);
     	//client.parseRequest(input);
         return new ArrayList<ScheduleEvent>();
+        //remoteApplication.retrieveAllHostedEvents();
     }
 
     /**
@@ -123,7 +124,7 @@ public class BGCommander{
         if(d>7||d<1)throw new FormatException("day");
         else if(s>24||s<0) throw new FormatException("start");
         else if(e>24||e<0) throw new FormatException("end");
-        ScheduleEvent event = new ScheduleEvent(d,s,e, desc, id);
+        ScheduleEvent event = new ScheduleEvent(new ArrayList<Dependencies>(), new ArrayList<TimeBlock>(), "", id);
         client.subscribe(event);
     }
 
@@ -134,7 +135,7 @@ public class BGCommander{
      * @throws UserNotFoundException
     */
     public void unsubscribe(String id){
-       ScheduleEvent event = new ScheduleEvent(0, 0, 0, "", id);
+       ScheduleEvent event = new ScheduleEvent(new ArrayList<Dependencies>(), new ArrayList<TimeBlock>(), "", id);
        try{
            client.unsubscribe(event);
        }catch(ElementNotFoundException e){}
