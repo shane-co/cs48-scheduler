@@ -176,12 +176,21 @@ public class BGCommander{
         }catch(ElementNotFoundException e){}
     }
 
-    public void addOrganization(String id, String ip, int port){
-
+    public void addOrganization(String id, String ip, String port){
+	portID = Integer.parseInt(port);
+	DatabaseConnection d = new DatabaseConnetion(id,ip,portID);
+	try{
+	    client.registerOrg(d);
+	   }catch(ElementNotFoundException e){}
     }
+	
     public void deleteOrganization(String id){
-        
+        DatabaseConnection d = new DatabaseConnection(id,"","")
+	try{
+	    client.forgetOrg(d);
+	   }catch(ElementNotFoundException e){}
     }
+    
 
     /**
     *Function to exit the application cleanly. Tells Client to exit application and write application state to file.
