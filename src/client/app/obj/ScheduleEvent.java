@@ -38,6 +38,10 @@ public class ScheduleEvent extends ScheduleObject{
     public String get_ID() {return id; }
     public ArrayList<Dependencies> getDependencies(){return deps;}
 
+    public boolean conflicts(ScheduleEvent compare){
+        return duration.equals(compare.duration());
+    }
+    
     @Override public boolean equals(Object o){
         if(this==o)return true;
         if(o==null)return false;

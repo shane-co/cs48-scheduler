@@ -63,6 +63,13 @@ public class User extends ScheduleObject{
 
     //Accessor functions
     public String getPassword(){return password;}
+    public String nextSchedID(){
+        if(mySchedules.size()==0)return "1";
+        else{
+            Schedule lastSched = mySchedules.get(mySchedules.size()-1);
+            return Integer.toString(Integer.parseInt(lastSched.getID())+1);
+        }
+    }
     public ArrayList<Schedule> getMySchedules(){return mySchedules;}
     public ArrayList<ScheduleEvent> getMyEvents(){return myEvents;}
     public ArrayList<ScheduleEvent> getMyHostedEvents(){return myHostedEvents;}

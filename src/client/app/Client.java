@@ -172,6 +172,11 @@ public class Client{
 	 else throw new UserNotFoundException();
     }
 
+    public String getUserNextAvailableSchedID() throws UserNotFoundException{
+        if(currUser != null) return currUser.nextSchedID();
+        else throw new UserNotFoundException();
+    }
+
     /*
     *Function to exit application cleanly. Tells Database to write current DOM to file.
     */

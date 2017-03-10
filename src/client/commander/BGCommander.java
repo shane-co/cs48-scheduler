@@ -47,9 +47,10 @@ public class BGCommander{
     *Client to get myEvents from the current User
     *@return ArrayList containing all Schedule objects obtained by Events subscribed to by the current User
     */
-    public ArrayList<Schedule> genSchedule() throws UserNotFoundException{
+    public Schedule genSchedule(int month, int day) throws UserNotFoundException{
         gen = new ScheduleGenerator(client.getUserEvents());
-        return gen.getSchedules();
+        String id = client.getUserNextAvailableSchedID();
+        return gen.getSchedule(id, month, day);
     }
 
     //Function to get a list of ScheduleEvents objects from current users return to UserInterface for display
