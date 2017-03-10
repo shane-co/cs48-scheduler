@@ -61,7 +61,7 @@ public class Client{
 		}
 	}
     /**
-    *Function to setCurrentUser to null
+    *Function to setCurrentUser to null. Writes currUser state to Database.
     */
     public void logout() throws TransformerException{
         if(currUser!=null){

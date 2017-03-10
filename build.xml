@@ -12,7 +12,9 @@
         <fileset dir="lib">
             <include name="*.jar"/>
         </fileset>
+        <pathelement location="build"/>
     </path>
+
     <target name="compile" description="compile entire application">
             <mkdir dir="build"/>
             <javac srcdir="src" destdir="build" includeantruntime="false">
@@ -31,7 +33,9 @@
     </target>
 
     <target name="runapp" depends="compile" description="run the application">
-        <java classname="${mainClass}" fork="true" classpath="build"/>
+        <java classname="${mainClass}" fork="true">
+            <classpath refid="master-classpath"/>
+        </java>
     </target>
 
     <target name="noui" depends="compile" description="run the application">

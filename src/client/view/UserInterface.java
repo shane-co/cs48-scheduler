@@ -45,12 +45,8 @@ public class UserInterface {
 		frame.getContentPane().setLayout(new GridLayout(1, 3));
 
 
+		//LEFT PANE OF MAIN UI
 		JTabbedPane paneLeft = new JTabbedPane(JTabbedPane.TOP);
-
-		//not completely done implementing
-		/*DisplayScheduleDisplay k = new DisplayScheduleDisplay();
-		JPanel panelScheduleEvents = k.returnFinalPanel();
-		paneLeft.addTab("Schedule Display", panelScheduleEvents);*/
 
 		myEventsDisplay = new DisplayMyEvents();
 		JPanel panelMyEventsTop = myEventsDisplay.returnFinalPanel();
@@ -64,30 +60,20 @@ public class UserInterface {
 		panelMyEventsBoth.setResizeWeight(0.5);
 		paneLeft.addTab("My Events", panelMyEventsBoth);
 		paneLeft.addTab("My Schedules", new JPanel());
+		paneLeft.addTab("My Hosted Events", new JPanel());
+		paneLeft.addTab("My Organizations", new JPanel());
 
-		//not completely done implementing
-		/*JPanel panelGenerateSchedules = new JPanel();
-		paneLeft.addTab("Generate Schedules", panelGenerateSchedules);*/
-
-
+		//RIGHT PANE OF MAIN UI
 		JTabbedPane paneRight = new JTabbedPane(JTabbedPane.TOP);
-		login loginhandler = new login(this);
-		paneRight.addTab("Login",loginhandler.returnPanel());
+
+		paneRight.addTab("Login",new login(this));
 		JSplitPane splitPaneLR = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, paneLeft, paneRight);
-
-		//not completely done implementing
-		/*displaySearchEvent c = new displaySearchEvent();
-		JSplitPane panel3 = c.returnFinalPanel();
-		paneRight.addTab("Search for Event", panel3);*/
-
-		/*JPanel panelGenerateSchedules2 = new JPanel();
-		paneRight.addTab("Generate Schedules", panelGenerateSchedules2);*/
 
 		paneRight.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		paneLeft.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		splitPaneLR.setOneTouchExpandable(true);
 
-		splitPaneLR.setResizeWeight(0.5);
+		splitPaneLR.setResizeWeight(0.75);
 		frame.getContentPane().add(splitPaneLR);
 	}
 

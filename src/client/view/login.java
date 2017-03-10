@@ -4,6 +4,8 @@ import java.awt.EventQueue;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import java.awt.BorderLayout;
+import javax.swing.SwingConstants;
 
 import java.awt.Font;
 import javax.swing.JTextField;
@@ -16,13 +18,15 @@ import java.awt.event.ActionEvent;
 import client.app.exceptions.*;
 import client.commander.BGCommander;
 
-public class login {
+public class login extends JPanel{
 
-	private JPanel panel;
-	private JTextField textFieldUN;
+	private JLabel lblUsername;
+	private JLabel lblPassword;
+	private JTextField usernameField;
 	private JPasswordField passwordField;
 	private BGCommander command;
 	private UserInterface ui;
+	private final JPanel panel=this;
 
 	/**
 	 * Launch the application.
@@ -34,58 +38,59 @@ public class login {
 	public login(UserInterface parent) {
 		command = BGCommander.getBGCommander();
 		ui=parent;
-		panel = new JPanel();
+		initialize();
 	}
 
 	/**
 	 * Initialize the contents of the panel.
 	 */
 	private void initialize() {
-		panel.setBounds(100, 100, 450, 300);
-		panel.setLayout(null);
+		this.setLayout(new BorderLayout());
 
-		JLabel lblNewLabel = new JLabel("Username");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblNewLabel.setBounds(71, 67, 88, 27);
-		panel.add(lblNewLabel);
+		lblUsername = new JLabel("Username");
+		lblUsername.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblUsername.setBounds(71, 67, 88, 27);
 
-		JLabel lblNewLabel_1 = new JLabel("Password");
-		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblNewLabel_1.setBounds(71, 105, 88, 27);
-		panel.add(lblNewLabel_1);
+		lblPassword = new JLabel("Password");
+		lblPassword.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblPassword.setBounds(71, 105, 88, 27);
 
-		textFieldUN = new JTextField();
-		textFieldUN.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		textFieldUN.setBounds(161, 72, 153, 22);
-		panel.add(textFieldUN);
-		textFieldUN.setColumns(10);
+		usernameField = new JTextField();
+		usernameField.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		usernameField.setBounds(161, 72, 153, 22);
+		usernameField.setColumns(10);
 
 		passwordField = new JPasswordField();
 		passwordField.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		passwordField.setBounds(161, 110, 152, 22);
-		panel.add(passwordField);
 
-		JLabel lblprompt = new JLabel("Enter username and password");
+		JLabel lblprompt = new JLabel("Enter username and password", SwingConstants.CENTER);
 		lblprompt.setFont(new Font("Sylfaen", Font.PLAIN, 14));
 		lblprompt.setBounds(71, 22, 250, 34);
-		panel.add(lblprompt);
+
+		this.add(lblprompt,BorderLayout.NORTH);
+		this.add(lblUsername,BorderLayout.CENTER);
+		this.add(usernameField,BorderLayout.CENTER);
+		this.add(lblPassword,BorderLayout.CENTER);
+		this.add(passwordField,BorderLayout.CENTER);
+		this.add(new JPanel(),BorderLayout.CENTER);
 
 		JButton btnlogin = new JButton("Log in");
 		btnlogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String Username=textFieldUN.getText();
+				String Username=usernameField.getText();
 				String Password=passwordField.getText();
 				try{
 					command.login(Username, Password);
 					panel.removeAll();
-					JLabel lblNewLabel = new JLabel("Username: "+Username);
-					lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
-					lblNewLabel.setBounds(71, 67, 153, 27);
-					panel.add(lblNewLabel);
-					JLabel lblprompt1 = new JLabel("Log in successfully");
+					JLabel lblUser = new JLabel(Username, SwingConstants.CENTER);
+					lblUser.setFont(new Font("Tahoma", Font.PLAIN, 16));
+					lblUser.setBounds(71, 67, 153, 27);
+					panel.add(lblUser, BorderLayout.NORTH);
+					JLabel lblprompt1 = new JLabel("Log in successfully", SwingConstants.CENTER);
 					lblprompt1.setFont(new Font("Sylfaen", Font.PLAIN, 14));
 					lblprompt1.setBounds(119, 22, 223, 34);
-					panel.add(lblprompt1);
+					panel.add(lblprompt1, BorderLayout.CENTER);
 
 					JButton btnlogout = new JButton("Log out");
 					btnlogout.addActionListener(new ActionListener() {
@@ -98,11 +103,9 @@ public class login {
 					btnlogout.setForeground(Color.BLUE);
 					btnlogout.setFont(new Font("Tahoma", Font.PLAIN, 16));
 					btnlogout.setBounds(161, 176, 153, 27);
-					panel.add(btnlogout);
+					panel.add(btnlogout, BorderLayout.SOUTH);
 					panel.repaint();
-					//panel.add(new test());
 					panel.validate();
-					//panel.add(ui);
 					ui.refreshMyEvents();
 				}catch(ElementNotFoundException elem){
 					lblprompt.setText("Unrecognized username or password O.o? ");
@@ -115,12 +118,7 @@ public class login {
 		btnlogin.setForeground(Color.BLUE);
 		btnlogin.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnlogin.setBounds(161, 176, 153, 27);
-		panel.add(btnlogin);
-	}
-
-	public JPanel returnPanel(){
-		initialize();
-		return panel;
+		this.add(btnlogin, BorderLayout.SOUTH);
 	}
 
 }
