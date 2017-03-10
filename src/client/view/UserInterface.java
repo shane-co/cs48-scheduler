@@ -1,5 +1,5 @@
 package client.view;
-
+import client.app.obj.*;
 import client.commander.BGCommander;
 import client.view.*;
 
@@ -58,7 +58,7 @@ public class UserInterface {
 		JSplitPane panelMyEventsBoth = new JSplitPane(JSplitPane.VERTICAL_SPLIT, panelMyEventsTop, panelMyEventsBottom);
 		panelMyEventsBoth.setResizeWeight(0.5);
 		paneLeft.addTab("My Events", panelMyEventsBoth);
-		paneLeft.addTab("My Schedules", new ScheduleDisplay());
+		paneLeft.addTab("My Schedules", new ScheduleDisplay(new Schedule(new ArrayList<ScheduleEvent>(), "testing", 1,1 )));
 		paneLeft.addTab("My Hosted Events", new JPanel());
 		paneLeft.addTab("My Organizations", new JPanel());
 

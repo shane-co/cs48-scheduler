@@ -168,10 +168,7 @@ public class Client{
 	}
 
 
-    /**
-    *Function to retrieve ArrayList of the currUser's myEvents.
-    * @return ArrayList<ScheduleEvent>
-    */
+    //currUser accessor functions
     public ArrayList<ScheduleEvent> getUserEvents() throws UserNotFoundException{
         if(currUser!=null)return currUser.getMyEvents();
         else throw new UserNotFoundException();
@@ -180,6 +177,16 @@ public class Client{
     public ArrayList<Schedule> getUserSchedules() throws UserNotFoundException{
 	 if(currUser != null) return currUser.getMySchedules();
 	 else throw new UserNotFoundException();
+    }
+
+    public ArrayList<DatabaseConnection> getUserOrgs() throws UserNotFoundException{
+        if(currUser != null) return currUser.getMyOrgs();
+        else throw new UserNotFoundException();
+    }
+
+    public ArrayList<ScheduleEvent> getUserHosted() throws UserNotFoundException{
+        if(currUser!=null) return currUser.getMyHostedEvents();
+        else throw new UserNotFoundException();
     }
 
     public String getUserNextAvailableSchedID() throws UserNotFoundException{
@@ -193,7 +200,7 @@ public class Client{
     public void exitApp() throws TransformerException{
         local.writeToFile();
     }
-    //----------------------------SERVER FUNCTIONALITY---------------------------------------------
+    //----------------------------SERVER/CLIENT FUNCTIONALITY---------------------------------------------
     /**
     *Function to set Client public and listen for requests
     */
@@ -222,29 +229,16 @@ public class Client{
             }
         }
 
-        public void parseRequest(String in){ //requests come in the form ORGNAME;%COMMAND;ARG COMMAND={get,search} ARG={filter:}
+        public void parseRequest(String orgName){ //requests come in the form ORGNAME which is equivalent to DatabaseConnection.id and the user being queried
             try{
                 DataOutputStream dos = new DataOutputStream(s.getOutputStream());
-                ArrayList<String> req = new ArrayList<String>(Arrays.asList(in.split(";"))); //split request into parseable list.
-                ListIterator iter = req.listIterator();
-                String result;
-                String orgName = (String)iter.next(); //get the name of the organization hosted in local to query.
-                String r = (String)iter.next();
-                switch(r){
-                    case "%get": //returns all events from orgName
-                        try{
-                            result = local.outputSearchResultString(orgName, "");
-                            dos.writeUTF(result);
-                        }catch(UserNotFoundException e){dos.writeUTF("USER NOT FOUND");}
-                        break;
-                    case "%search": //applies search filters.
-                        try{
-                            result = local.outputSearchResultString(orgName, (String)iter.next());
-                            dos.writeUTF(result);
-                        }catch(Exception e){dos.writeUTF("USER NOT FOUND");}
-                        break;
+                User queried = new User(local.findUser("user",orgName));
+                String result = "";
+                for(ScheduleEvent h : queried.getMyHostedEvents()){
+                    result+=h.toString()+"$";
                 }
-            } catch (Exception e){e.printStackTrace();}
+            } catch (ElementNotFoundException e){}
+            catch (IOException i){}
         }
 
     }

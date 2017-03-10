@@ -33,6 +33,9 @@ public class TimeBlock extends ScheduleObject{
         TimeBlock other = (TimeBlock) o;
         return (other.getDay()==day && other.getStart()==start);
     }
+    @Override public String toString(){
+        return day+","+start;
+    }
     //ScheduleObject Methods
     public Element record(Document doc){
         return super.record(this,doc); //inherited from Superclass

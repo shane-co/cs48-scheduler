@@ -54,6 +54,20 @@ public class ScheduleEvent extends ScheduleObject{
         ScheduleEvent other = (ScheduleEvent) o;
         return other.get_ID().equals(id);
     }
+
+    @Override public String toString(){
+        String durationString = "";
+        String dependencyString = "";
+        for(TimeBlock t: duration){
+            durationString+= t.toString()+"|";
+        }
+        for(Dependencies d: deps){
+            dependencyString+=d.toString();
+        }
+        String result = "id:"+id+";description:"+description+";duration:"+durationString+";dependencies:"+dependencyString;
+        //id:JARED;description:SOMETEXT;duration:((0-7),(0-2400)|)*;dependencies:?
+        return result;
+    }
     //ScheduleObject methods
     public Element record(Document doc){
         return super.record(this,doc); //inherited by Superclass

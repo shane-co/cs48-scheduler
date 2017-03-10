@@ -59,11 +59,15 @@ public class BGCommander{
     }
 
     public ArrayList<ScheduleEvent> getHosted() throws UserNotFoundException{
-        return new ArrayList<ScheduleEvent>();
+        return client.getUserHosted();
     }
     //Function to get a list of schedules
     public ArrayList<Schedule> getSchedules() throws UserNotFoundException{
 	 return client.getUserSchedules();
+    }
+
+    public ArrayList<DatabaseConnection> getOrgs() throws UserNotFoundException{
+        return client.getUserOrgs();
     }
 
     //Function to add a schdule to array

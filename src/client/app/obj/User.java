@@ -30,6 +30,13 @@ public class User extends ScheduleObject{
         myEvents = new ArrayList<ScheduleEvent>();
         myOrgs = new ArrayList<DatabaseConnection>();
     }
+    public User(Element e){
+        mySchedules = new ArrayList<Schedule>();
+        myHostedEvents = new ArrayList<ScheduleEvent>();
+        myEvents = new ArrayList<ScheduleEvent>();
+        myOrgs = new ArrayList<DatabaseConnection>();
+        load(e);
+    }
   //Functions to add to instance variables;
     public void setUsername(String s){username=s;}
     public void setPassword(String s){password=s;}
