@@ -10,7 +10,7 @@ public class RunApp{
     private static boolean end;
     public static void main(String[] args){
         if(args.length == 0){
-            UserInterface main = new UserInterface();
+            UserInterface main = UserInterface.getUserInterface();
             main.launch();
         }
         else if(args[0].equals("--no-ui")){

@@ -106,12 +106,12 @@ public class login extends JPanel{
 					panel.add(btnlogout, BorderLayout.SOUTH);
 					panel.repaint();
 					panel.validate();
-					ui.refreshMyEvents();
+					ui.refreshDisplay();
 				}catch(ElementNotFoundException elem){
-					lblprompt.setText("Unrecognized username or password O.o? ");
+					lblprompt.setText(elem.getMsg());
 				}
 				catch(UserLoggedInException uex){
-					System.out.println( uex.getMsg());
+					lblprompt.setText( uex.getMsg());
 				}
 			}
 		});

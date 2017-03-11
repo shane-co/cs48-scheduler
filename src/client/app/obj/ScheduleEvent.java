@@ -83,7 +83,6 @@ public class ScheduleEvent extends ScheduleObject{
                 dpnd= (Element)dpnd.getNextSibling();
             }
             Element drtn = (Element)depelem.getNextSibling().getFirstChild();
-            System.out.println("here");
             while(drtn!=null){
                  duration.add(new TimeBlock(drtn));
                  drtn=(Element)drtn.getNextSibling();

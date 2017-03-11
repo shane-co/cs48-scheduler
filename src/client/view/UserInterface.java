@@ -17,6 +17,8 @@ public class UserInterface {
 	private DisplayScheduleDisplay displayScheduleDisplay;
 	private DisplayHostedEvents displayHostedEvents;
 	private DisplayMyOrganizations displayMyOrganizations;
+	private static UserInterface ui;
+
 
 	public BGCommander command(){return commander;}
   /**
@@ -31,7 +33,13 @@ public class UserInterface {
 		}
 	}
 
-	public UserInterface() {
+	public static UserInterface getUserInterface(){
+		if(ui==null){
+			ui = new UserInterface();
+		}
+		return ui;
+	}
+	private UserInterface() {
 		initialize();
 	}
 
@@ -67,13 +75,12 @@ public class UserInterface {
 		paneRight.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		paneLeft.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		splitPaneLR.setOneTouchExpandable(true);
+		splitPaneLR.setResizeWeight(0.6);
 
-		splitPaneLR.setResizeWeight(0.75);
 		frame.getContentPane().add(splitPaneLR);
 	}
 
-	public void refreshMyEvents(){
-
+	public void refreshDisplay(){
 		displayMyEvents.refresh();
 		frame.repaint();
 	}

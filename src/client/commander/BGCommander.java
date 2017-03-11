@@ -20,6 +20,7 @@ public class BGCommander{
     //instance variables
     private Client client;
     private ScheduleGenerator gen;
+    private ArrayList<ScheduleEvent> remoteList;
     private static BGCommander command;
 
     /*
@@ -54,8 +55,12 @@ public class BGCommander{
     }
 
     //Function to get a list of ScheduleEvents objects from current users return to UserInterface for display
-    public ArrayList<ScheduleEvent> getScheduleEvents() throws UserNotFoundException{
-        return client.getUserEvents();
+    public ArrayList<String> getScheduleEvents() throws UserNotFoundException{
+        ArrayList<String> display = new ArrayList<String>();
+        for(ScheduleEvent e:client.getUserEvents()){
+            display.add(e.get_ID());
+        }
+        return display;
     }
 
     public ArrayList<ScheduleEvent> getHosted() throws UserNotFoundException{
@@ -66,8 +71,12 @@ public class BGCommander{
 	 return client.getUserSchedules();
     }
 
-    public ArrayList<DatabaseConnection> getOrgs() throws UserNotFoundException{
-        return client.getUserOrgs();
+    public ArrayList<String> getOrgs() throws UserNotFoundException{
+        ArrayList<String> display = new ArrayList<String>();
+        for(DatabaseConnection o:client.getUserOrgs()){
+            display.add(o.getID());
+        }
+        return display;
     }
 
     //Function to add a schdule to array
@@ -135,13 +144,9 @@ public class BGCommander{
     * @throws ElementNotFoundException
     * @throws UserNotFoundException
     */
-    public void subscribeEvent(String id, String day, String starthr, String endhr, String desc)throws FormatException,ElementNotFoundException{
-        int d = Integer.parseInt(day); int s = Integer.parseInt(starthr); int e =Integer.parseInt(endhr);
-        if(d>7||d<1)throw new FormatException("day");
-        else if(s>24||s<0) throw new FormatException("start");
-        else if(e>24||e<0) throw new FormatException("end");
+    public void subscribeEvent(String id)throws FormatException,ElementNotFoundException{
         ScheduleEvent event = new ScheduleEvent(new ArrayList<Dependencies>(), new ArrayList<TimeBlock>(), "", id);
-        client.subscribe(event);
+        if(remoteList.contains(event))client.subscribe(remoteList.get(remoteList.indexOf(event)));
     }
 
     /**

@@ -1,7 +1,11 @@
 package client.view;
 import client.commander.BGCommander;
-import client.app.obj.*;
 import client.app.exceptions.*;
+import client.view.listeners.AddButtonListener;
+import client.view.listeners.DelButtonListener;
+//import client.view.listeners.InfoListener;
+//import client.view.listeners.*;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -12,6 +16,7 @@ import java.util.ArrayList;
 
 public class DisplayMyEvents extends JSplitPane{
 	private BGCommander commander;
+	//display panes
 	private JSplitPane leftPanel;
 	private JPanel leftAdditionalInfoPanel;
 	private JPanel myEventsListPanel;
@@ -19,52 +24,40 @@ public class DisplayMyEvents extends JSplitPane{
 	private JPanel rightAdditionalInfoPanel;
 	private JPanel availableEventsListPanel;
 	private JPanel upperRightPanel;
+	//mutable content
+	private JList myEventsList;
+	private JList availableEventsList;
+	private JTextField leftAddInfoTxtFld;
+	private JTextField rightAddInfoTxtFld;
+	private JComboBox availableOrgs;
 
+	//Constructor to assemble all the display panes
 	public DisplayMyEvents() {
-		initialize();
-	}
-
-	/**
-	 * Initialize the contents of the panel.
-	 */
-	private void initialize() {
 		commander = BGCommander.getBGCommander();
+		initialize();
 
 		//makes myEventsListPanel
 		myEventsListPanel = new JPanel();
-		myEventsListPanel.setBounds(100, 100, 500, 300);
-		myEventsListPanel.setLayout(new BorderLayout(0, 0));
-
-		JTextPane myEventsTxtPn = new JTextPane();
-		myEventsTxtPn.setText("My Events");
-		myEventsTxtPn.setEditable(false);
-		myEventsListPanel.add(myEventsTxtPn, BorderLayout.NORTH);
-
-		String[] listOfEvents = {"hey", "hello", "blaugh", "maroon"};
-		JList myEventsList = new JList(listOfEvents);
-		myEventsList.addListSelectionListener(new ListSelectionListener(){
-    		public void valueChanged(ListSelectionEvent event) {
-
-    		}
-		});
-
-		JScrollPane scroll = new JScrollPane(myEventsList);
+			myEventsListPanel.setBounds(100, 100, 500, 300);
+			myEventsListPanel.setLayout(new BorderLayout(0, 0));
+			JTextPane myEventsTxtPn = new JTextPane();
+			myEventsTxtPn.setText("My Events");
+			myEventsTxtPn.setEditable(false);
+			JScrollPane scroll = new JScrollPane(myEventsList);
 		myEventsListPanel.add(scroll, BorderLayout.CENTER);
+		myEventsListPanel.add(myEventsTxtPn, BorderLayout.NORTH);
 
 		//makes additionalInfoPanel
 		leftAdditionalInfoPanel = new JPanel();
-		leftAdditionalInfoPanel.setBounds(100, 100, 500, 300);
-		leftAdditionalInfoPanel.setLayout(new BorderLayout(0, 0));
-
-		JTextPane leftAddInfoTxtPn = new JTextPane();
-		leftAddInfoTxtPn.setText("Additional Information");
-		leftAddInfoTxtPn.setEditable(false);
+			leftAdditionalInfoPanel.setBounds(100, 100, 500, 300);
+			leftAdditionalInfoPanel.setLayout(new BorderLayout(0, 0));
+			JTextPane leftAddInfoTxtPn = new JTextPane();
+			leftAddInfoTxtPn.setText("Additional Information");
+			leftAddInfoTxtPn.setEditable(false);
+			JButton removeEventsBtn = new JButton("Remove Event");
+			removeEventsBtn.addActionListener(new DelButtonListener(myEventsList));
 		leftAdditionalInfoPanel.add(leftAddInfoTxtPn, BorderLayout.NORTH);
-
-		JTextField leftAddInfoTxtFld = new JTextField();
 		leftAdditionalInfoPanel.add(leftAddInfoTxtFld, BorderLayout.CENTER);
-
-		JButton removeEventsBtn = new JButton("Remove Event");
 		leftAdditionalInfoPanel.add(removeEventsBtn, BorderLayout.SOUTH);
 
 		//makes leftPanel
@@ -73,55 +66,40 @@ public class DisplayMyEvents extends JSplitPane{
 
 		//makes availableEventsListPanel
 		availableEventsListPanel = new JPanel();
-		availableEventsListPanel.setBounds(100, 100, 500, 300);
-		availableEventsListPanel.setLayout(new BorderLayout(0, 0));
-
-		String[] listOfAvailableEvents = {"hey", "hello", "blaugh", "maroon"};
-		//insert try, catch method to obtain events
-		JList availableEventsList = new JList(listOfAvailableEvents);
-		availableEventsList.addListSelectionListener(new ListSelectionListener(){
-    		public void valueChanged(ListSelectionEvent event) {
-    		}
-		});
-		JScrollPane a = new JScrollPane(availableEventsList);
+			availableEventsListPanel.setBounds(100, 100, 500, 300);
+			availableEventsListPanel.setLayout(new BorderLayout(0, 0));
+			JScrollPane a = new JScrollPane(availableEventsList);
 		availableEventsListPanel.add(a, BorderLayout.CENTER);
 
 		//makes upperRightPanel
 		upperRightPanel = new JPanel();
-		upperRightPanel.setBounds(100, 100, 500, 300);
-		upperRightPanel.setLayout(new BorderLayout(0, 0));
-		String[] availableOrgsList;
-		//insert method to fill availableOrgsList with the names of the list
-		JPanel topEventsListPanel = new JPanel();
-		topEventsListPanel.setBounds(100, 100, 500, 300);
-		topEventsListPanel.setLayout(new BorderLayout(0, 0));
-		JTextPane availableEventsTxtPn = new JTextPane();
-		availableEventsTxtPn.setText("Available Events");
-		availableEventsTxtPn.setEditable(false);
-
-		topEventsListPanel.add(availableEventsTxtPn, BorderLayout.NORTH);
-		JComboBox availableOrgs = new JComboBox(/*availableOrgsList*/);
-		topEventsListPanel.add(availableOrgs, BorderLayout.CENTER);
-		JTextPane availableOrgsTxtPn = new JTextPane();
-		availableOrgsTxtPn.setText("Available Orgs.");
-		topEventsListPanel.add(availableOrgsTxtPn, BorderLayout.WEST);
+			upperRightPanel.setBounds(100, 100, 500, 300);
+			upperRightPanel.setLayout(new BorderLayout(0, 0));
+			JPanel topEventsListPanel = new JPanel();
+				topEventsListPanel.setBounds(100, 100, 500, 300);
+				topEventsListPanel.setLayout(new BorderLayout(0, 0));
+				JTextPane availableEventsTxtPn = new JTextPane();
+				availableEventsTxtPn.setText("Available Events");
+				availableEventsTxtPn.setEditable(false);
+				JTextPane availableOrgsTxtPn = new JTextPane();
+				availableOrgsTxtPn.setText("Available Orgs.");
+			topEventsListPanel.add(availableEventsTxtPn, BorderLayout.NORTH);
+			topEventsListPanel.add(availableOrgs, BorderLayout.CENTER);
+			topEventsListPanel.add(availableOrgsTxtPn, BorderLayout.WEST);
 		upperRightPanel.add(topEventsListPanel, BorderLayout.NORTH);
 		upperRightPanel.add(availableEventsListPanel, BorderLayout.CENTER);
 
 		//makes rightAdditionalInfoPanel
 		rightAdditionalInfoPanel = new JPanel();
-		rightAdditionalInfoPanel.setBounds(100, 100, 500, 300);
-		rightAdditionalInfoPanel.setLayout(new BorderLayout(0, 0));
-
-		JTextPane rightAddInfoTxtPn = new JTextPane();
-		rightAddInfoTxtPn.setText("Additional Information");
-		rightAddInfoTxtPn.setEditable(false);
+			rightAdditionalInfoPanel.setBounds(100, 100, 500, 300);
+			rightAdditionalInfoPanel.setLayout(new BorderLayout(0, 0));
+			JTextPane rightAddInfoTxtPn = new JTextPane();
+			rightAddInfoTxtPn.setText("Additional Information");
+			rightAddInfoTxtPn.setEditable(false);
+			rightAdditionalInfoPanel.add(rightAddInfoTxtFld, BorderLayout.CENTER);
+			JButton addEventsBtn = new JButton("Add Event");
 		rightAdditionalInfoPanel.add(rightAddInfoTxtPn, BorderLayout.NORTH);
-
-		JTextField rightAddInfoTxtFld = new JTextField();
 		rightAdditionalInfoPanel.add(rightAddInfoTxtFld, BorderLayout.CENTER);
-
-		JButton addEventsBtn = new JButton("Add Event");
 		rightAdditionalInfoPanel.add(addEventsBtn, BorderLayout.SOUTH);
 
 		//makes rightPanel
@@ -134,18 +112,39 @@ public class DisplayMyEvents extends JSplitPane{
 		this.setResizeWeight(.5);
 	}
 
-	//returns a string of the events
-	public static String[] eventFormatting(ArrayList<ScheduleEvent> listEvents){
-		String[] output = new String[listEvents.size()];
-		for(int i =0; i < listEvents.size(); i++){
-			ScheduleEvent e = listEvents.get(i);
-			output[i] = e.get_ID();
-		}
-		return output;
+	/**
+	 * Initialize the mutable contents of the panel.
+	 */
+	private void initialize() {
+		myEventsList = new JList(new DefaultListModel<String>());
+		leftAddInfoTxtFld = new JTextField();
+		availableOrgs = new JComboBox(new DefaultComboBoxModel());
+		availableEventsList = new JList(new DefaultListModel());
+		rightAddInfoTxtFld = new JTextField();
+
+		//myEventsList.addListSelectionListener();
+		//availableEventsList.addListSelectionListener();
+
+
 	}
-
 	public void refresh(){
-
+		DefaultListModel evmodel = (DefaultListModel)myEventsList.getModel();
+		DefaultComboBoxModel orgmodel = new DefaultComboBoxModel();
+		try{
+			ArrayList<String> orglist = commander.getScheduleEvents();
+			//add new ScheduleEvents
+			for(String ev:orglist){
+				if(!evmodel.contains(ev))evmodel.addElement(ev);
+			}
+			//delete old ScheduleEvents
+			for(String oldev:(String[])evmodel.toArray()){
+				if(!orglist.contains(oldev))evmodel.removeElement(oldev);
+			}
+			for(String org:commander.getOrgs()){
+				orgmodel.addElement(org);
+				availableOrgs.setModel(orgmodel);
+			}
+		}catch(UserNotFoundException e){}
 	}
 
 }
