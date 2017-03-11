@@ -3,8 +3,8 @@ import client.commander.BGCommander;
 import client.app.exceptions.*;
 import client.view.listeners.AddButtonListener;
 import client.view.listeners.DelButtonListener;
+import client.view.listeners.OrgSelectionListener;
 //import client.view.listeners.InfoListener;
-//import client.view.listeners.*;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -122,6 +122,7 @@ public class DisplayMyEvents extends JSplitPane{
 		availableEventsList = new JList(new DefaultListModel());
 		rightAddInfoTxtFld = new JTextField();
 
+		availableOrgs.addActionListener(new OrgSelectionListener(availableOrgs,availableEventsList.getModel()));
 		//myEventsList.addListSelectionListener();
 		//availableEventsList.addListSelectionListener();
 
@@ -134,7 +135,6 @@ public class DisplayMyEvents extends JSplitPane{
 			ArrayList<String> orglist = commander.getScheduleEvents();
 			//add new ScheduleEvents
 			for(String ev:orglist){
-				System.out.println(ev);
 				if(!evmodel.contains(ev))evmodel.addElement(ev);
 			}
 			/*delete old ScheduleEvents

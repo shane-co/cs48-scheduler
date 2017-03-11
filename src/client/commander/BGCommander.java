@@ -58,7 +58,6 @@ public class BGCommander{
     public ArrayList<String> getScheduleEvents() throws UserNotFoundException{
         ArrayList<String> display = new ArrayList<String>();
         for(ScheduleEvent e:client.getUserEvents()){
-            System.out.println(e.get_ID());
             display.add(e.get_ID());
         }
         return display;
@@ -124,7 +123,7 @@ public class BGCommander{
     public void logout(){
         try{
             client.logout();
-        }catch(TransformerException t){System.out.println("Couldn't write to File");}
+        }catch(TransformerException t){.out.println("Couldn't write to File");}
     }
     /**
     *Function to add a User to the application.
