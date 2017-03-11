@@ -13,9 +13,11 @@ import javax.swing.table.DefaultTableModel;
 public class UserInterface {
 	private JFrame frame;
 	private BGCommander commander;
-	private DisplayMyEvents myEventsDisplay;
-	private DisplayAddEvent addEventDisplay;
-	private DisplayRemoveEvent removeEventDisplay;
+	private DisplayMyEvents displayMyEvents;
+	private DisplayScheduleDisplay displayScheduleDisplay;
+	private DisplayHostedEvents displayHostedEvents;
+	private DisplayMyOrganizations displayMyOrganizations;
+
 	public BGCommander command(){return commander;}
   /**
 	 * Launch method.
@@ -47,20 +49,14 @@ public class UserInterface {
 		//LEFT PANE OF MAIN UI
 		JTabbedPane paneLeft = new JTabbedPane(JTabbedPane.TOP);
 
-		myEventsDisplay = new DisplayMyEvents();
-		JPanel panelMyEventsTop = myEventsDisplay.returnFinalPanel();
-		removeEventDisplay = new DisplayRemoveEvent(this);
-		JPanel panelMyEventsBottomRight = removeEventDisplay.returnFinalPanel();
-		addEventDisplay = new DisplayAddEvent(this);
-		JSplitPane panelMyEventsBottomLeft = addEventDisplay.returnPanel();
-		JSplitPane panelMyEventsBottom = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panelMyEventsBottomLeft, panelMyEventsBottomRight);
-		panelMyEventsBottom.setResizeWeight(0.5);
-		JSplitPane panelMyEventsBoth = new JSplitPane(JSplitPane.VERTICAL_SPLIT, panelMyEventsTop, panelMyEventsBottom);
-		panelMyEventsBoth.setResizeWeight(0.5);
-		paneLeft.addTab("My Events", panelMyEventsBoth);
-		paneLeft.addTab("My Schedules", new ScheduleDisplay(new Schedule(new ArrayList<ScheduleEvent>(), "testing", 1,1 )));
-		paneLeft.addTab("My Hosted Events", new JPanel());
-		paneLeft.addTab("My Organizations", new JPanel());
+		displayMyEvents = new DisplayMyEvents();
+		paneLeft.addTab("My Events", displayMyEvents);
+		displayScheduleDisplay = new DisplayScheduleDisplay();
+		paneLeft.addTab("My Schedules", displayScheduleDisplay);
+		displayHostedEvents = new DisplayHostedEvents();
+		paneLeft.addTab("My Hosted Events", displayHostedEvents);
+		displayMyOrganizations = new DisplayMyOrganizations();
+		paneLeft.addTab("My Organizations", displayMyOrganizations);
 
 		//RIGHT PANE OF MAIN UI
 		JTabbedPane paneRight = new JTabbedPane(JTabbedPane.TOP);
@@ -77,8 +73,8 @@ public class UserInterface {
 	}
 
 	public void refreshMyEvents(){
-		myEventsDisplay.refresh();
-		removeEventDisplay.refresh();
+
+		displayMyEvents.refresh();
 		frame.repaint();
 	}
 }

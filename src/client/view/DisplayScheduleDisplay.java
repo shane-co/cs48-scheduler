@@ -11,12 +11,11 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
-public class DisplayScheduleDisplay {
-
-	private JPanel finalPanel;
+public class DisplayScheduleDisplay extends JPanel{
+	
 	private JComboBox comboBox;
 	private BGCommander commander;
-	//private Container container;
+	private final String[] columnNames = {"ID", "DAY", "START DATE", "END DATE"};
 	public DisplayScheduleDisplay() {
 		initialize();
 	}
@@ -25,55 +24,28 @@ public class DisplayScheduleDisplay {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		this.setBounds(100, 100, 500, 300);
+		this.setLayout(new BorderLayout(0, 0));
+		JPanel topPanel = new JPanel();
+		topPanel.setBounds(100, 100, 500, 300);
+		topPanel.setLayout(new BorderLayout(0, 0));
+		JTextPane chooseSchTxtPn = new JTextPane();
+		chooseSchTxtPn.setText("Choose Schedule to Display");
+		topPanel.add(chooseSchTxtPn, BorderLayout.WEST);
 		
-		finalPanel = new JPanel();
-		finalPanel.setBounds(100, 100, 500, 600);
-		finalPanel.setLayout(new BorderLayout(0, 0));
+		comboBox = new JComboBox();
+		topPanel.add(comboBox, BorderLayout.CENTER);
+		this.add(topPanel, BorderLayout.NORTH);
 		
-		JSplitPane splitPane = new JSplitPane();
-		finalPanel.add(splitPane, BorderLayout.NORTH);
-		//ArrayList<Schedule> list = commander.getSchedules();
-		//String[] listNames = new String[list.size()];
-		/*for(int i = 0; i < list.size(); i++ )
-			listNames[i] = list.get(i).getID();
-			*/
-		comboBox = new JComboBox(/*listNames*/);
-		splitPane.setRightComponent(comboBox);
-		//commander.genSchedule();
-		comboBox.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				//int index = comboBox.getSelectedIndex();
-				//ScheduleDisplay a = new ScheduleDisplay(list.get(index));
-				//container = a.returnContainer();
-				JPanel panel = new JPanel(/*container*/);
-				finalPanel.add(panel, BorderLayout.CENTER);
-			}
-		});
+		Object[][] data = {{"blaugh", "a", "b", "c"}};
+		JTable schedule = new JTable(data, columnNames);
+		JScrollPane scroll = new JScrollPane(schedule);
+		this.add(scroll, BorderLayout.CENTER);
 		
-		JTextPane txtpnChooseScheduleTo = new JTextPane();
-		txtpnChooseScheduleTo.setText("Choose Schedule to Display");
-		splitPane.setLeftComponent(txtpnChooseScheduleTo);
-		txtpnChooseScheduleTo.setEditable(false);
+		JButton deleteScheduleBtn = new JButton("Delete Schedule");
+		this.add(deleteScheduleBtn, BorderLayout.SOUTH);
 		
 		
-		JTextPane txtpnChooseScheduleToDelete = new JTextPane();
-		txtpnChooseScheduleToDelete.setText("Choose Schedule to Delete");
-		txtpnChooseScheduleToDelete.setEditable(false);
-		
-		JButton buttonDeleteSchedule = new JButton("Delete Selected Schedule");
-		JSplitPane bottomPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, txtpnChooseScheduleToDelete, buttonDeleteSchedule);
-		buttonDeleteSchedule.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				//comboBox.getSelectedIndex();
-				//commander.deleteSchedule(list.get(i));
-			}
-		});
-		
-		finalPanel.add(bottomPanel, BorderLayout.SOUTH);	
 	}
 	
-	public JPanel returnFinalPanel(){
-		return finalPanel;
-	}
-
 }
