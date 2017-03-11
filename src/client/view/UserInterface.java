@@ -2,6 +2,7 @@ package client.view;
 
 import client.app.obj.ScheduleEvent;
 import client.commander.BGCommander;
+import client.view.*;
 
 import java.util.ArrayList;
 import java.awt.*;
@@ -13,7 +14,10 @@ import javax.swing.table.DefaultTableModel;
 public class UserInterface {
 	private JFrame frame;
 	private BGCommander commander;
-
+	private DisplayMyEvents displayMyEvents;
+	private DisplayScheduleDisplay displayScheduleDisplay;
+	private DisplayHostedEvents displayHostedEvents;
+	private DisplayMyOrganizations displayMyOrganizations;
 	public BGCommander command(){return commander;}
   /**
 	 * Launch method.
@@ -37,54 +41,39 @@ public class UserInterface {
 	private void initialize() {
 		//commander=BGCommander.getBGCommander();
 		frame = new JFrame("Del Planner");
-		frame.setBounds(100, 100, 1000, 600);
+		frame.setBounds(100, 100, 1200, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new GridLayout(1, 3));
 
 
+		//LEFT PANE OF MAIN UI
 		JTabbedPane paneLeft = new JTabbedPane(JTabbedPane.TOP);
 
-		//not completely done implementing
-		/*DisplayScheduleDisplay k = new DisplayScheduleDisplay();
-		JPanel panelScheduleEvents = k.returnFinalPanel();
-		paneLeft.addTab("Schedule Display", panelScheduleEvents);*/
+		displayMyEvents = new DisplayMyEvents();
+		paneLeft.addTab("My Events", displayMyEvents);
+		displayScheduleDisplay = new DisplayScheduleDisplay();
+		paneLeft.addTab("My Schedules", displayScheduleDisplay);
+		displayHostedEvents = new DisplayHostedEvents();
+		paneLeft.addTab("My Hosted Events", displayHostedEvents);
+		displayMyOrganizations = new DisplayMyOrganizations();
+		paneLeft.addTab("My Organizations", displayMyOrganizations);
 
-		DisplayMyEvents j = new DisplayMyEvents();
-		JSplitPane panelMyEventsDisplay = myEventsDisplay.returnFinalPanel();
-		/*JPanel panelMyEventsTop = j.returnFinalPanel();
-		DisplayRemoveEvent a = new DisplayRemoveEvent();
-		JPanel panelMyEventsBottomRight = a.returnFinalPanel();
-		DisplayAddEvent b = new DisplayAddEvent();
-		JSplitPane panelMyEventsBottomLeft = b.returnPanel();
-		JSplitPane panelMyEventsBottom = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panelMyEventsBottomLeft, panelMyEventsBottomRight);
-		panelMyEventsBottom.setResizeWeight(0.5);
-		JSplitPane panelMyEventsBoth = new JSplitPane(JSplitPane.VERTICAL_SPLIT, panelMyEventsTop, panelMyEventsBottom);
-		panelMyEventsBoth.setResizeWeight(0.5);*/
-		paneLeft.addTab("My Events", panelMyEventsDisplay);
-
-		//not completely done implementing
-		/*JPanel panelGenerateSchedules = new JPanel();
-		paneLeft.addTab("Generate Schedules", panelGenerateSchedules);*/
-
-
+		//RIGHT PANE OF MAIN UI
 		JTabbedPane paneRight = new JTabbedPane(JTabbedPane.TOP);
+
+		paneRight.addTab("Login",new login(this));
 		JSplitPane splitPaneLR = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, paneLeft, paneRight);
-
-		//not completely done implementing
-		/*displaySearchEvent c = new displaySearchEvent();
-		JSplitPane panel3 = c.returnFinalPanel();
-		paneRight.addTab("Search for Event", panel3);*/
-
-		/*JPanel panelGenerateSchedules2 = new JPanel();
-		paneRight.addTab("Generate Schedules", panelGenerateSchedules2);*/
 
 		paneRight.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		paneLeft.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		splitPaneLR.setOneTouchExpandable(true);
 
-		splitPaneLR.setResizeWeight(0.5);
+		splitPaneLR.setResizeWeight(0.75);
 		frame.getContentPane().add(splitPaneLR);
 	}
 
+	public void refreshMyEvents(){
+		displayMyEvents.refresh();
+		frame.repaint();
+	}
 }
-
