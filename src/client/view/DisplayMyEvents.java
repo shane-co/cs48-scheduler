@@ -55,10 +55,10 @@ public class DisplayMyEvents {
 		Object[][] output = new String[listEvents.size()][4];
 		for(int i =0; i < listEvents.size(); i++){
 			ScheduleEvent e = listEvents.get(i);
-			output[i][0] = (String)e.get_ID();
-			output[i][1] = Integer.toString(e.what_day());
-			output[i][2] = Integer.toString(e.when_to_start());
-			output[i][3] = Integer.toString(e.when_to_end());
+			//output[i][0] = (String)e.get_ID();
+			//output[i][1] = Integer.toString(e.what_day());
+			//output[i][2] = Integer.toString(e.when_to_start());
+			//output[i][3] = Integer.toString(e.when_to_end());
 		}
 		return output;
 	}

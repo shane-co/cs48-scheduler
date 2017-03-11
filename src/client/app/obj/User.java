@@ -30,6 +30,13 @@ public class User extends ScheduleObject{
         myEvents = new ArrayList<ScheduleEvent>();
         myOrgs = new ArrayList<DatabaseConnection>();
     }
+    public User(Element e){
+        mySchedules = new ArrayList<Schedule>();
+        myHostedEvents = new ArrayList<ScheduleEvent>();
+        myEvents = new ArrayList<ScheduleEvent>();
+        myOrgs = new ArrayList<DatabaseConnection>();
+        load(e);
+    }
   //Functions to add to instance variables;
     public void setUsername(String s){username=s;}
     public void setPassword(String s){password=s;}
@@ -63,6 +70,13 @@ public class User extends ScheduleObject{
 
     //Accessor functions
     public String getPassword(){return password;}
+    public String nextSchedID(){
+        if(mySchedules.size()==0)return "1";
+        else{
+            Schedule lastSched = mySchedules.get(mySchedules.size()-1);
+            return Integer.toString(Integer.parseInt(lastSched.getID())+1);
+        }
+    }
     public ArrayList<Schedule> getMySchedules(){return mySchedules;}
     public ArrayList<ScheduleEvent> getMyEvents(){return myEvents;}
     public ArrayList<ScheduleEvent> getMyHostedEvents(){return myHostedEvents;}
@@ -87,13 +101,13 @@ public class User extends ScheduleObject{
             mySchedules=new ArrayList<Schedule>();
             myOrgs= new ArrayList<DatabaseConnection>();
             Element field = (Element)root.getFirstChild();
-            do{
+            while(field!=null){
                 //process entries in a field
                 loadArrayList(field,field.getNodeName());
                 System.out.println("loaded: "+field);
                 //get next field.
                 field=(Element)field.getNextSibling();
-            }while(field!=null);
+            }
         }
     }
     private void loadArrayList(Element field,String tag){ //helper function to load series of DOM Elements

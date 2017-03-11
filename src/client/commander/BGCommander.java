@@ -47,9 +47,10 @@ public class BGCommander{
     *Client to get myEvents from the current User
     *@return ArrayList containing all Schedule objects obtained by Events subscribed to by the current User
     */
-    public ArrayList<Schedule> genSchedule() throws UserNotFoundException{
+    public Schedule genSchedule(int month, int day) throws UserNotFoundException{
         gen = new ScheduleGenerator(client.getUserEvents());
-        return gen.getSchedules();
+        String id = client.getUserNextAvailableSchedID();
+        return gen.getSchedule(id, month, day);
     }
 
     //Function to get a list of ScheduleEvents objects from current users return to UserInterface for display
@@ -57,9 +58,16 @@ public class BGCommander{
         return client.getUserEvents();
     }
 
+    public ArrayList<ScheduleEvent> getHosted() throws UserNotFoundException{
+        return client.getUserHosted();
+    }
     //Function to get a list of schedules
     public ArrayList<Schedule> getSchedules() throws UserNotFoundException{
 	 return client.getUserSchedules();
+    }
+
+    public ArrayList<DatabaseConnection> getOrgs() throws UserNotFoundException{
+        return client.getUserOrgs();
     }
 
     //Function to add a schdule to array
@@ -83,6 +91,7 @@ public class BGCommander{
     	//String input = String.format("%s;%get", orgName);
     	//client.parseRequest(input);
         return new ArrayList<ScheduleEvent>();
+        //remoteApplication.retrieveAllHostedEvents();
     }
 
     /**
@@ -95,6 +104,14 @@ public class BGCommander{
             client.setCurrUser(username,password);
     }
 
+    /**
+    *Function to logout the currentUser in Client and set currentUser to null
+    */
+    public void logout(){
+        try{
+            client.logout();
+        }catch(TransformerException t){System.out.println("Couldn't write to File");}
+    }
     /**
     *Function to add a User to the application.
     *@param uname String representing the User's username
@@ -123,7 +140,7 @@ public class BGCommander{
         if(d>7||d<1)throw new FormatException("day");
         else if(s>24||s<0) throw new FormatException("start");
         else if(e>24||e<0) throw new FormatException("end");
-        ScheduleEvent event = new ScheduleEvent(d,s,e, desc, id);
+        ScheduleEvent event = new ScheduleEvent(new ArrayList<Dependencies>(), new ArrayList<TimeBlock>(), "", id);
         client.subscribe(event);
     }
 
@@ -134,11 +151,50 @@ public class BGCommander{
      * @throws UserNotFoundException
     */
     public void unsubscribe(String id){
-       ScheduleEvent event = new ScheduleEvent(0, 0, 0, "", id);
+       ScheduleEvent event = new ScheduleEvent(new ArrayList<Dependencies>(), new ArrayList<TimeBlock>(), "", id);
        try{
            client.unsubscribe(event);
        }catch(ElementNotFoundException e){}
     }
+
+    // command.createHostedEvent()
+    public void createHostedEvent(ArrayList<ArrayList<Integer>> duration, String id, String desc){
+        ArrayList<TimeBlock> evduration = new ArrayList<TimeBlock>();
+        for(int i=0; i<7; i++){
+            for(int j: duration.get(i)){
+                if(j>0){
+                    evduration.add(new TimeBlock(i,j));
+                }
+            }
+        }
+        try{
+            ScheduleEvent newev = new ScheduleEvent(new ArrayList<Dependencies>(), evduration, desc, id);
+            client.createEvent(newev);
+        }catch(ElementNotFoundException e){}
+    }
+
+    public void deleteHostedEvent(String id){
+        ScheduleEvent event = new ScheduleEvent(new ArrayList<Dependencies>(), new ArrayList<TimeBlock>(), "", id);
+        try{
+            client.deleteEvent(event);
+        }catch(ElementNotFoundException e){}
+    }
+
+    public void addOrganization(String id, String ip, String port){
+	int portID = Integer.parseInt(port);
+	DatabaseConnection d = new DatabaseConnection(id,ip,portID);
+	try{
+	    client.registerOrg(d);
+	   }catch(ElementNotFoundException e){}
+    }
+
+    public void deleteOrganization(String id){
+        DatabaseConnection d = new DatabaseConnection(id,"",0);
+	try{
+	    client.forgetOrg(d);
+	   }catch(ElementNotFoundException e){}
+    }
+
 
     /**
     *Function to exit the application cleanly. Tells Client to exit application and write application state to file.

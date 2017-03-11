@@ -18,47 +18,34 @@ import org.w3c.dom.Document;
 public class ScheduleEvent extends ScheduleObject{
 
     private ArrayList<Dependencies> deps;
-    private int day;
-    private int start;
-    private int end;
+    private ArrayList<TimeBlock> duration;
     private String description;
     private String id;
-    public ScheduleEvent(ArrayList<Dependencies> dep,int d,int s, int e, String dp,String i)
+    public ScheduleEvent(ArrayList<Dependencies> dep, ArrayList<TimeBlock> dur, String dp,String i)
     {
     	deps=dep;
-    	day=d;
-    	start=s;
-    	end=e;
+    	duration=dur;
     	description=dp;
         id=i;
     }
 
-    public ScheduleEvent(int d,int s, int e, String dp,String i)
-    {
-        deps=new ArrayList<Dependencies>();
-    	day=d;
-    	start=s;
-    	end=e;
-    	description=dp;
-        id=i;
-    }
     public ScheduleEvent(Element root){
+        deps = new ArrayList<Dependencies>();
+        duration = new ArrayList<TimeBlock>();
         load(root);
     }
 
-    public int what_day() {return day;}
-    public int when_to_start() {return start; }
-    public int when_to_end() {return end; }
-    public int duration() {return start-end;}
+    public ArrayList<TimeBlock> duration(){return duration;}
     public String get_descpt() {return description; }
     public String get_ID() {return id; }
-    public void set_day(int d){day=d;}
-    public void set_start(int s) {start=s; }
-    public void set_to_end(int e) { end=e; }
-    public void set_descpt(String dp) { description=dp; }
-    public void set_id(String i){id=i;}
-    public int num_deps(){return deps.size();}
-    public Dependencies getDependency(int index){return deps.get(index);}
+    public ArrayList<Dependencies> getDependencies(){return deps;}
+
+    public boolean conflicts(ScheduleEvent compare){
+        for(TimeBlock t : compare.duration()){
+            if(duration.contains(t)) return true;
+        }
+        return false;
+    }
 
     @Override public boolean equals(Object o){
         if(this==o)return true;
@@ -67,6 +54,20 @@ public class ScheduleEvent extends ScheduleObject{
         ScheduleEvent other = (ScheduleEvent) o;
         return other.get_ID().equals(id);
     }
+
+    @Override public String toString(){
+        String durationString = "";
+        String dependencyString = "";
+        for(TimeBlock t: duration){
+            durationString+= t.toString()+"|";
+        }
+        for(Dependencies d: deps){
+            dependencyString+=d.toString();
+        }
+        String result = "id:"+id+";description:"+description+";duration:"+durationString+";dependencies:"+dependencyString;
+        //id:JARED;description:SOMETEXT;duration:((0-7),(0-2400)|)*;dependencies:?
+        return result;
+    }
     //ScheduleObject methods
     public Element record(Document doc){
         return super.record(this,doc); //inherited by Superclass
@@ -74,14 +75,18 @@ public class ScheduleEvent extends ScheduleObject{
     public void load(Element root){
         if(root!=null){
             id=root.getAttribute("id");
-            day=Integer.parseInt(root.getAttribute("day"));
-            start=Integer.parseInt(root.getAttribute("start"));
-            end=Integer.parseInt(root.getAttribute("end"));
             description=root.getFirstChild().getTextContent();
-            Element d = (Element)root.getLastChild().getFirstChild();
-            while(d!=null){
-                deps.add(new Dependencies(d));
-                d= (Element)d.getNextSibling();
+            Element depelem = (Element)root.getFirstChild().getNextSibling();
+            Element dpnd = (Element)depelem.getFirstChild();
+            while(dpnd!=null){
+                deps.add(new Dependencies(dpnd));
+                dpnd= (Element)dpnd.getNextSibling();
+            }
+            Element drtn = (Element)depelem.getNextSibling().getFirstChild();
+            System.out.println("here");
+            while(drtn!=null){
+                 duration.add(new TimeBlock(drtn));
+                 drtn=(Element)drtn.getNextSibling();
             }
         }
     }
