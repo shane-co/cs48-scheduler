@@ -22,6 +22,9 @@ public class TimeBlock extends ScheduleObject{
     public TimeBlock(Element e){
         load(e);
     }
+    public TimeBlock(String s){
+        load(s);
+    }
 
     public int getDay(){return day;}
     public int getStart(){return start;}
@@ -45,5 +48,11 @@ public class TimeBlock extends ScheduleObject{
             day=Integer.parseInt(root.getAttribute("day"));
             start=Integer.parseInt(root.getAttribute("start"));
         }
+    }
+
+    public void load(String networkDesc){
+        String[] parts = networkDesc.split(",");
+        day=Integer.parseInt(parts[0]);
+        start=Integer.parseInt(parts[1]);
     }
 }

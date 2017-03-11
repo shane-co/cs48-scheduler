@@ -35,6 +35,12 @@ public class ScheduleEvent extends ScheduleObject{
         load(root);
     }
 
+    public ScheduleEvent(String networkDesc){
+        deps = new ArrayList<Dependencies>();
+        duration = new ArrayList<TimeBlock>();
+        load(networkDesc);
+    }
+
     public ArrayList<TimeBlock> duration(){return duration;}
     public String get_descpt() {return description; }
     public String get_ID() {return id; }
@@ -87,6 +93,27 @@ public class ScheduleEvent extends ScheduleObject{
                  duration.add(new TimeBlock(drtn));
                  drtn=(Element)drtn.getNextSibling();
             }
+        }
+    }
+
+    public void load(String recv){
+        String[] fields = recv.split(";");
+        id=fields[0].split(":")[1];
+        description=fields[1].split(":")[1];
+        loadArray(fields[2]);
+        loadArray(fields[3]);
+    }
+    private void loadArray(String data){
+        String[] parts = data.split(":");
+        switch(parts[0]){
+            case "duration":
+                for(String dur:parts[1].split("|")){
+                    duration.add(new TimeBlock(dur));
+                }
+            break;
+            case "dependencies":
+                //STUB Class Dependencies has no load(String) function and no Dependencies(String) constructor.
+            break;
         }
     }
 }

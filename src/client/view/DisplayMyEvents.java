@@ -134,12 +134,14 @@ public class DisplayMyEvents extends JSplitPane{
 			ArrayList<String> orglist = commander.getScheduleEvents();
 			//add new ScheduleEvents
 			for(String ev:orglist){
+				System.out.println(ev);
 				if(!evmodel.contains(ev))evmodel.addElement(ev);
 			}
-			//delete old ScheduleEvents
-			for(String oldev:(String[])evmodel.toArray()){
-				if(!orglist.contains(oldev))evmodel.removeElement(oldev);
-			}
+			/*delete old ScheduleEvents
+			for(Object oldev:evmodel.toArray()){
+				System.out.println((String)oldev);
+				if(!orglist.contains((String)oldev))evmodel.removeElement(oldev);
+			}*/
 			for(String org:commander.getOrgs()){
 				orgmodel.addElement(org);
 				availableOrgs.setModel(orgmodel);

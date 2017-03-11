@@ -58,6 +58,7 @@ public class BGCommander{
     public ArrayList<String> getScheduleEvents() throws UserNotFoundException{
         ArrayList<String> display = new ArrayList<String>();
         for(ScheduleEvent e:client.getUserEvents()){
+            System.out.println(e.get_ID());
             display.add(e.get_ID());
         }
         return display;
@@ -95,12 +96,16 @@ public class BGCommander{
     *@param -- Lets leave this for the second iteration, for now just return all the events --
     *filters A set of filters to apply when searching for a ScheduleEvent
     */
-    public ArrayList<ScheduleEvent> search(String orgName/*, ArrayList<String> filters*/){
-    	//CALL client parseRequest, still needs implementation of database.outputSearchResultString ignore filter
-    	//String input = String.format("%s;%get", orgName);
-    	//client.parseRequest(input);
-        return new ArrayList<ScheduleEvent>();
-        //remoteApplication.retrieveAllHostedEvents();
+    public ArrayList<String> search(String orgName){
+        ArrayList<String> display = new ArrayList<String>();
+        String resultString = client.sendRequest(orgName);
+        String[] results = resultString.split("%%");
+        for(String s:results){
+            ScheduleEvent e = new ScheduleEvent(s);
+            display.add(s.split(":")[1]);
+            remoteList.add(e);
+        }
+        return display;
     }
 
     /**
@@ -200,6 +205,9 @@ public class BGCommander{
 	   }catch(ElementNotFoundException e){}
     }
 
+
+    public void setNetworkDiscoverable(){client.setPublic();}
+    public void unsetNetworkDiscoverable(){client.setPrivate();}
 
     /**
     *Function to exit the application cleanly. Tells Client to exit application and write application state to file.
