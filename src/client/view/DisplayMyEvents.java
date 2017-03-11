@@ -3,31 +3,25 @@ import client.commander.BGCommander;
 import client.app.obj.*;
 import client.app.exceptions.*;
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class DisplayMyEvents {
 
-	private JPanel topPanel;
-	private JSplitPane finalPanel;
-	private JSplitPane bottomPanel;
-	private JPanel columnPanel;
-	private JPanel bottomRightPanel;
-	private JPanel bottomLeftPanel;
-	private JTable table_1;
-	private JTable table_2;
-	private ArrayList<ScheduleEvent> events_1;
-	private ArrayList<ScheduleEvent> events_2;
+public class DisplayMyEvents extends JSplitPane{
 	private BGCommander commander;
-	private final String[] columnNames = {"ID", "DAY", "START DATE", "END DATE"};
-
-
+	
+	private JSplitPane leftPanel;
+	private JPanel leftAdditionalInfoPanel;
+	private JPanel myEventsListPanel;
+	
+	private JSplitPane rightPanel;
+	private JPanel rightAdditionalInfoPanel;
+	private JPanel availableEventsListPanel;
+	private JPanel upperRightPanel;
+	
 	public DisplayMyEvents() {
 		initialize();
 	}
@@ -37,197 +31,143 @@ public class DisplayMyEvents {
 	 */
 	private void initialize() {
 		commander = BGCommander.getBGCommander();
-		//makes panel and sets up layout of TopPanel
-		topPanel = new JPanel();
-		topPanel.setBounds(100, 100, 500, 300);
-		topPanel.setLayout(new BorderLayout(0, 0));
 		
-		//makes a text pane
-		JTextPane txtpnMyEvents = new JTextPane();
-		txtpnMyEvents.setText("My Events");
-		txtpnMyEvents.setEditable(false);
-		topPanel.add(txtpnMyEvents, BorderLayout.NORTH);
+		//makes myEventsListPanel
+		myEventsListPanel = new JPanel();
+		myEventsListPanel.setBounds(100, 100, 500, 300);
+		myEventsListPanel.setLayout(new BorderLayout(0, 0));
+		
+		JTextPane myEventsTxtPn = new JTextPane();
+		myEventsTxtPn.setText("My Events");
+		myEventsTxtPn.setEditable(false);
+		myEventsListPanel.add(myEventsTxtPn, BorderLayout.NORTH);
 
-		Object[][] data_1={{}};
+		String[] listOfEvents = {"hey", "hello", "blaugh", "maroon"};
 		/*try{
 			ArrayList<ScheduleEvent> events = commander.getScheduleEvents();
-			data_1 = eventFormatting(events);
+			listOfEvents = eventFormatting(events);
 		}catch(ElementNotFoundException e){
-		 	data_1 = eventFormatting(new ArrayList<ScheduleEvent>());
-		}
-		*/
-		DefaultTableModel model_1 = new DefaultTableModel(data_1, columnNames);
-		JTable table_1 = new JTable(model_1);
-		table_1.setEnabled(false);
-		table_1.setRowHeight(30);
-		//ListSelectionModel listSelectionModel = table_1.getSelectionModel();
-        /*table_1.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
-			public void valueChanged(ListSelectionEvent event) {
-				System.out.println(table_1.getValueAt(table_1.getSelectedRow(), 0).toString());
-			}
-		});*/
-		JScrollPane scroll = new JScrollPane(table_1);
-		topPanel.add(scroll, BorderLayout.CENTER);
-		
-		//makes bottom left panel
-		bottomLeftPanel = new JPanel();
-		bottomLeftPanel.setBounds(100, 100, 250, 300);
-		bottomLeftPanel.setLayout(new BorderLayout(0, 0));
-		
-		JTextPane txtpnEventsToAdd = new JTextPane();
-		txtpnEventsToAdd.setText("Events to Add");
-		txtpnEventsToAdd.setEditable(false);
-		bottomLeftPanel.add(txtpnEventsToAdd, BorderLayout.NORTH);
-
-		Object[][] data_2 = {{}};
-		/*try{
-			//replace with method to get another orgs/students events
-			ArrayList<ScheduleEvent> events = commander.getScheduleEvents();
-			data_2 = eventFormatting(events);
-		}catch(ElementNotFoundException e){
-		 	data_2 = eventFormatting(new ArrayList<ScheduleEvent>());
+		 	listOfEvents = eventFormatting(new ArrayList<ScheduleEvent>());
 		}*/
+		JList myEventsList = new JList(listOfEvents);
+		myEventsList.addListSelectionListener(new ListSelectionListener(){
+    		public void valueChanged(ListSelectionEvent event) {
+    			
+    		}
+		});
 		
-		DefaultTableModel model_2 = new DefaultTableModel(data_2, columnNames);
-		JTable table_2 = new JTable(model_2);
-		table_2.setEnabled(false);
-		table_2.setRowHeight(30);
-		JScrollPane scrollBottomLeftTable = new JScrollPane(table_2);
-		bottomLeftPanel.add(scrollBottomLeftTable, BorderLayout.CENTER);
+		JScrollPane scroll = new JScrollPane(myEventsList);
+		myEventsListPanel.add(scroll, BorderLayout.CENTER);
 		
-		//makes bottom right panel
-		bottomRightPanel = new JPanel();
-		JTextPane txtpnAdditionalInfo = new JTextPane();
-		txtpnAdditionalInfo.setText("Additional Info");
-		bottomRightPanel.setBounds(100, 100, 250, 300);
-		bottomRightPanel.setLayout(new BorderLayout(0, 0));
-		bottomRightPanel.add(txtpnAdditionalInfo, BorderLayout.NORTH);
+		//makes additionalInfoPanel
+		leftAdditionalInfoPanel = new JPanel();
+		leftAdditionalInfoPanel.setBounds(100, 100, 500, 300);
+		leftAdditionalInfoPanel.setLayout(new BorderLayout(0, 0));
 		
-		//completes panel
-		bottomPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, bottomLeftPanel, bottomRightPanel);
-		bottomPanel.setBounds(100, 100, 500, 600);
-		bottomPanel.setResizeWeight(0.5);
-		finalPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, topPanel, bottomPanel);
-		finalPanel.setBounds(100, 100, 500, 600);
-		finalPanel.setResizeWeight(0.5);
+		JTextPane leftAddInfoTxtPn = new JTextPane();
+		leftAddInfoTxtPn.setText("Additional Information");
+		leftAddInfoTxtPn.setEditable(false);
+		leftAdditionalInfoPanel.add(leftAddInfoTxtPn, BorderLayout.NORTH);
+		
+		JTextField leftAddInfoTxtFld = new JTextField();
+		leftAdditionalInfoPanel.add(leftAddInfoTxtFld, BorderLayout.CENTER);
+		
+		JButton removeEventsBtn = new JButton("Remove Event");
+		leftAdditionalInfoPanel.add(removeEventsBtn, BorderLayout.SOUTH);
+		
+		//makes leftPanel
+		leftPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, myEventsListPanel, leftAdditionalInfoPanel);
+		leftPanel.setResizeWeight(0.5);
+		
+		//makes availableEventsListPanel
+		availableEventsListPanel = new JPanel();
+		availableEventsListPanel.setBounds(100, 100, 500, 300);
+		availableEventsListPanel.setLayout(new BorderLayout(0, 0));
+		
+		String[] listOfAvailableEvents = {"hey", "hello", "blaugh", "maroon"};
+		//insert try, catch method to obtain events
+		JList availableEventsList = new JList(listOfAvailableEvents);
+		availableEventsList.addListSelectionListener(new ListSelectionListener(){
+    		public void valueChanged(ListSelectionEvent event) {
+    		}
+		});
+		JScrollPane a = new JScrollPane(availableEventsList);
+		availableEventsListPanel.add(a, BorderLayout.CENTER);
+		
+		//makes upperRightPanel
+		upperRightPanel = new JPanel();
+		upperRightPanel.setBounds(100, 100, 500, 300);
+		upperRightPanel.setLayout(new BorderLayout(0, 0));
+		String[] availableOrgsList;
+		//insert method to fill availableOrgsList with the names of the list
+		JPanel topEventsListPanel = new JPanel();
+		topEventsListPanel.setBounds(100, 100, 500, 300);
+		topEventsListPanel.setLayout(new BorderLayout(0, 0));
+		JTextPane availableEventsTxtPn = new JTextPane();
+		availableEventsTxtPn.setText("Available Events");
+		availableEventsTxtPn.setEditable(false);
+
+		topEventsListPanel.add(availableEventsTxtPn, BorderLayout.NORTH);
+		JComboBox availableOrgs = new JComboBox(/*availableOrgsList*/);
+		topEventsListPanel.add(availableOrgs, BorderLayout.CENTER);
+		JTextPane availableOrgsTxtPn = new JTextPane();
+		availableOrgsTxtPn.setText("Available Orgs.");
+		topEventsListPanel.add(availableOrgsTxtPn, BorderLayout.WEST);
+		upperRightPanel.add(topEventsListPanel, BorderLayout.NORTH);
+		upperRightPanel.add(availableEventsListPanel, BorderLayout.CENTER);
+		
+		//makes rightAdditionalInfoPanel
+		rightAdditionalInfoPanel = new JPanel();
+		rightAdditionalInfoPanel.setBounds(100, 100, 500, 300);
+		rightAdditionalInfoPanel.setLayout(new BorderLayout(0, 0));
+		
+		JTextPane rightAddInfoTxtPn = new JTextPane();
+		rightAddInfoTxtPn.setText("Additional Information");
+		rightAddInfoTxtPn.setEditable(false);
+		rightAdditionalInfoPanel.add(rightAddInfoTxtPn, BorderLayout.NORTH);
+		
+		JTextField rightAddInfoTxtFld = new JTextField();
+		rightAdditionalInfoPanel.add(rightAddInfoTxtFld, BorderLayout.CENTER);
+		
+		JButton addEventsBtn = new JButton("Add Event");
+		rightAdditionalInfoPanel.add(addEventsBtn, BorderLayout.SOUTH);
+		
+		//makes rightPanel
+		rightPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, upperRightPanel, rightAdditionalInfoPanel);
+		rightPanel.setResizeWeight(0.5);
+		
+		//makes full panel
+		this.setLeftComponent(leftPanel);
+		this.setRightComponent(rightPanel);
+		this.setResizeWeight(.5);
 	}
 
-	//will help make the information be formatted
-	public static Object[][] eventFormatting(ArrayList<ScheduleEvent> listEvents){
-		Object[][] output = new String[listEvents.size()][4];
+	//returns a string of the events
+	public static String[] eventFormatting(ArrayList<ScheduleEvent> listEvents){
+		String[] output = new String[listEvents.size()];
 		for(int i =0; i < listEvents.size(); i++){
 			ScheduleEvent e = listEvents.get(i);
-			output[i][0] = (String)e.get_ID();
-			output[i][1] = Integer.toString(e.what_day());
-			output[i][2] = Integer.toString(e.when_to_start());
-			output[i][3] = Integer.toString(e.when_to_end());
+			output[i] = e.get_ID();
 		}
 		return output;
 	}
 
 	public void refresh(){
-		finalPanel.removeAll();
-		
-		
-		//makes bottom right panel
-		JTextPane txtpnAdditionalInfo = new JTextPane();
-		txtpnAdditionalInfo.setText("Additional Info");
-		bottomRightPanel.add(txtpnAdditionalInfo, BorderLayout.NORTH);
-		
-		//make top panel
-		
+		/*finalPanel.removeAll();
 		Object[][] data_1;
 		try{
-			ArrayList<ScheduleEvent> events_1 = commander.getScheduleEvents();
-			data_1 = eventFormatting(events_1);
+			ArrayList<ScheduleEvent> events = commander.getScheduleEvents();
+			data_1 = eventFormatting(events);
 		}catch(ElementNotFoundException e){
 		 	data_1 = eventFormatting(new ArrayList<ScheduleEvent>());
 		}
 
-		table_1 = new JTable();
-		table_1.setModel(new OtherModel(data_1, columnNames));
-        /*table_1.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
-			public void valueChanged(ListSelectionEvent event) {
-				bottomRightPanel.removeAll();
-				final int i = table_1.getSelectedRow();
-				JTextField textFieldAdditionalInfo = new JTextField();
-				textFieldAdditionalInfo.setText("/nI.D. : " + events_1.get(i).get_ID() + "/nDay : "
-						+ events_1.get(i).what_day() + "/nStart Time : " + events_1.get(i).when_to_start() + "/nEnd Time : " 
-						+ events_1.get(i).when_to_end() + "/nDescription : " + events_1.get(i).get_descpt());
-				JTextPane txtpnAdditionalInfo = new JTextPane();
-				txtpnAdditionalInfo.setText("Additional Info");
-				bottomRightPanel.add(txtpnAdditionalInfo, BorderLayout.NORTH);
-				bottomRightPanel.add(textFieldAdditionalInfo, BorderLayout.CENTER);
-				JButton removeEventBtn = new JButton("Remove Event");
-				removeEventBtn.addActionListener(new ActionListener(){
-					public void actionPerformed(ActionEvent e){
-						//code to remove events
-					}
-				});
-				bottomRightPanel.add(removeEventBtn, BorderLayout.SOUTH);
-				bottomRightPanel.repaint();
-			}
-		});*/
+		DefaultTableModel model_1 = new DefaultTableModel(data_1, columnNames);
+		JTable table_1 = new JTable(model_1);
+		table_1.setEnabled(false);
 		table_1.setRowHeight(30);
 		JScrollPane scroll = new JScrollPane(table_1);
-		topPanel.add(scroll, BorderLayout.CENTER);
-		JTextPane txtpnMyEvents = new JTextPane();
-		txtpnMyEvents.setText("My Events");
-		txtpnMyEvents.setEditable(false);
-		topPanel.add(txtpnMyEvents, BorderLayout.NORTH);
-		
-		//make bottom left panel
-		Object[][] data_2;
-		try{
-			//replace with command to get events list from an organization
-			ArrayList<ScheduleEvent> events_2 = commander.getScheduleEvents();
-			data_2 = eventFormatting(events_2);
-		}catch(ElementNotFoundException e){
-		 	data_2 = eventFormatting(new ArrayList<ScheduleEvent>());
-		}
-		table_2 = new JTable();
-		table_2.setModel(new OtherModel(data_2, columnNames));
-        /*table_2.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
-			public void valueChanged(ListSelectionEvent event) {
-				bottomRightPanel.removeAll();
-				final int i = table_2.getSelectedRow();
-				JTextField textFieldAdditionalInfo = new JTextField();
-				textFieldAdditionalInfo.setText("/nI.D. : " + events_2.get(i).get_ID() + "/nDay : "
-						+ events_2.get(i).what_day() + "/nStart Time : " + events_2.get(i).when_to_start() + "/nEnd Time : " 
-						+ events_2.get(i).when_to_end() + "/n Description : " + events_2.get(i).get_descpt());
-				JTextPane txtpnAdditionalInfo = new JTextPane();
-				txtpnAdditionalInfo.setText("Additional Info");
-				bottomRightPanel.add(txtpnAdditionalInfo, BorderLayout.NORTH);
-				bottomRightPanel.add(textFieldAdditionalInfo, BorderLayout.CENTER);
-				JButton addEventBtn = new JButton("Add Event");
-				addEventBtn.addActionListener(new ActionListener(){
-					public void actionPerformed(ActionEvent e){
-						//code to remove events
-					}
-				});
-				bottomRightPanel.add(addEventBtn, BorderLayout.SOUTH);
-				bottomRightPanel.repaint();
-			}
-		});*/
-        table_2.setRowHeight(30);
-		JScrollPane scroll_2 = new JScrollPane(table_2);
-		topPanel.add(scroll_2, BorderLayout.CENTER);
-		JTextPane txtpnEventsToAdd = new JTextPane();
-		txtpnEventsToAdd.setText("Events to Add");
-		txtpnEventsToAdd.setEditable(false);
-		bottomLeftPanel.add(txtpnEventsToAdd, BorderLayout.NORTH);
-		
-		
-		//completes the final panel
-		bottomPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, bottomLeftPanel, bottomRightPanel);
-		bottomPanel.setBounds(100, 100, 500, 600);
-		bottomPanel.setResizeWeight(0.5);
-		finalPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, topPanel, bottomPanel);
-		finalPanel.setBounds(100, 100, 500, 600);
-		finalPanel.setResizeWeight(0.5);
-	}
-	public JSplitPane returnFinalPanel(){
-		return finalPanel;
+		finalPanel.add(scroll, BorderLayout.CENTER);*/
 	}
 
 }
