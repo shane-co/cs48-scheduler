@@ -56,13 +56,16 @@ public class DisplayMyEvents extends JSplitPane{
 			leftAddInfoTxtPn.setText("Additional Information");
 			leftAddInfoTxtPn.setEditable(false);
 			JPanel eventActions = new JPanel();
+			eventActions.setLayout(new BorderLayout());
 			JButton genScheduleBtn = new JButton("Generate Schedule");
 			JButton removeEventsBtn = new JButton("Remove Event");
-			//genScheduleBtn.addActionListener(new GenScheduleListener());
+			genScheduleBtn.addActionListener(new GenScheduleListener());
 			removeEventsBtn.addActionListener(new DelButtonListener(myEventsList));
+			eventActions.add(genScheduleBtn,BorderLayout.NORTH);
+			eventActions.add(removeEventsBtn,BorderLayout.SOUTH);
 		leftAdditionalInfoPanel.add(leftAddInfoTxtPn, BorderLayout.NORTH);
 		leftAdditionalInfoPanel.add(leftAddInfoTxtFld, BorderLayout.CENTER);
-		leftAdditionalInfoPanel.add(removeEventsBtn, BorderLayout.SOUTH);
+		leftAdditionalInfoPanel.add(eventActions, BorderLayout.SOUTH);
 
 		//makes leftPanel
 		leftPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, myEventsListPanel, leftAdditionalInfoPanel);
