@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import javax.swing.*;
 
 public class DisplayScheduleDisplay extends JPanel{
-	
+
 	private JComboBox comboBox;
 	private BGCommander commander;
 	private final String[] columnNames = {"ID", "DAY", "START DATE", "END DATE"};
@@ -32,20 +32,22 @@ public class DisplayScheduleDisplay extends JPanel{
 		JTextPane chooseSchTxtPn = new JTextPane();
 		chooseSchTxtPn.setText("Choose Schedule to Display");
 		topPanel.add(chooseSchTxtPn, BorderLayout.WEST);
-		
+
 		comboBox = new JComboBox();
 		topPanel.add(comboBox, BorderLayout.CENTER);
 		this.add(topPanel, BorderLayout.NORTH);
-		
+
 		Object[][] data = {{"blaugh", "a", "b", "c"}};
 		JTable schedule = new JTable(data, columnNames);
 		JScrollPane scroll = new JScrollPane(schedule);
 		this.add(scroll, BorderLayout.CENTER);
-		
+
 		JButton deleteScheduleBtn = new JButton("Delete Schedule");
 		this.add(deleteScheduleBtn, BorderLayout.SOUTH);
-		
-		
+
+
 	}
+
+	public void refresh(){}
 	
 }

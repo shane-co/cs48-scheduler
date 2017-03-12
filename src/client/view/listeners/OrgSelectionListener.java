@@ -23,6 +23,7 @@ public class OrgSelectionListener implements ActionListener{
         for(String ev:available){
             availableOrgsList.addElement(ev);
         }
+        System.out.println("refreshing display");
         UserInterface.getUserInterface().refreshDisplay();
     }
 }

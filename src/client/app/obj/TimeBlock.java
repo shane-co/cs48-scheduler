@@ -51,8 +51,10 @@ public class TimeBlock extends ScheduleObject{
     }
 
     public void load(String networkDesc){
-        String[] parts = networkDesc.split(",");
-        day=Integer.parseInt(parts[0]);
-        start=Integer.parseInt(parts[1]);
+        if(!networkDesc.equals("")){
+            String[] parts = networkDesc.split(",");
+            day=Integer.parseInt(parts[0]);
+            start=Integer.parseInt(parts[1]);
+        }
     }
 }

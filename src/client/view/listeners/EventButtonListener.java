@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public abstract class EventButtonListener implements ActionListener{
-    private JList eventsList;
+    protected JList eventsList;
     public EventButtonListener(JList list){
         eventsList=list;
     }

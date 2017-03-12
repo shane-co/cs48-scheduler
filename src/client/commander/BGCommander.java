@@ -29,6 +29,7 @@ public class BGCommander{
     */
     private BGCommander(){
         client = new Client();
+        remoteList=new ArrayList<ScheduleEvent>();
     }
 
     /**
@@ -98,11 +99,13 @@ public class BGCommander{
     public ArrayList<String> search(String orgName){
         ArrayList<String> display = new ArrayList<String>();
         String resultString = client.sendRequest(orgName);
-        String[] results = resultString.split("%%");
+        String[] results = resultString.split("%");
         for(String s:results){
-            ScheduleEvent e = new ScheduleEvent(s);
-            display.add(s.split(":")[1]);
-            remoteList.add(e);
+            if(!s.equals("")){
+                ScheduleEvent e = new ScheduleEvent(s);
+                display.add(s.split(":")[1].split(";")[0]);
+                remoteList.add(e);
+            }
         }
         return display;
     }
@@ -123,7 +126,7 @@ public class BGCommander{
     public void logout(){
         try{
             client.logout();
-        }catch(TransformerException t){.out.println("Couldn't write to File");}
+        }catch(TransformerException t){System.out.println("Couldn't write to File");}
     }
     /**
     *Function to add a User to the application.

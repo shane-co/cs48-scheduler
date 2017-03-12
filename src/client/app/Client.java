@@ -40,7 +40,7 @@ public class Client{
 		currUser = null;
         try{ss = new ServerSocket(port);}catch(IOException e){e.printStackTrace();}
         local = new Database();
-        pub = false;
+        setPublic();
     }
 
     /**
@@ -257,7 +257,7 @@ public class Client{
                 User queried = new User(local.findUser("user",orgName));
                 String result = "";
                 for(ScheduleEvent h : queried.getMyHostedEvents()){
-                    result+=h.toString()+"%%";
+                    result+=h.toString()+"%";
                 }
                 dos.writeUTF(result);
             } catch (ElementNotFoundException e){

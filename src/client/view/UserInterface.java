@@ -10,9 +10,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
-public class UserInterface {
-	private JFrame frame;
-	private BGCommander commander;
+public class UserInterface extends JFrame{
 	private DisplayMyEvents displayMyEvents;
 	private DisplayScheduleDisplay displayScheduleDisplay;
 	private DisplayHostedEvents displayHostedEvents;
@@ -20,14 +18,13 @@ public class UserInterface {
 	private static UserInterface ui;
 
 
-	public BGCommander command(){return commander;}
   /**
 	 * Launch method.
 	 */
 	public void launch(){
 		try {
 			UserInterface uiWindow = new UserInterface();
-			uiWindow.frame.setVisible(true);
+			this.setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -40,6 +37,7 @@ public class UserInterface {
 		return ui;
 	}
 	private UserInterface() {
+		super("Del Planner");
 		initialize();
 	}
 
@@ -48,10 +46,9 @@ public class UserInterface {
 	 */
 	private void initialize() {
 		//commander=BGCommander.getBGCommander();
-		frame = new JFrame("Del Planner");
-		frame.setBounds(100, 100, 1200, 600);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(new GridLayout(1, 3));
+		this.setBounds(100, 100, 1200, 600);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.getContentPane().setLayout(new GridLayout(1, 3));
 
 
 		//LEFT PANE OF MAIN UI
@@ -77,11 +74,15 @@ public class UserInterface {
 		splitPaneLR.setOneTouchExpandable(true);
 		splitPaneLR.setResizeWeight(0.6);
 
-		frame.getContentPane().add(splitPaneLR);
+		this.getContentPane().add(splitPaneLR);
 	}
 
 	public void refreshDisplay(){
 		displayMyEvents.refresh();
-		frame.repaint();
+		displayScheduleDisplay.refresh();
+		displayHostedEvents.refresh();
+		displayMyOrganizations.refresh();
+		this.repaint();
 	}
+
 }

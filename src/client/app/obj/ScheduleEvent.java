@@ -65,7 +65,7 @@ public class ScheduleEvent extends ScheduleObject{
         String durationString = "";
         String dependencyString = "";
         for(TimeBlock t: duration){
-            durationString+= t.toString()+"|";
+            durationString+= t.toString()+"&";
         }
         for(Dependencies d: deps){
             dependencyString+=d.toString();
@@ -107,7 +107,7 @@ public class ScheduleEvent extends ScheduleObject{
         String[] parts = data.split(":");
         switch(parts[0]){
             case "duration":
-                for(String dur:parts[1].split("|")){
+                for(String dur:parts[1].split("&")){
                     duration.add(new TimeBlock(dur));
                 }
             break;
