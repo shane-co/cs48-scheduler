@@ -68,8 +68,8 @@ public class BGCommander{
         return client.getUserHosted();
     }
     //Function to get a list of schedules
-    public ArrayList<Schedule> getSchedules() throws UserNotFoundException{
-	 return client.getUserSchedules();
+    public ArrayList<String> getSchedules() throws UserNotFoundException{
+	 return new ArrayList<String>();
     }
 
     public ArrayList<String> getOrgs() throws UserNotFoundException{
@@ -151,7 +151,7 @@ public class BGCommander{
     * @throws ElementNotFoundException
     * @throws UserNotFoundException
     */
-    public void subscribeEvent(String id)throws FormatException,ElementNotFoundException{
+    public void subscribeEvent(String id)throws ElementNotFoundException{
         ScheduleEvent event = new ScheduleEvent(new ArrayList<Dependencies>(), new ArrayList<TimeBlock>(), "", id);
         if(remoteList.contains(event))client.subscribe(remoteList.get(remoteList.indexOf(event)));
     }

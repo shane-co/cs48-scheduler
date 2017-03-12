@@ -4,6 +4,7 @@ import client.app.exceptions.*;
 import client.view.listeners.AddButtonListener;
 import client.view.listeners.DelButtonListener;
 import client.view.listeners.OrgSelectionListener;
+import client.view.listeners.GenScheduleListener;
 //import client.view.listeners.InfoListener;
 
 import javax.swing.*;
@@ -54,7 +55,10 @@ public class DisplayMyEvents extends JSplitPane{
 			JTextPane leftAddInfoTxtPn = new JTextPane();
 			leftAddInfoTxtPn.setText("Additional Information");
 			leftAddInfoTxtPn.setEditable(false);
+			JPanel eventActions = new JPanel();
+			JButton genScheduleBtn = new JButton("Generate Schedule");
 			JButton removeEventsBtn = new JButton("Remove Event");
+			//genScheduleBtn.addActionListener(new GenScheduleListener());
 			removeEventsBtn.addActionListener(new DelButtonListener(myEventsList));
 		leftAdditionalInfoPanel.add(leftAddInfoTxtPn, BorderLayout.NORTH);
 		leftAdditionalInfoPanel.add(leftAddInfoTxtFld, BorderLayout.CENTER);
@@ -133,15 +137,9 @@ public class DisplayMyEvents extends JSplitPane{
 		DefaultComboBoxModel orgmodel = new DefaultComboBoxModel();
 		try{
 			ArrayList<String> orglist = commander.getScheduleEvents();
-			//add new ScheduleEvents
 			for(String ev:orglist){
 				if(!evmodel.contains(ev))evmodel.addElement(ev);
 			}
-			/*delete old ScheduleEvents
-			for(Object oldev:evmodel.toArray()){
-				System.out.println((String)oldev);
-				if(!orglist.contains((String)oldev))evmodel.removeElement(oldev);
-			}*/
 			for(String org:commander.getOrgs()){
 				orgmodel.addElement(org);
 				availableOrgs.setModel(orgmodel);

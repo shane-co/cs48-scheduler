@@ -13,17 +13,11 @@ import javax.swing.*;
 
 public class DisplayScheduleDisplay extends JPanel{
 
-	private JComboBox comboBox;
+	private JComboBox possibleSchedules;
 	private BGCommander commander;
 	private final String[] columnNames = {"ID", "DAY", "START DATE", "END DATE"};
 	public DisplayScheduleDisplay() {
 		initialize();
-	}
-
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
 		this.setBounds(100, 100, 500, 300);
 		this.setLayout(new BorderLayout(0, 0));
 		JPanel topPanel = new JPanel();
@@ -32,9 +26,7 @@ public class DisplayScheduleDisplay extends JPanel{
 		JTextPane chooseSchTxtPn = new JTextPane();
 		chooseSchTxtPn.setText("Choose Schedule to Display");
 		topPanel.add(chooseSchTxtPn, BorderLayout.WEST);
-
-		comboBox = new JComboBox();
-		topPanel.add(comboBox, BorderLayout.CENTER);
+		topPanel.add(possibleSchedules, BorderLayout.CENTER);
 		this.add(topPanel, BorderLayout.NORTH);
 
 		Object[][] data = {{"blaugh", "a", "b", "c"}};
@@ -44,10 +36,15 @@ public class DisplayScheduleDisplay extends JPanel{
 
 		JButton deleteScheduleBtn = new JButton("Delete Schedule");
 		this.add(deleteScheduleBtn, BorderLayout.SOUTH);
+	}
 
-
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		possibleSchedules = new JComboBox();
 	}
 
 	public void refresh(){}
-	
+
 }
