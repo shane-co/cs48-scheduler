@@ -19,7 +19,6 @@ import java.awt.event.KeyEvent;
 
 import client.app.exceptions.*;
 import client.commander.BGCommander;
-import client.view.listeners.ServerButtonListener;
 
 public class login extends JPanel{
 

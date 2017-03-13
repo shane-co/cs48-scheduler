@@ -13,42 +13,48 @@ import java.awt.GridLayout;
 public class DisplayHostedEvents extends JSplitPane{
 	private JSplitPane leftPanel;
 	private JPanel topLeftPanel;
-	private JPanel hostedEventsPanel;
 	private JPanel additionalInformationPanel;
 	private JPanel rightPanel;
 	private JPanel rightColumnPanel;
+	//mutable fields
+	private JList hostedEventsList;
+
+	//user input fields
+	private JTextField idInputTxtPn;
+	private JTextField descriptionInputTxtFld;
+	private JTextField sunInputTxtPn;
+	private	JTextField monInputTxtPn;
+	private	JTextField tueInputTxtPn;
+	private	JTextField wedInputTxtPn;
+	private	JTextField thrInputTxtPn; 
+	private	JTextField friInputTxtPn; 
+	private	JTextField satInputTxtPn;
+	
 	public DisplayHostedEvents() {
 		initialize();
-	}
-	public void initialize(){
-
+		
 		//make topLeftPanel
 		topLeftPanel = new JPanel();
-		topLeftPanel.setBounds(100, 100, 500, 300);
-		topLeftPanel.setLayout(new BorderLayout(0, 0));
-		JTextPane hostedEventsTxtPn = new JTextPane();
-		hostedEventsTxtPn.setText("Hosted Events");
-		topLeftPanel.add(hostedEventsTxtPn, BorderLayout.NORTH);
-
-		String[] hostedEvents = {"a", "b", "c"};
-		JList hostedEventsList = new JList(hostedEvents);
-		JScrollPane scroll = new JScrollPane(hostedEventsList);
+			topLeftPanel.setBounds(100, 100, 500, 300);
+			topLeftPanel.setLayout(new BorderLayout(0, 0));
+			JTextPane hostedEventsTxtPn = new JTextPane();
+			hostedEventsTxtPn.setText("Hosted Events");
+			hostedEventsTxtPn.setEditable(false);
+			JScrollPane scroll = new JScrollPane(hostedEventsList);
 		topLeftPanel.add(hostedEventsList, BorderLayout.CENTER);
+		topLeftPanel.add(hostedEventsTxtPn, BorderLayout.NORTH);
 
 		//make additionalInformationPanel
 		additionalInformationPanel = new JPanel();
-		additionalInformationPanel.setBounds(100, 100, 500, 300);
-		additionalInformationPanel.setLayout(new BorderLayout(0, 0));
-
-		JTextPane addInfoTxtPn = new JTextPane();
-		addInfoTxtPn.setText("Additional Information");
-		additionalInformationPanel.add(addInfoTxtPn, BorderLayout.NORTH);
-
-		JTextField addInfoTxtFld = new JTextField();
-		additionalInformationPanel.add(addInfoTxtFld, BorderLayout.CENTER);
-
-		JButton removeHostedEventBtn = new JButton("Remove Hosted Event");
+			additionalInformationPanel.setBounds(100, 100, 500, 300);
+			additionalInformationPanel.setLayout(new BorderLayout(0, 0));
+			JTextPane addInfoTxtPn = new JTextPane();
+			addInfoTxtPn.setText("Additional Information");
+			JTextField addInfoTxtFld = new JTextField();
+			JButton removeHostedEventBtn = new JButton("Remove Hosted Event");
 		additionalInformationPanel.add(removeHostedEventBtn, BorderLayout.SOUTH);
+		additionalInformationPanel.add(addInfoTxtPn, BorderLayout.NORTH);
+		additionalInformationPanel.add(addInfoTxtFld, BorderLayout.CENTER);
 
 		//make left panel
 		leftPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, topLeftPanel, additionalInformationPanel);
@@ -60,6 +66,7 @@ public class DisplayHostedEvents extends JSplitPane{
 
 		JTextPane addHostedEventTxtPn = new JTextPane();
 		addHostedEventTxtPn.setText("Add Hosted Event");
+		addHostedEventTxtPn.setEditable(false);
 		rightPanel.add(addHostedEventTxtPn, BorderLayout.NORTH);
 
 		rightColumnPanel = new JPanel();
@@ -71,7 +78,6 @@ public class DisplayHostedEvents extends JSplitPane{
 		idTxtPn.setEditable(false);
 		rightColumnPanel.add(idTxtPn);
 
-		JTextPane idInputTxtPn = new JTextPane();
 		rightColumnPanel.add(idInputTxtPn);
 
 		JTextField descriptionTxtFld = new JTextField();
@@ -79,15 +85,20 @@ public class DisplayHostedEvents extends JSplitPane{
 		descriptionTxtFld.setEditable(false);
 		rightColumnPanel.add(descriptionTxtFld);
 
-		JTextField descriptionInputTxtFld = new JTextField();
 		rightColumnPanel.add(descriptionInputTxtFld);
+
+		JTextPane sunTxtPn = new JTextPane();
+		sunTxtPn.setText("Sunday Times : ");
+		sunTxtPn.setEditable(false);
+		rightColumnPanel.add(sunTxtPn);
+
+		rightColumnPanel.add(sunInputTxtPn);
 
 		JTextPane monTxtPn = new JTextPane();
 		monTxtPn.setText("Monday Times : ");
 		monTxtPn.setEditable(false);
 		rightColumnPanel.add(monTxtPn);
 
-		JTextPane monInputTxtPn = new JTextPane();
 		rightColumnPanel.add(monInputTxtPn);
 
 		JTextPane tueTxtPn = new JTextPane();
@@ -95,7 +106,6 @@ public class DisplayHostedEvents extends JSplitPane{
 		tueTxtPn.setEditable(false);
 		rightColumnPanel.add(tueTxtPn);
 
-		JTextPane tueInputTxtPn = new JTextPane();
 		rightColumnPanel.add(tueInputTxtPn);
 
 		JTextPane wedTxtPn = new JTextPane();
@@ -103,7 +113,6 @@ public class DisplayHostedEvents extends JSplitPane{
 		wedTxtPn.setEditable(false);
 		rightColumnPanel.add(wedTxtPn);
 
-		JTextPane wedInputTxtPn = new JTextPane();
 		rightColumnPanel.add(wedInputTxtPn);
 
 		JTextPane thrTxtPn = new JTextPane();
@@ -111,7 +120,6 @@ public class DisplayHostedEvents extends JSplitPane{
 		thrTxtPn.setEditable(false);
 		rightColumnPanel.add(thrTxtPn);
 
-		JTextPane thrInputTxtPn = new JTextPane();
 		rightColumnPanel.add(thrInputTxtPn);
 
 		JTextPane friTxtPn = new JTextPane();
@@ -119,7 +127,6 @@ public class DisplayHostedEvents extends JSplitPane{
 		friTxtPn.setEditable(false);
 		rightColumnPanel.add(friTxtPn);
 
-		JTextPane friInputTxtPn = new JTextPane();
 		rightColumnPanel.add(friInputTxtPn);
 
 		JTextPane satTxtPn = new JTextPane();
@@ -127,21 +134,13 @@ public class DisplayHostedEvents extends JSplitPane{
 		satTxtPn.setEditable(false);
 		rightColumnPanel.add(satTxtPn);
 
-		JTextPane satInputTxtPn = new JTextPane();
 		rightColumnPanel.add(satInputTxtPn);
-
-		JTextPane sunTxtPn = new JTextPane();
-		sunTxtPn.setText("Sunday Times : ");
-		sunTxtPn.setEditable(false);
-		rightColumnPanel.add(sunTxtPn);
-
-		JTextPane sunInputTxtPn = new JTextPane();
-		rightColumnPanel.add(sunInputTxtPn);
 
 		rightPanel.add(rightColumnPanel, BorderLayout.CENTER);
 
 
 		JButton addHostedEventBtn= new JButton("Add Hosted Event");
+		//addHostedEventBtn.addActionListener();
 		rightPanel.add(addHostedEventBtn, BorderLayout.SOUTH);
 
 		//add them to this
@@ -150,6 +149,20 @@ public class DisplayHostedEvents extends JSplitPane{
 		this.setRightComponent(rightPanel);
 		this.setResizeWeight(0.5);
 	}
-	public void refresh(){}
+	public void initialize(){
+		hostedEventsList = new JList(new DefaultListModel<String>());
+		idInputTxtPn = new JTextField();
+		descriptionInputTxtFld = new JTextField();
+		sunInputTxtPn = new JTextField();
+		monInputTxtPn = new JTextField();
+		tueInputTxtPn = new JTextField();
+		wedInputTxtPn = new JTextField();
+		thrInputTxtPn = new JTextField();
+		friInputTxtPn = new JTextField();
+		satInputTxtPn = new JTextField();
+	}
+	public void refresh(){
+		
+	}
 
 }
