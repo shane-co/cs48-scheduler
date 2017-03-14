@@ -90,7 +90,7 @@ public class login extends JPanel{
 
 //LISTENER CLASSES
 	private class loginButtonListener implements ActionListener, KeyListener{
-		private void login()throws ElementNotFoundException, UserLoggedInException{
+		private void login()throws ElementNotFoundException, UserLoggedInException, LoginFailedException{
 			String Username=usernameField.getText();
 			String Password=passwordField.getText();
 			command.login(Username, Password);
@@ -123,6 +123,7 @@ public class login extends JPanel{
 			catch(UserLoggedInException uex){
 				lblprompt.setText( uex.getMsg());
 			}
+			catch(LoginFailedException l){lblprompt.setText(l.getMsg());}
 		}
 		public void keyPressed(KeyEvent e){
 			if(e.getKeyCode()==KeyEvent.VK_ENTER){
@@ -133,6 +134,7 @@ public class login extends JPanel{
 				catch(UserLoggedInException uex){
 					lblprompt.setText( uex.getMsg());
 				}
+				catch(LoginFailedException l){lblprompt.setText(l.getMsg());}
 			}
 		}
 		public void keyReleased(KeyEvent e){}

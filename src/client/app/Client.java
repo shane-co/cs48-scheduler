@@ -53,12 +53,13 @@ public class Client{
     *Function to set the currUser variable. Queries LOCAL Database with login credentials. Throws Exception if
     *if login credentials are invalid.
     */
-    public void setCurrUser(String uname, String pw) throws ElementNotFoundException, UserLoggedInException{
+    public void setCurrUser(String uname, String pw) throws ElementNotFoundException, UserLoggedInException, LoginFailedException{
 		if(currUser!=null) throw new UserLoggedInException();
 		if(local.verifyCredentials(uname, pw)){
 			currUser = new User();
 			currUser.load(local.findUser("user",uname));
 		}
+        else throw new LoginFailedException();
 	}
     /**
     *Function to setCurrentUser to null. Writes currUser state to Database.

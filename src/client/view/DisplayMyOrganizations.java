@@ -10,26 +10,19 @@ import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.awt.GridLayout;
 
-public class DisplayMyOrganizations extends JSplitPane{
+public class DisplayMyOrganizations extends JSplitPane implements DisplayScheduleComponent{
 	private JPanel leftPanel;
 	private JPanel rightPanel;
 	private JPanel rightColumnPanel;
 	private String[] columnNames = {"Organization Name", "I.P.", "Port"};
+	private JTable organizationDisplay;
 
 	public DisplayMyOrganizations() {
-		initialize();
-	}
-
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
 		leftPanel = new JPanel();
 		leftPanel.setBounds(100, 100, 500, 300);
 		leftPanel.setLayout(new BorderLayout(0, 0));
 
-		Object[][] data = {{"blaugh", "a", "b"}};
-		JTable organizationDisplay = new JTable(data, columnNames);
+		organizationDisplay = new JTable();
 		JScrollPane scroll = new JScrollPane(organizationDisplay);
 		leftPanel.add(scroll, BorderLayout.CENTER);
 
@@ -76,7 +69,17 @@ public class DisplayMyOrganizations extends JSplitPane{
 		this.setLeftComponent(leftPanel);
 		this.setRightComponent(rightPanel);
 		this.setResizeWeight(0.5);
-
 	}
-	public void refresh(){}
+
+	public void refresh(){
+		DefaultTableModel model = (DefaultTableModel) organizationDisplay.getModel();
+		//initialize display columnNames
+		for(int i=0; i<3; i++){model.addColumn(columnNames[i]);}
+		try{
+			for(DatabaseConnection d:BGCommander.getBGCommander().getOrgs()){
+				String [] data = {d.getID(), d.getIP(), Integer.toString(d.getPort())};
+				model.addRow(data);
+			}
+		}catch(UserNotFoundException e){}
+	}
 }

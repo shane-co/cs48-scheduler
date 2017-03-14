@@ -15,7 +15,7 @@ import java.awt.BorderLayout;
 import java.util.ArrayList;
 
 
-public class DisplayMyEvents extends JSplitPane{
+public class DisplayMyEvents extends JSplitPane implements DisplayScheduleComponent{
 	private BGCommander commander;
 	//display panes
 	private JSplitPane leftPanel;
@@ -60,7 +60,7 @@ public class DisplayMyEvents extends JSplitPane{
 			JButton genScheduleBtn = new JButton("Generate Schedule");
 			JButton removeEventsBtn = new JButton("Remove Event");
 			genScheduleBtn.addActionListener(new GenScheduleListener());
-			removeEventsBtn.addActionListener(new DelButtonListener(myEventsList));
+			removeEventsBtn.addActionListener(new DelButtonListener(myEventsList,"event"));
 			eventActions.add(genScheduleBtn,BorderLayout.NORTH);
 			eventActions.add(removeEventsBtn,BorderLayout.SOUTH);
 		leftAdditionalInfoPanel.add(leftAddInfoTxtPn, BorderLayout.NORTH);
@@ -143,7 +143,7 @@ public class DisplayMyEvents extends JSplitPane{
 			for(String ev:orglist){
 				if(!evmodel.contains(ev))evmodel.addElement(ev);
 			}
-			for(String org:commander.getOrgs()){
+			for(String org:commander.getOrgNames()){
 				orgmodel.addElement(org);
 				availableOrgs.setModel(orgmodel);
 			}

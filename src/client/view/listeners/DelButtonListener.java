@@ -6,12 +6,14 @@ import javax.swing.JList;
 import javax.swing.DefaultListModel;
 
 public class DelButtonListener extends EventButtonListener{
-    public DelButtonListener(JList list){
+    private String field;
+    public DelButtonListener(JList list, String f){
         super(list);
+        field=f;
     }
 
     @Override protected void editDisplay(String evid){
-        BGCommander.getBGCommander().unsubscribe(evid);
+        BGCommander.getBGCommander().deleteFromField(evid,field);
         DefaultListModel model = (DefaultListModel)super.eventsList.getModel();
         model.remove(model.indexOf(evid));
         UserInterface.getUserInterface().refreshDisplay();

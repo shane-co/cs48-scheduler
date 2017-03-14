@@ -33,6 +33,7 @@ public class RunApp{
                             command.login(uname,pword);
                         }catch(ElementNotFoundException ex){System.out.println(ex.getMsg());}
                         catch(UserLoggedInException uex){System.out.println(uex.getMsg());}
+                        catch(LoginFailedException ex){System.out.println(ex.getMsg());}
                         break;
                     case "addOrg":System.out.println("Enter Organization name:"); String name=System.console().readLine();
                         System.out.println("Enter IP Address:"); String ip=System.console().readLine();
@@ -41,11 +42,8 @@ public class RunApp{
                     case "retrieve":System.out.println("Enter Organization name:"); String n=System.console().readLine();
                         command.search(n);
                         break;
-                    case "unsubscribe":
-                        System.out.println("Enter Schedule identifier:"); String id=System.console().readLine();
-                        command.unsubscribe(id);
                     case "createEvent":
-                        System.out.println("Enter Event Name:"); id=System.console().readLine();
+                        System.out.println("Enter Event Name:"); String id=System.console().readLine();
                         System.out.println("Enter Event Description:"); String desc=System.console().readLine();
                         ArrayList<ArrayList<Integer>> dur = new ArrayList<ArrayList<Integer>>();
                         ArrayList<Integer> d;
@@ -58,7 +56,9 @@ public class RunApp{
                             }
                             dur.add(i,d);
                         }
-                        command.createHostedEvent(dur,id,desc);
+                        try{
+                            command.createHostedEvent(dur,id,desc);
+                        }catch(ElementNotFoundException e){}
                         break;
                     case "exit":
                         command.exitApp();

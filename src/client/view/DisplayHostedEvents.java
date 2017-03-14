@@ -2,6 +2,8 @@ package client.view;
 import client.commander.BGCommander;
 import client.app.obj.*;
 import client.app.exceptions.*;
+import client.view.listeners.CreateHostedListener;
+import client.view.listeners.DelButtonListener;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -10,7 +12,7 @@ import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.awt.GridLayout;
 
-public class DisplayHostedEvents extends JSplitPane{
+public class DisplayHostedEvents extends JSplitPane implements DisplayScheduleComponent{
 	private JSplitPane leftPanel;
 	private JPanel topLeftPanel;
 	private JPanel additionalInformationPanel;
@@ -26,13 +28,13 @@ public class DisplayHostedEvents extends JSplitPane{
 	private	JTextField monInputTxtPn;
 	private	JTextField tueInputTxtPn;
 	private	JTextField wedInputTxtPn;
-	private	JTextField thrInputTxtPn; 
-	private	JTextField friInputTxtPn; 
+	private	JTextField thrInputTxtPn;
+	private	JTextField friInputTxtPn;
 	private	JTextField satInputTxtPn;
-	
+
 	public DisplayHostedEvents() {
 		initialize();
-		
+
 		//make topLeftPanel
 		topLeftPanel = new JPanel();
 			topLeftPanel.setBounds(100, 100, 500, 300);
@@ -41,7 +43,7 @@ public class DisplayHostedEvents extends JSplitPane{
 			hostedEventsTxtPn.setText("Hosted Events");
 			hostedEventsTxtPn.setEditable(false);
 			JScrollPane scroll = new JScrollPane(hostedEventsList);
-		topLeftPanel.add(hostedEventsList, BorderLayout.CENTER);
+		topLeftPanel.add(scroll, BorderLayout.CENTER);
 		topLeftPanel.add(hostedEventsTxtPn, BorderLayout.NORTH);
 
 		//make additionalInformationPanel
@@ -52,13 +54,14 @@ public class DisplayHostedEvents extends JSplitPane{
 			addInfoTxtPn.setText("Additional Information");
 			JTextField addInfoTxtFld = new JTextField();
 			JButton removeHostedEventBtn = new JButton("Remove Hosted Event");
+			removeHostedEventBtn.addActionListener(new DelButtonListener(hostedEventsList,"hosted"));
 		additionalInformationPanel.add(removeHostedEventBtn, BorderLayout.SOUTH);
 		additionalInformationPanel.add(addInfoTxtPn, BorderLayout.NORTH);
 		additionalInformationPanel.add(addInfoTxtFld, BorderLayout.CENTER);
 
 		//make left panel
 		leftPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, topLeftPanel, additionalInformationPanel);
-
+		leftPanel.setDividerLocation(.5);
 		//make rightPanel
 		rightPanel = new JPanel();
 		rightPanel.setBounds(100, 100, 500, 300);
@@ -140,7 +143,10 @@ public class DisplayHostedEvents extends JSplitPane{
 
 
 		JButton addHostedEventBtn= new JButton("Add Hosted Event");
-		//addHostedEventBtn.addActionListener();
+		addHostedEventBtn.addActionListener(new CreateHostedListener(
+			idInputTxtPn, descriptionInputTxtFld, sunInputTxtPn, monInputTxtPn, tueInputTxtPn,
+			wedInputTxtPn, thrInputTxtPn, friInputTxtPn, satInputTxtPn
+		));
 		rightPanel.add(addHostedEventBtn, BorderLayout.SOUTH);
 
 		//add them to this
@@ -162,7 +168,12 @@ public class DisplayHostedEvents extends JSplitPane{
 		satInputTxtPn = new JTextField();
 	}
 	public void refresh(){
-		
+		DefaultListModel hostedModel = (DefaultListModel) hostedEventsList.getModel();
+		try{
+			for(String ev:BGCommander.getBGCommander().getHosted()){
+				if(!hostedModel.contains(ev)) hostedModel.addElement(ev);
+			}
+		}catch(UserNotFoundException e){}
 	}
 
 }

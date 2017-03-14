@@ -64,20 +64,28 @@ public class BGCommander{
         return display;
     }
 
-    public ArrayList<ScheduleEvent> getHosted() throws UserNotFoundException{
-        return client.getUserHosted();
+    public ArrayList<String> getHosted() throws UserNotFoundException{
+        ArrayList<String> display = new ArrayList<String>();
+        for(ScheduleEvent e:client.getUserHosted()){
+            display.add(e.get_ID());
+        }
+        return display;
     }
     //Function to get a list of schedules
     public ArrayList<String> getSchedules() throws UserNotFoundException{
 	 return new ArrayList<String>();
     }
 
-    public ArrayList<String> getOrgs() throws UserNotFoundException{
+    public ArrayList<String> getOrgNames() throws UserNotFoundException{
         ArrayList<String> display = new ArrayList<String>();
         for(DatabaseConnection o:client.getUserOrgs()){
             display.add(o.getID());
         }
         return display;
+    }
+
+    public ArrayList<DatabaseConnection> getOrgs() throws UserNotFoundException{
+        return client.getUserOrgs();
     }
 
     //Function to add a schdule to array
@@ -116,7 +124,7 @@ public class BGCommander{
      * @throws UserLoggedInException
      * @throws ElementNotFoundException
     */
-    public void login(String username, String password) throws ElementNotFoundException, UserLoggedInException{
+    public void login(String username, String password) throws ElementNotFoundException, UserLoggedInException, LoginFailedException{
             client.setCurrUser(username,password);
     }
 
@@ -170,7 +178,7 @@ public class BGCommander{
     }
 
     // command.createHostedEvent()
-    public void createHostedEvent(ArrayList<ArrayList<Integer>> duration, String id, String desc){
+    public void createHostedEvent(ArrayList<ArrayList<Integer>> duration, String id, String desc) throws ElementNotFoundException{
         ArrayList<TimeBlock> evduration = new ArrayList<TimeBlock>();
         for(int i=0; i<7; i++){
             for(int j: duration.get(i)){
@@ -179,16 +187,24 @@ public class BGCommander{
                 }
             }
         }
-        try{
-            ScheduleEvent newev = new ScheduleEvent(new ArrayList<Dependencies>(), evduration, desc, id);
-            client.createEvent(newev);
-        }catch(ElementNotFoundException e){}
+        ScheduleEvent newev = new ScheduleEvent(new ArrayList<Dependencies>(), evduration, desc, id);
+        client.createEvent(newev);
     }
 
-    public void deleteHostedEvent(String id){
-        ScheduleEvent event = new ScheduleEvent(new ArrayList<Dependencies>(), new ArrayList<TimeBlock>(), "", id);
+    public void deleteFromField(String id, String field){
         try{
-            client.deleteEvent(event);
+            switch(field){
+                case "event": ScheduleEvent event = new ScheduleEvent(new ArrayList<Dependencies>(), new ArrayList<TimeBlock>(), "", id);
+                    client.unsubscribe(event);
+                    break;
+                case "hosted": ScheduleEvent hosted = new ScheduleEvent(new ArrayList<Dependencies>(), new ArrayList<TimeBlock>(), "", id);
+                    client.deleteEvent(hosted);
+                    break;
+                case "sched": break;
+                case "org": DatabaseConnection d = new DatabaseConnection(id,"",0);
+                    client.forgetOrg(d);
+                    break;
+            }
         }catch(ElementNotFoundException e){}
     }
 
@@ -197,13 +213,6 @@ public class BGCommander{
 	DatabaseConnection d = new DatabaseConnection(id,ip,portID);
 	try{
 	    client.registerOrg(d);
-	   }catch(ElementNotFoundException e){}
-    }
-
-    public void deleteOrganization(String id){
-        DatabaseConnection d = new DatabaseConnection(id,"",0);
-	try{
-	    client.forgetOrg(d);
 	   }catch(ElementNotFoundException e){}
     }
 

@@ -8,13 +8,16 @@ import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 
 public class UserInterface extends JFrame{
 	private DisplayMyEvents displayMyEvents;
 	private DisplayScheduleDisplay displayScheduleDisplay;
 	private DisplayHostedEvents displayHostedEvents;
 	private DisplayMyOrganizations displayMyOrganizations;
+	private JTabbedPane paneLeft;
+	private JTabbedPane paneRight;
 	private static UserInterface ui;
 
 
@@ -52,7 +55,13 @@ public class UserInterface extends JFrame{
 
 
 		//LEFT PANE OF MAIN UI
-		JTabbedPane paneLeft = new JTabbedPane(JTabbedPane.TOP);
+		paneLeft = new JTabbedPane(JTabbedPane.TOP);
+		paneLeft.addChangeListener(new ChangeListener(){
+			public void stateChanged(ChangeEvent e){
+				DisplayScheduleComponent next = (DisplayScheduleComponent)paneLeft.getSelectedComponent();
+				next.refresh();
+			}
+		});
 
 		displayMyEvents = new DisplayMyEvents();
 		paneLeft.addTab("My Events", displayMyEvents);
@@ -64,7 +73,7 @@ public class UserInterface extends JFrame{
 		paneLeft.addTab("My Organizations", displayMyOrganizations);
 
 		//RIGHT PANE OF MAIN UI
-		JTabbedPane paneRight = new JTabbedPane(JTabbedPane.TOP);
+		paneRight = new JTabbedPane(JTabbedPane.TOP);
 
 		paneRight.addTab("Login",new login(this));
 		JSplitPane splitPaneLR = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, paneLeft, paneRight);
@@ -78,10 +87,8 @@ public class UserInterface extends JFrame{
 	}
 
 	public void refreshDisplay(){
-		displayMyEvents.refresh();
-		displayScheduleDisplay.refresh();
-		displayHostedEvents.refresh();
-		displayMyOrganizations.refresh();
+		DisplayScheduleComponent currTab = (DisplayScheduleComponent) paneLeft.getSelectedComponent();
+		currTab.refresh();
 		this.repaint();
 	}
 

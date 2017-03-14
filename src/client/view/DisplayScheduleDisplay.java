@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
-public class DisplayScheduleDisplay extends JPanel{
+public class DisplayScheduleDisplay extends JPanel implements DisplayScheduleComponent{
 
 	private JComboBox possibleSchedules;
 	private BGCommander commander;
