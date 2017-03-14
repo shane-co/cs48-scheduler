@@ -53,6 +53,29 @@ public class ScheduleEvent extends ScheduleObject{
         return false;
     }
 
+    public String getDurationString(){
+        String durationString = "";
+        for(TimeBlock t: duration){
+            switch(t.getDay()){
+                case 0: durationString+="Sunday: " + t.getStart() + "\n";
+                break;
+                case 1:durationString+="Monday: " + t.getStart() + "\n";
+                break;
+                case 2:durationString+="Tuesday: " + t.getStart() + "\n";
+                break;
+                case 3:durationString+="Wednesday: " + t.getStart() + "\n";
+                break;
+                case 4:durationString+="Thursday: " + t.getStart() + "\n";
+                break;
+                case 5:durationString+="Friday: " + t.getStart() + "\n";
+                break;
+                case 6:durationString+="Saturday: " + t.getStart() + "\n";
+                break;
+            }
+        }
+        return durationString;
+    }
+
     @Override public boolean equals(Object o){
         if(this==o)return true;
         if(o==null)return false;

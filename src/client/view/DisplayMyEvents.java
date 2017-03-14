@@ -28,8 +28,8 @@ public class DisplayMyEvents extends JSplitPane implements DisplayScheduleCompon
 	//mutable content
 	private JList myEventsList;
 	private JList availableEventsList;
-	private JTextField leftAddInfoTxtFld;
-	private JTextField rightAddInfoTxtFld;
+	private JTextPane leftAddInfoTxtFld;
+	private JTextPane rightAddInfoTxtFld;
 	private JComboBox availableOrgs;
 
 	//Constructor to assemble all the display panes
@@ -65,7 +65,7 @@ public class DisplayMyEvents extends JSplitPane implements DisplayScheduleCompon
 			eventActions.add(removeEventsBtn,BorderLayout.SOUTH);
 			myEventsList.addListSelectionListener( new InfoListener(myEventsList, leftAddInfoTxtFld));
 		leftAdditionalInfoPanel.add(leftAddInfoTxtPn, BorderLayout.NORTH);
-		leftAdditionalInfoPanel.add(leftAddInfoTxtFld, BorderLayout.CENTER);
+		leftAdditionalInfoPanel.add(new JScrollPane(leftAddInfoTxtFld), BorderLayout.CENTER);
 		leftAdditionalInfoPanel.add(eventActions, BorderLayout.SOUTH);
 
 		//makes leftPanel
@@ -126,10 +126,10 @@ public class DisplayMyEvents extends JSplitPane implements DisplayScheduleCompon
 	 */
 	private void initialize() {
 		myEventsList = new JList(new DefaultListModel<String>());
-		leftAddInfoTxtFld = new JTextField();
+		leftAddInfoTxtFld = new JTextPane();
 		availableOrgs = new JComboBox(new DefaultComboBoxModel());
 		availableEventsList = new JList(new DefaultListModel());
-		rightAddInfoTxtFld = new JTextField();
+		rightAddInfoTxtFld = new JTextPane();
 
 		availableOrgs.addActionListener(new OrgSelectionListener(availableOrgs,availableEventsList.getModel()));
 		//myEventsList.addListSelectionListener();
