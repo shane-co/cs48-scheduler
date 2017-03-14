@@ -5,7 +5,7 @@ import client.view.listeners.AddButtonListener;
 import client.view.listeners.DelButtonListener;
 import client.view.listeners.OrgSelectionListener;
 import client.view.listeners.GenScheduleListener;
-//import client.view.listeners.InfoListener;
+import client.view.listeners.InfoListener;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -63,6 +63,7 @@ public class DisplayMyEvents extends JSplitPane implements DisplayScheduleCompon
 			removeEventsBtn.addActionListener(new DelButtonListener(myEventsList,"event"));
 			eventActions.add(genScheduleBtn,BorderLayout.NORTH);
 			eventActions.add(removeEventsBtn,BorderLayout.SOUTH);
+			myEventsList.addListSelectionListener( new InfoListener(myEventsList, leftAddInfoTxtFld));
 		leftAdditionalInfoPanel.add(leftAddInfoTxtPn, BorderLayout.NORTH);
 		leftAdditionalInfoPanel.add(leftAddInfoTxtFld, BorderLayout.CENTER);
 		leftAdditionalInfoPanel.add(eventActions, BorderLayout.SOUTH);
@@ -105,6 +106,7 @@ public class DisplayMyEvents extends JSplitPane implements DisplayScheduleCompon
 			rightAddInfoTxtPn.setEditable(false);
 			rightAdditionalInfoPanel.add(rightAddInfoTxtFld, BorderLayout.CENTER);
 			JButton addEventsBtn = new JButton("Add Event");
+			addEventsBtn.addActionListener(new AddButtonListener(availableEventsList));
 		rightAdditionalInfoPanel.add(rightAddInfoTxtPn, BorderLayout.NORTH);
 		rightAdditionalInfoPanel.add(rightAddInfoTxtFld, BorderLayout.CENTER);
 		rightAdditionalInfoPanel.add(addEventsBtn, BorderLayout.SOUTH);
