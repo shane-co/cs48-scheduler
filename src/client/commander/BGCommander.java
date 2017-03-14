@@ -209,6 +209,7 @@ public class BGCommander{
     }
 
     public void addOrganization(String id, String ip, String port){
+        System.out.println("adding org");
 	int portID = Integer.parseInt(port);
 	DatabaseConnection d = new DatabaseConnection(id,ip,portID);
 	try{
