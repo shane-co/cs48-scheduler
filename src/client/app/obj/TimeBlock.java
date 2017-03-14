@@ -6,6 +6,8 @@ import client.app.interfaces.ScheduleObject;
 import java.util.ArrayList;
 //ScheduleObject imports
 import org.w3c.dom.Element;
+import org.w3c.dom.Document;
+
 /**
 *Class representing a TimeBlock within a schedule. Is the basic unit within a schedule and holds only information regarding the
 *block of time, its availability, and a reference to the ScheduleEvent that is occupying it. Takes 24hr time notation to denote
@@ -13,34 +15,46 @@ import org.w3c.dom.Element;
 */
 public class TimeBlock extends ScheduleObject{
     //instance variables
-    private int day;
-	private int start;
-    private ArrayList<ScheduleEvent> se;
-
+    private int day; //day of the week 1-7
+	private int start; // an hour 0-24;
 
     public TimeBlock(int d,int s){day=d; start=s;}
     public TimeBlock(Element e){
         load(e);
     }
-    public boolean is_occupied(){return se.size()!=0;}
-    public void addEvent(ScheduleEvent ev){se.add(ev);}
-    public void removeEvent(int position){se.remove(position);}
+    public TimeBlock(String s){
+        load(s);
+    }
+
     public int getDay(){return day;}
     public int getStart(){return start;}
-    public int numberOfEvents(){return se.size();}
-    public ScheduleEvent getEvent(int index){return se.get(index);}
 
+    @Override public boolean equals(Object o){
+        if(this==o)return true;
+        if(o==null)return false;
+        if(!(o instanceof TimeBlock)) return false;
+        TimeBlock other = (TimeBlock) o;
+        return (other.getDay()==day && other.getStart()==start);
+    }
+    @Override public String toString(){
+        return day+","+start;
+    }
     //ScheduleObject Methods
-    public Element record(){
-        return super.record(this); //inherited from Superclass
+    public Element record(Document doc){
+        return super.record(this,doc); //inherited from Superclass
     }
     public void load(Element root){
-        day=Integer.parseInt(root.getAttribute("day"));
-        start=Integer.parseInt(root.getAttribute("start"));
-        Element ev = (Element)root.getFirstChild().getFirstChild();
-        do{
-            se.add(new ScheduleEvent(ev));
-            ev=(Element)ev.getNextSibling();
-        }while(ev!=null);
+        if(root!=null){
+            day=Integer.parseInt(root.getAttribute("day"));
+            start=Integer.parseInt(root.getAttribute("start"));
+        }
+    }
+
+    public void load(String networkDesc){
+        if(!networkDesc.equals("")){
+            String[] parts = networkDesc.split(",");
+            day=Integer.parseInt(parts[0]);
+            start=Integer.parseInt(parts[1]);
+        }
     }
 }

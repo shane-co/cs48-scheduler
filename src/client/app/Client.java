@@ -40,7 +40,7 @@ public class Client{
 		currUser = null;
         try{ss = new ServerSocket(port);}catch(IOException e){e.printStackTrace();}
         local = new Database();
-        pub = false;
+        setPublic();
     }
 
     /**
@@ -53,13 +53,23 @@ public class Client{
     *Function to set the currUser variable. Queries LOCAL Database with login credentials. Throws Exception if
     *if login credentials are invalid.
     */
-    public void setCurrUser(String uname, String pw) throws ElementNotFoundException, UserLoggedInException{
+    public void setCurrUser(String uname, String pw) throws ElementNotFoundException, UserLoggedInException, LoginFailedException{
 		if(currUser!=null) throw new UserLoggedInException();
 		if(local.verifyCredentials(uname, pw)){
 			currUser = new User();
 			currUser.load(local.findUser("user",uname));
 		}
+        else throw new LoginFailedException();
 	}
+    /**
+    *Function to setCurrentUser to null. Writes currUser state to Database.
+    */
+    public void logout() throws TransformerException{
+        if(currUser!=null){
+            local.writeToFile();
+            currUser=null;
+        }
+    }
 
 	/**
  	*Function to add User object to local Database. Allows user to sign in with registered credentials
@@ -67,7 +77,7 @@ public class Client{
  	*/
 
 	public void addUser(User u){
-		local.addUser(u.record());
+		local.addUser(u.record(local.getDocument()));
 	}
 
 
@@ -77,74 +87,81 @@ public class Client{
     *@param e ScheduleEvent object that the currUser is subcribed to.
     */
     public void subscribe(ScheduleEvent e) throws UserNotFoundException, ElementNotFoundException{
-		//update the currUser to include subscription.
+        if(currUser==null)throw new UserNotFoundException();
+        //update the currUser to include subscription.
 		currUser.addToMyEvents(e);
 		//update the local database to reflect new change.
-		local.modifyUser(currUser.getUsername(), true, "myEvents", e.record());
+		local.modifyUser(currUser.getUsername(), true, "myEvents", e.record(local.getDocument()));
 	}
 
     /**
     *Function to delete an event from currUser.myEvents. Effectively completes the "un-subscription" process of the currUser to this Event.
     *@param e ScheduleEvent object that the currUser is unsubscribed to.
     */
-    public void unsubscribe(ScheduleEvent e) throws UserNotFoundException, ElementNotFoundException{
-		//update the currUser to remove subscription
+    public void unsubscribe(ScheduleEvent e) throws ElementNotFoundException{
+        if(currUser==null)throw new UserNotFoundException();
+	//update the currUser to remove subscription
 		currUser.removeFromMyEvents(e);
 		//update the local database to reflect the change
-		local.modifyUser(currUser.getUsername(), false, "myEvents", e.record());
+		local.modifyUser(currUser.getUsername(), false, "myEvents", e.record(local.getDocument()));
 	}
 
     /**
     *Function to add a Schedule to User.mySchedules
     *@param s Schedule object to be added to currUser.
     */
-    public void addSchedule(Schedule s)throws ElementNotFoundException, UserNotFoundException{
-		//update the currUser to include schedule.
+    public void addSchedule(Schedule s)throws ElementNotFoundException{
+        if(currUser==null)throw new UserNotFoundException();
+//update the currUser to include schedule.
 		currUser.addToMySchedules(s);
 		//update the local database to reflect new change.
-		local.modifyUser(currUser.getUsername(), true, "mySchedules", s.record());
+		local.modifyUser(currUser.getUsername(), true, "mySchedules", s.record(local.getDocument()));
 	}
     /**
     *Function to delete a Schedule to User.mySchedules
     *@param s Schedule object to be deleted to currUser.
     */
-    public void deleteSchedule(Schedule s)throws ElementNotFoundException, UserNotFoundException{
-		//update the currUser to include schedule.
+    public void deleteSchedule(Schedule s)throws ElementNotFoundException{
+        if(currUser==null)throw new UserNotFoundException();
+        //update the currUser to include schedule.
 		currUser.removeFromMySchedules(s);
 		//update the local database to reflect new change.
-		local.modifyUser(currUser.getUsername(), false, "mySchedules", s.record());
+		local.modifyUser(currUser.getUsername(), false, "mySchedules", s.record(local.getDocument()));
 	}
 
     /**
     *Function to add an organization to currUser.myOrgs and allow Client to connect to it. Places newOrg into orgs.
     *@param newOrg a DatabaseConnection object representing the data store connection hosted by the organization
     */
-    public void registerOrg(DatabaseConnection newOrg)throws ElementNotFoundException, UserNotFoundException{
-		//update the currUser to include schedule.
+    public void registerOrg(DatabaseConnection newOrg)throws ElementNotFoundException{
+        if(currUser==null)throw new UserNotFoundException();
+        //update the currUser to include schedule.
 		currUser.addDatabaseConnection(newOrg);
 		//update the local database to reflect new change.
-		local.modifyUser(currUser.getUsername(), true, "myOrgs", newOrg.record());
+		local.modifyUser(currUser.getUsername(), true, "myOrgs", newOrg.record(local.getDocument()));
 	}
 
     /**
     *Function to remove an organization from currUser.myOrgs.
     *@param org a DatabaseConnection object representing the data store connection hosted by the organization.
     */
-    public void forgetOrg(DatabaseConnection org)throws ElementNotFoundException, UserNotFoundException{
+    public void forgetOrg(DatabaseConnection org)throws ElementNotFoundException{
+        if(currUser==null)throw new UserNotFoundException();
 		//update the currUser to include schedule.
 		currUser.removeDatabaseConnection(org);
 		//update the local database to reflect new change.
-		local.modifyUser(currUser.getUsername(), false, "myOrgs", org.record());
+		local.modifyUser(currUser.getUsername(), false, "myOrgs", org.record(local.getDocument()));
     }
     /**
     *Function to add a ScheduleEvent to currUser.myHostedEvents. Makes a ScheduleEvent available to be subscibed to.
     *@param e ScheduleEvent object that the User has created.
     */
-    public void createEvent(ScheduleEvent e)throws ElementNotFoundException, UserNotFoundException{
-		//update the currUser to include schedule.
+    public void createEvent(ScheduleEvent e)throws ElementNotFoundException{
+        if(currUser==null)throw new UserNotFoundException();
+        //update the currUser to include schedule.
 		currUser.addHostedEvent(e);
 		//update the local database to reflect new change.
-		local.modifyUser(currUser.getUsername(), true, "myHostedEvents", e.record());
+		local.modifyUser(currUser.getUsername(), true, "myHostedEvents", e.record(local.getDocument()));
 	}
     /**
     *Function to remove a ScheduleEvent from currUser.myHostedEvents.
@@ -154,24 +171,34 @@ public class Client{
 		//update the currUser to include schedule.
 		currUser.removeHostedEvent(e);
 		//update the local database to reflect new change.
-		local.modifyUser(currUser.getUsername(), false, "myHostedEvents", e.record());
+		local.modifyUser(currUser.getUsername(), false, "myHostedEvents", e.record(local.getDocument()));
 	}
 
 
-    /**
-    *Function to retrieve ArrayList of the currUser's myEvents.
-    * @return ArrayList<ScheduleEvent>
-    */
-    public ArrayList<ScheduleEvent> getUserEvents(){
+    //currUser accessor functions
+    public ArrayList<ScheduleEvent> getUserEvents() throws UserNotFoundException{
         if(currUser!=null)return currUser.getMyEvents();
-        else return null;
+        else throw new UserNotFoundException();
     }
-	
-    public ArrayList<Schedule> getUserSchedules(){
-	 if(currUser != null) 
-		 return currUser.getMySchedules();
-	 else
-		 return null;
+
+    public ArrayList<Schedule> getUserSchedules() throws UserNotFoundException{
+	 if(currUser != null) return currUser.getMySchedules();
+	 else throw new UserNotFoundException();
+    }
+
+    public ArrayList<DatabaseConnection> getUserOrgs() throws UserNotFoundException{
+        if(currUser != null) return currUser.getMyOrgs();
+        else throw new UserNotFoundException();
+    }
+
+    public ArrayList<ScheduleEvent> getUserHosted() throws UserNotFoundException{
+        if(currUser!=null) return currUser.getMyHostedEvents();
+        else throw new UserNotFoundException();
+    }
+
+    public String getUserNextAvailableSchedID() throws UserNotFoundException{
+        if(currUser != null) return currUser.nextSchedID();
+        else throw new UserNotFoundException();
     }
 
     /*
@@ -180,7 +207,7 @@ public class Client{
     public void exitApp() throws TransformerException{
         local.writeToFile();
     }
-    //----------------------------SERVER FUNCTIONALITY---------------------------------------------
+    //----------------------------SERVER/CLIENT FUNCTIONALITY---------------------------------------------
     /**
     *Function to set Client public and listen for requests
     */
@@ -194,44 +221,50 @@ public class Client{
     */
     public void setPrivate(){pub=false;}
 
+    public String sendRequest(String orgname){
+        try{
+            //retrieve connection information to orgname
+            ArrayList<DatabaseConnection> orgs = currUser.getMyOrgs();
+            DatabaseConnection remote = orgs.get(orgs.indexOf(new DatabaseConnection(orgname,"",0)));
+            Socket organization = new Socket(remote.getIP(),remote.getPort());
+            //send orgname over the network to remote server
+            DataOutputStream out= new DataOutputStream(organization.getOutputStream());
+            out.writeUTF(orgname);
+            //retrieve server response
+            DataInputStream in = new DataInputStream(organization.getInputStream());
+            return in.readUTF();
+        }catch(IOException i){return "";}
+    }
     /**
     *Inner Listener class to listen for requests on port 7777. Handles server functionality.
     */
     class Listener implements Runnable{
+        private DataInputStream dis;
+        private DataOutputStream dos;
         public void run(){
             while(pub){
                 try{
                     s = ss.accept();
-                    DataInputStream dis = new DataInputStream(s.getInputStream());
+                    dis = new DataInputStream(s.getInputStream());
                     String request = dis.readUTF();
                     parseRequest(request);
                 }catch(IOException e){ }
             }
         }
 
-        public void parseRequest(String in){ //requests come in the form ORGNAME;%COMMAND;ARG COMMAND={get,search} ARG={filter:}
+        public void parseRequest(String orgName){ //requests come in the form ORGNAME which is equivalent to DatabaseConnection.id and the user being queried
             try{
-                DataOutputStream dos = new DataOutputStream(s.getOutputStream());
-                ArrayList<String> req = new ArrayList<String>(Arrays.asList(in.split(";"))); //split request into parseable list.
-                ListIterator iter = req.listIterator();
-                String result;
-                String orgName = (String)iter.next(); //get the name of the organization hosted in local to query.
-                String r = (String)iter.next();
-                switch(r){
-                    case "%get": //returns all events from orgName
-                        try{
-                            result = local.outputSearchResultString(orgName, "");
-                            dos.writeUTF(result);
-                        }catch(UserNotFoundException e){dos.writeUTF("USER NOT FOUND");}
-                        break;
-                    case "%search": //applies search filters.
-                        try{
-                            result = local.outputSearchResultString(orgName, (String)iter.next());
-                            dos.writeUTF(result);
-                        }catch(Exception e){dos.writeUTF("USER NOT FOUND");}
-                        break;
+                dos = new DataOutputStream(s.getOutputStream());
+                User queried = new User(local.findUser("user",orgName));
+                String result = "";
+                for(ScheduleEvent h : queried.getMyHostedEvents()){
+                    result+=h.toString()+"%";
                 }
-            } catch (Exception e){e.printStackTrace();}
+                dos.writeUTF(result);
+            } catch (ElementNotFoundException e){
+                try{dos.writeUTF("NONE");}catch(IOException io){}
+            }
+            catch (IOException i){}
         }
 
     }

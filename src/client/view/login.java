@@ -1,9 +1,11 @@
 package client.view;
 import java.awt.EventQueue;
 
-import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import java.awt.BorderLayout;
+import javax.swing.SwingConstants;
 
 import java.awt.Font;
 import javax.swing.JTextField;
@@ -12,14 +14,22 @@ import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
 
 import client.app.exceptions.*;
+import client.commander.BGCommander;
 
-public class login {
+public class login extends JPanel{
 
-	private JFrame frame;
-	private JTextField textFieldUN;
+	private JLabel lblUsername;
+	private JLabel lblPassword;
+	private JTextField usernameField;
 	private JPasswordField passwordField;
+	private JLabel lblprompt;
+	private BGCommander command;
+	private UserInterface ui;
+	private final JPanel panel=this;
 
 	/**
 	 * Launch the application.
@@ -28,74 +38,115 @@ public class login {
 	/**
 	 * Create the application.
 	 */
-	public login() {
+	public login(UserInterface parent) {
+		command = BGCommander.getBGCommander();
+		ui=parent;
 		initialize();
 	}
 
 	/**
-	 * Initialize the contents of the frame.
+	 * Initialize the contents of the panel.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
+		this.setLayout(new BorderLayout());
 
-		JLabel lblNewLabel = new JLabel("Username");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblNewLabel.setBounds(71, 67, 88, 27);
-		frame.getContentPane().add(lblNewLabel);
+		lblUsername = new JLabel("Username");
+		lblUsername.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblUsername.setBounds(71, 67, 88, 27);
 
-		JLabel lblNewLabel_1 = new JLabel("Password");
-		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblNewLabel_1.setBounds(71, 105, 88, 27);
-		frame.getContentPane().add(lblNewLabel_1);
+		lblPassword = new JLabel("Password");
+		lblPassword.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblPassword.setBounds(71, 105, 88, 27);
 
-		textFieldUN = new JTextField();
-		textFieldUN.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		textFieldUN.setBounds(161, 72, 153, 22);
-		frame.getContentPane().add(textFieldUN);
-		textFieldUN.setColumns(10);
+		usernameField = new JTextField();
+		usernameField.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		usernameField.setBounds(161, 72, 153, 22);
+		usernameField.setColumns(10);
 
 		passwordField = new JPasswordField();
+		passwordField.addActionListener(new loginButtonListener());
 		passwordField.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		passwordField.setBounds(161, 110, 152, 22);
-		frame.getContentPane().add(passwordField);
+
+		lblprompt = new JLabel("Enter username and password", SwingConstants.CENTER);
+		lblprompt.setFont(new Font("Sylfaen", Font.PLAIN, 14));
+		lblprompt.setBounds(71, 22, 250, 34);
+
+		this.add(lblprompt,BorderLayout.NORTH);
+		this.add(lblUsername,BorderLayout.CENTER);
+		this.add(usernameField,BorderLayout.CENTER);
+		this.add(lblPassword,BorderLayout.CENTER);
+		this.add(passwordField,BorderLayout.CENTER);
+		this.add(new JPanel(),BorderLayout.CENTER);
 
 		JButton btnlogin = new JButton("Log in");
-		btnlogin.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				UserInterface main = new UserInterface();
-				String Username=textFieldUN.getText();
-				String Password=passwordField.getText();
-				try{
-					main.command().login(Username, Password);
-					JOptionPane.showMessageDialog(null, "Correct Username and Password!");
-					frame.dispose();
-					main.launch();
-				}catch(ElementNotFoundException elem){
-					JOptionPane.showMessageDialog(null, "Incorrect Username or Password. Please Try Again!");
-				}
-				/**
-				if (main.command().login(Username, Password))//login (as well as logout) function requires implementation.
-				{
-					//Here I just realized that maybe blending entire login into Userinterface would make more sense.
-					//Otherwise, I have to create a class of userinterface here which might cause conflicts against RunApp().
-					JOptionPane.showMessageDialog(null, "Correct Username and Password!");
-					frame.dispose();
-					main.launch();
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "Incorrect Username or Password. Please Try Again!");
-				}
-				*/
-			}
-		});
+		btnlogin.addActionListener(new loginButtonListener());
 		btnlogin.setForeground(Color.BLUE);
 		btnlogin.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnlogin.setBounds(161, 176, 153, 27);
-		frame.getContentPane().add(btnlogin);
+		this.add(btnlogin, BorderLayout.SOUTH);
+	}
+
+
+//LISTENER CLASSES
+	private class loginButtonListener implements ActionListener, KeyListener{
+		private void login()throws ElementNotFoundException, UserLoggedInException, LoginFailedException{
+			String Username=usernameField.getText();
+			String Password=passwordField.getText();
+			command.login(Username, Password);
+			panel.removeAll();
+			lblprompt.setText(Username);
+			panel.add(lblprompt, BorderLayout.CENTER);
+			JLabel successMsg = new JLabel("Log in successfully", SwingConstants.CENTER);
+			successMsg.setFont(new Font("Sylfaen", Font.PLAIN, 14));
+			successMsg.setBounds(119, 22, 223, 34);
+			panel.add(successMsg, BorderLayout.CENTER);
+
+			JButton btnlogout = new JButton("Log out");
+			btnlogout.addActionListener(new logoutButtonListener());
+			btnlogout.setForeground(Color.BLUE);
+			btnlogout.setFont(new Font("Tahoma", Font.PLAIN, 16));
+			btnlogout.setBounds(161, 176, 153, 27);
+			panel.add(btnlogout, BorderLayout.SOUTH);
+
+			panel.repaint();
+			panel.validate();
+			ui.refreshDisplay();
+		}
+		public void actionPerformed(ActionEvent e) {
+
+			try{
+				login();
+			}catch(ElementNotFoundException elem){
+				lblprompt.setText(elem.getMsg());
+			}
+			catch(UserLoggedInException uex){
+				lblprompt.setText( uex.getMsg());
+			}
+			catch(LoginFailedException l){lblprompt.setText(l.getMsg());}
+		}
+		public void keyPressed(KeyEvent e){
+			if(e.getKeyCode()==KeyEvent.VK_ENTER){
+				try{login();}
+				catch(ElementNotFoundException elem){
+					lblprompt.setText(elem.getMsg());
+				}
+				catch(UserLoggedInException uex){
+					lblprompt.setText( uex.getMsg());
+				}
+				catch(LoginFailedException l){lblprompt.setText(l.getMsg());}
+			}
+		}
+		public void keyReleased(KeyEvent e){}
+		public void keyTyped(KeyEvent e){}
+	}
+	private class logoutButtonListener implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+					command.logout();
+					panel.removeAll();
+					initialize();
+					panel.repaint();
+		}
 	}
 
 }

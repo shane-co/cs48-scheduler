@@ -1,6 +1,7 @@
 package client.view;
 import client.commander.BGCommander;
 import client.app.obj.*;
+import client.app.exceptions.UserNotFoundException;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
@@ -11,19 +12,12 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
-public class DisplayScheduleDisplay extends JPanel{
-	
-	private JComboBox comboBox;
+public class DisplayScheduleDisplay extends JPanel implements DisplayScheduleComponent{
+
+	private JComboBox possibleSchedules;
 	private BGCommander commander;
-	private final String[] columnNames = {"ID", "DAY", "START DATE", "END DATE"};
 	public DisplayScheduleDisplay() {
 		initialize();
-	}
-
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
 		this.setBounds(100, 100, 500, 300);
 		this.setLayout(new BorderLayout(0, 0));
 		JPanel topPanel = new JPanel();
@@ -32,20 +26,33 @@ public class DisplayScheduleDisplay extends JPanel{
 		JTextPane chooseSchTxtPn = new JTextPane();
 		chooseSchTxtPn.setText("Choose Schedule to Display");
 		topPanel.add(chooseSchTxtPn, BorderLayout.WEST);
-		
-		comboBox = new JComboBox();
-		topPanel.add(comboBox, BorderLayout.CENTER);
+		topPanel.add(possibleSchedules, BorderLayout.CENTER);
 		this.add(topPanel, BorderLayout.NORTH);
-		
-		Object[][] data = {{"blaugh", "a", "b", "c"}};
-		JTable schedule = new JTable(data, columnNames);
-		JScrollPane scroll = new JScrollPane(schedule);
+
+		ScheduleDisplay display=new ScheduleDisplay();
+		JScrollPane scroll = new JScrollPane(display);
 		this.add(scroll, BorderLayout.CENTER);
-		
+
 		JButton deleteScheduleBtn = new JButton("Delete Schedule");
 		this.add(deleteScheduleBtn, BorderLayout.SOUTH);
-		
-		
 	}
-	
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		possibleSchedules = new JComboBox();
+	}
+
+	public void refresh(){
+		DefaultComboBoxModel schedmodel = new DefaultComboBoxModel();
+		try{
+			for(String org:commander.getSchedules()){
+				schedmodel.addElement(org);
+				possibleSchedules.setModel(schedmodel);
+			}
+		}catch(UserNotFoundException ex){}
+		catch(NullPointerException ex){}
+	}
+
 }

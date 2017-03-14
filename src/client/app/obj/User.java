@@ -8,6 +8,7 @@ import java.util.Iterator;
 import client.app.interfaces.ScheduleObject;
 import java.util.ArrayList;
 import org.w3c.dom.Element;
+import org.w3c.dom.Document;
 
 /**
 *Class representing a user using the Application. Maintains all data about the user and their
@@ -29,6 +30,13 @@ public class User extends ScheduleObject{
         myEvents = new ArrayList<ScheduleEvent>();
         myOrgs = new ArrayList<DatabaseConnection>();
     }
+    public User(Element e){
+        mySchedules = new ArrayList<Schedule>();
+        myHostedEvents = new ArrayList<ScheduleEvent>();
+        myEvents = new ArrayList<ScheduleEvent>();
+        myOrgs = new ArrayList<DatabaseConnection>();
+        load(e);
+    }
   //Functions to add to instance variables;
     public void setUsername(String s){username=s;}
     public void setPassword(String s){password=s;}
@@ -48,79 +56,62 @@ public class User extends ScheduleObject{
     //Functions to remove from instance variables;
     public String getUsername(){return username;}
     public void removeFromMySchedules(Schedule s){
-    	Iterator<Schedule> iter = mySchedules.iterator();
-    	while (iter.hasNext()){
-    		Schedule ss = iter.next();
-    		if (s == ss)
-    		{
-    	    	this.mySchedules.remove(s);
-
-    		}
-    	}
+    	mySchedules.remove(s);
     }
     public void removeFromMyEvents(ScheduleEvent s){
-    	Iterator<ScheduleEvent> iter = myEvents.iterator();
-    	while (iter.hasNext()){
-    		ScheduleEvent ss = iter.next();
-    		if (s == ss)
-    		{
-    	    	this.myEvents.remove(s);
-
-    		}
-    	}
+    	myEvents.remove(s);
     }
     public void removeHostedEvent(ScheduleEvent s){
-    	Iterator<ScheduleEvent> iter = myHostedEvents.iterator();
-    	while (iter.hasNext()){
-    		ScheduleEvent ss = iter.next();
-    		if (s == ss)
-    		{
-    	    	this.myHostedEvents.remove(s);
-
-    		}
-    	}
+    	myHostedEvents.remove(s);
     }
     public void removeDatabaseConnection(DatabaseConnection d){
-    	Iterator<DatabaseConnection> iter = myOrgs.iterator();
-    	while (iter.hasNext()){
-    		DatabaseConnection ss = iter.next();
-    		if (d == ss)
-    		{
-    	    	this.myOrgs.remove(d);
-
-    		}
-    	}
+    	myOrgs.remove(d);
     }
 
     //Accessor functions
     public String getPassword(){return password;}
+    public String nextSchedID(){
+        if(mySchedules.size()==0)return "1";
+        else{
+            Schedule lastSched = mySchedules.get(mySchedules.size()-1);
+            return Integer.toString(Integer.parseInt(lastSched.getID())+1);
+        }
+    }
     public ArrayList<Schedule> getMySchedules(){return mySchedules;}
     public ArrayList<ScheduleEvent> getMyEvents(){return myEvents;}
     public ArrayList<ScheduleEvent> getMyHostedEvents(){return myHostedEvents;}
     public ArrayList<DatabaseConnection> getMyOrgs(){return myOrgs;}
-
+    @Override public boolean equals(Object o){
+        if(this==o)return true;
+        if(o==null)return false;
+        if(!(o instanceof User)) return false;
+        User other = (User) o;
+        return other.getUsername().equals(this.getUsername());
+    }
     //ScheduleObject methods
-    public Element record(){
-        return super.record(this); //inherited by Superclass
+    public Element record(Document doc){
+        return super.record(this,doc); //inherited by Superclass
     }
     public void load(Element root){ //recieves a "user" DOM Element Node.
-        username=root.getAttribute("id");
-        password=root.getAttribute("pw");
-        myEvents=new ArrayList<ScheduleEvent>();
-        myHostedEvents=new ArrayList<ScheduleEvent>();
-        mySchedules=new ArrayList<Schedule>();
-        myOrgs= new ArrayList<DatabaseConnection>();
-        Element field = (Element)root.getFirstChild();
-        do{
-            //process entries in a field
-            loadArrayList(field,field.getNodeName());
-            //get next field.
-            field=(Element)field.getNextSibling();
-        }while(field!=null);
+        if (root!=null) {
+            username=root.getAttribute("id");
+            password=root.getAttribute("pw");
+            myEvents=new ArrayList<ScheduleEvent>();
+            myHostedEvents=new ArrayList<ScheduleEvent>();
+            mySchedules=new ArrayList<Schedule>();
+            myOrgs= new ArrayList<DatabaseConnection>();
+            Element field = (Element)root.getFirstChild();
+            while(field!=null){
+                //process entries in a field
+                loadArrayList(field,field.getNodeName());
+                //get next field.
+                field=(Element)field.getNextSibling();
+            }
+        }
     }
     private void loadArrayList(Element field,String tag){ //helper function to load series of DOM Elements
         Element e = (Element)field.getFirstChild();
-        do{
+        while(e!=null){
             switch(tag){
                 case("myEvents"): myEvents.add(new ScheduleEvent(e));
                     break;
@@ -132,7 +123,7 @@ public class User extends ScheduleObject{
                     break;
             }
             e=(Element)e.getNextSibling();
-        }while(e!=null);
+        }
     }
 
 }

@@ -14,10 +14,8 @@ public class AddButtonListener extends EventButtonListener{
     @Override protected void editDisplay(String evid){
     	try{
     		BGCommander.getBGCommander().subscribeEvent(evid);
+     		UserInterface.getUserInterface().refreshDisplay();
     	}
-    	catch  (ElementNotFoundException e){
-    		
-    	}
-		UserInterface.getUserInterface().refreshDisplay();
+    	catch  (ElementNotFoundException e){}
     }
 }

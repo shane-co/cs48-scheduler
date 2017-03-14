@@ -9,6 +9,7 @@ import client.app.interfaces.ScheduleObject;
 import java.util.ArrayList;
 //ScheduleEvent imports
 import org.w3c.dom.Element;
+import org.w3c.dom.Document;
 
 /**
 *Class representing an event. Basic object that a user will subscribe to. Is created by Organizations and has event dependencies,
@@ -17,64 +18,102 @@ import org.w3c.dom.Element;
 public class ScheduleEvent extends ScheduleObject{
 
     private ArrayList<Dependencies> deps;
-    private int day;
-    private int start;
-    private int end;
+    private ArrayList<TimeBlock> duration;
     private String description;
     private String id;
-    public ScheduleEvent(ArrayList<Dependencies> dep,int d,int s, int e, String dp,String i)
+    public ScheduleEvent(ArrayList<Dependencies> dep, ArrayList<TimeBlock> dur, String dp,String i)
     {
     	deps=dep;
-    	day=d;
-    	start=s;
-    	end=e;
+    	duration=dur;
     	description=dp;
         id=i;
     }
 
-    public ScheduleEvent(int d,int s, int e, String dp,String i)
-    {
-    	day=d;
-    	start=s;
-    	end=e;
-    	description=dp;
-        id=i;
-    }
     public ScheduleEvent(Element root){
+        deps = new ArrayList<Dependencies>();
+        duration = new ArrayList<TimeBlock>();
         load(root);
     }
 
-    public int what_day() {return day;}
-    public int when_to_start() {return start; }
-    public int when_to_end() {return end; }
-    public int duration() {return start-end;}
+    public ScheduleEvent(String networkDesc){
+        deps = new ArrayList<Dependencies>();
+        duration = new ArrayList<TimeBlock>();
+        load(networkDesc);
+    }
+
+    public ArrayList<TimeBlock> duration(){return duration;}
     public String get_descpt() {return description; }
     public String get_ID() {return id; }
-    public void set_day(int d){day=d;}
-    public void set_start(int s) {start=s; }
-    public void set_to_end(int e) { end=e; }
-    public void set_descpt(String dp) { description=dp; }
-    public void set_id(String i){id=i;}
-    public int num_deps(){return deps.size();}
-    public Dependencies getDependency(int index){return deps.get(index);}
+    public ArrayList<Dependencies> getDependencies(){return deps;}
 
-    //STUB METHOD
-    public String display(){return "STUB";}
+    public boolean conflicts(ScheduleEvent compare){
+        for(TimeBlock t : compare.duration()){
+            if(duration.contains(t)) return true;
+        }
+        return false;
+    }
 
+    @Override public boolean equals(Object o){
+        if(this==o)return true;
+        if(o==null)return false;
+        if(!(o instanceof ScheduleEvent)) return false;
+        ScheduleEvent other = (ScheduleEvent) o;
+        return other.get_ID().equals(id);
+    }
+
+    @Override public String toString(){
+        String durationString = "";
+        String dependencyString = "";
+        for(TimeBlock t: duration){
+            durationString+= t.toString()+"&";
+        }
+        for(Dependencies d: deps){
+            dependencyString+=d.toString();
+        }
+        String result = "id:"+id+";description:"+description+";duration:"+durationString+";dependencies:"+dependencyString;
+        //id:JARED;description:SOMETEXT;duration:((0-7),(0-2400)|)*;dependencies:?
+        return result;
+    }
     //ScheduleObject methods
-    public Element record(){
-        return super.record(this); //inherited by Superclass
+    public Element record(Document doc){
+        return super.record(this,doc); //inherited by Superclass
     }
     public void load(Element root){
-        id=root.getAttribute("id");
-        day=Integer.parseInt(root.getAttribute("day"));
-        start=Integer.parseInt(root.getAttribute("start"));
-        end=Integer.parseInt(root.getAttribute("end"));
-        description=root.getFirstChild().getTextContent();
-        Element d = (Element)root.getLastChild().getFirstChild();
-        do{
-            deps.add(new Dependencies(d));
-            d= (Element)d.getNextSibling();
-        }while(d!=null);
+        if(root!=null){
+            id=root.getAttribute("id");
+            description=root.getFirstChild().getTextContent();
+            Element depelem = (Element)root.getFirstChild().getNextSibling();
+            Element dpnd = (Element)depelem.getFirstChild();
+            while(dpnd!=null){
+                deps.add(new Dependencies(dpnd));
+                dpnd= (Element)dpnd.getNextSibling();
+            }
+            Element drtn = (Element)depelem.getNextSibling().getFirstChild();
+            while(drtn!=null){
+                 duration.add(new TimeBlock(drtn));
+                 drtn=(Element)drtn.getNextSibling();
+            }
+        }
+    }
+
+    public void load(String recv){
+        String[] fields = recv.split(";");
+        id=fields[0].split(":")[1];
+        description=fields[1].split(":")[1];
+        loadArray(fields[2]);
+        loadArray(fields[3]);
+    }
+    private void loadArray(String data){
+        String[] parts = data.split(":");
+        switch(parts[0]){
+            case "duration":
+                for(String dur:parts[1].split("&")){
+                    duration.add(new TimeBlock(dur));
+                }
+            break;
+            case "dependencies":
+                //STUB Class Dependencies has no load(String) function and no Dependencies(String) constructor.
+            break;
+        }
     }
 }

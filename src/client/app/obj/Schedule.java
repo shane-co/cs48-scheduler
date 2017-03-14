@@ -6,56 +6,53 @@ import client.app.obj.TimeBlock;
 import java.util.ArrayList;
 import client.app.interfaces.ScheduleObject;
 import org.w3c.dom.Element;
+import org.w3c.dom.Document;
 
 
 public class Schedule extends ScheduleObject{
-	private ArrayList<TimeBlock> tb;
+	private ArrayList<ScheduleEvent> events; //all their timeblocks do not intersect.
 	private int month;
 	private int day;
 	private String id;
 
-	public Schedule(ArrayList<ScheduleEvent> events, String idnum, int m, int d){
+	public Schedule(ArrayList<ScheduleEvent> e, String idnum, int m, int d){
 		id = idnum;
 		month=m;
 		day=d;
-		//create timeblocks for a week
-		for (int day=1; day<=7; day++)
-			for (int hour=0; hour<24; hour++)
-			{
-				TimeBlock t=new TimeBlock(day,hour);
-				tb.add(t);
-			}
-
-		//insert events into their corresponding timeblock(s)
-		for (int i=0; i<events.size(); i++){
-			for (int j=0;j<=(events.get(i).duration()-1)/100;j++){
-				tb.get((events.get(i).what_day()-1)*24+events.get(i).when_to_start()+j).addEvent(events.get(i));
-			}
-		}
+		events=e;
 	}
 	public Schedule(Element root){ //Constructor that takes a DOM element and loads it.
 		load(root);
 	}
 
-	public int size_of_TimeBlock() {return tb.size();}
+	public int numEvents() {return events.size();}
 	public int get_month() {return month;}
 	public int get_day() {return day;}
-	public TimeBlock get_TimeBlock(int index) {return tb.get(index);}
+	public ArrayList<ScheduleEvent> get_ScheduleEvents() {return events;}
 	public String getID(){return id;}
-	//to simplify event modification, I suggest using remove and add function of class
-	//timeblock itself. remove the event requiring modification and add the modified one
-	//back.
+
+	@Override public boolean equals(Object o){
+        if(this==o)return true;
+        if(o==null)return false;
+        if(!(o instanceof Schedule)) return false;
+		Schedule other = (Schedule) o;
+		return other.getID().equals(id);
+    }
 
 	//ScheduleObject methods
-	@Override public Element record(){
-		return super.record(this);
+	@Override public Element record(Document doc){
+		return super.record(this,doc);
     }
 	public void load(Element root){
-		id=root.getAttribute("id");
-		Element tbelement = (Element) root.getFirstChild();
-		do{
-			tb.add(new TimeBlock(tbelement));
-			tbelement=(Element)tbelement.getNextSibling();
-		}while(tbelement!=null);
+		if(root!=null){
+			id=root.getAttribute("id");
+			month=Integer.parseInt(root.getAttribute("month"));
+			day=Integer.parseInt(root.getAttribute("day"));
+			Element evElement = (Element) root.getFirstChild();
+			while(evElement!=null){
+				events.add(new ScheduleEvent(evElement));
+				evElement=(Element)evElement.getNextSibling();
+			}
+		}
 	}
 }
