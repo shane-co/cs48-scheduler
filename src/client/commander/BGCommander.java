@@ -100,6 +100,13 @@ public class BGCommander{
         return display;
     }
 
+    public Schedule getSchedToDisplay(String schedid)throws UserNotFoundException{
+        for(Schedule s:client.getUserSchedules()){
+            if(s.getID().equals(schedid))return s;
+        }
+        return null;
+    }
+
     public ArrayList<String> getOrgNames() throws UserNotFoundException{
         ArrayList<String> display = new ArrayList<String>();
         for(DatabaseConnection o:client.getUserOrgs()){
