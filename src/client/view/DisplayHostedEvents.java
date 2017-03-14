@@ -4,6 +4,7 @@ import client.app.obj.*;
 import client.app.exceptions.*;
 import client.view.listeners.CreateHostedListener;
 import client.view.listeners.DelButtonListener;
+import client.view.listeners.InfoListener;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -52,13 +53,13 @@ public class DisplayHostedEvents extends JSplitPane implements DisplayScheduleCo
 			additionalInformationPanel.setLayout(new BorderLayout(0, 0));
 			JTextPane addInfoTxtPn = new JTextPane();
 			addInfoTxtPn.setText("Additional Information");
-			JTextField addInfoTxtFld = new JTextField();
+			JTextPane addInfoTxtFld = new JTextPane();
 			JButton removeHostedEventBtn = new JButton("Remove Hosted Event");
 			removeHostedEventBtn.addActionListener(new DelButtonListener(hostedEventsList,"hosted"));
 		additionalInformationPanel.add(removeHostedEventBtn, BorderLayout.SOUTH);
 		additionalInformationPanel.add(addInfoTxtPn, BorderLayout.NORTH);
-		additionalInformationPanel.add(addInfoTxtFld, BorderLayout.CENTER);
-
+		additionalInformationPanel.add(new JScrollPane(addInfoTxtFld), BorderLayout.CENTER);
+		hostedEventsList.addListSelectionListener( new InfoListener(hostedEventsList, addInfoTxtFld, true));
 		//make left panel
 		leftPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, topLeftPanel, additionalInformationPanel);
 		leftPanel.setDividerLocation(.5);

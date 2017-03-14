@@ -13,15 +13,18 @@ import javax.swing.event.ListSelectionEvent;
 public class InfoListener implements ListSelectionListener{
 	JList list;
 	JTextPane txtField;
-    public InfoListener(JList list, JTextPane txtField){
+	boolean hosted;
+    public InfoListener(JList list, JTextPane txtField, boolean h){
         this.list = list;
         this.txtField = txtField;
+		hosted = h;
     }
 
     public void valueChanged(ListSelectionEvent e) {
     	try{
 			String event = (String)list.getSelectedValue();
-	    	txtField.setText(BGCommander.getBGCommander().getEventInfo(event));
+	    	if(hosted) txtField.setText(BGCommander.getBGCommander().getHEventInfo(event));
+			else txtField.setText(BGCommander.getBGCommander().getEventInfo(event));
 	    	UserInterface.getUserInterface().refreshDisplay();
 		}catch(UserNotFoundException ex){}
     }
