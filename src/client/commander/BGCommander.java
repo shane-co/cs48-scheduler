@@ -73,7 +73,11 @@ public class BGCommander{
     }
     //Function to get a list of schedules
     public ArrayList<String> getSchedules() throws UserNotFoundException{
-	 return new ArrayList<String>();
+        ArrayList<String> display = new ArrayList<String>();
+        for(Schedule s:client.getUserSchedules()){
+            display.add(s.getID());
+        }
+        return display;
     }
 
     public ArrayList<String> getOrgNames() throws UserNotFoundException{

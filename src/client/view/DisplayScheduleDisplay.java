@@ -1,6 +1,7 @@
 package client.view;
 import client.commander.BGCommander;
 import client.app.obj.*;
+import client.app.exceptions.UserNotFoundException;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
@@ -15,7 +16,6 @@ public class DisplayScheduleDisplay extends JPanel implements DisplayScheduleCom
 
 	private JComboBox possibleSchedules;
 	private BGCommander commander;
-	private final String[] columnNames = {"ID", "DAY", "START DATE", "END DATE"};
 	public DisplayScheduleDisplay() {
 		initialize();
 		this.setBounds(100, 100, 500, 300);
@@ -29,9 +29,8 @@ public class DisplayScheduleDisplay extends JPanel implements DisplayScheduleCom
 		topPanel.add(possibleSchedules, BorderLayout.CENTER);
 		this.add(topPanel, BorderLayout.NORTH);
 
-		Object[][] data = {{"blaugh", "a", "b", "c"}};
-		JTable schedule = new JTable(data, columnNames);
-		JScrollPane scroll = new JScrollPane(schedule);
+		ScheduleDisplay display=new ScheduleDisplay();
+		JScrollPane scroll = new JScrollPane(display);
 		this.add(scroll, BorderLayout.CENTER);
 
 		JButton deleteScheduleBtn = new JButton("Delete Schedule");
@@ -45,6 +44,15 @@ public class DisplayScheduleDisplay extends JPanel implements DisplayScheduleCom
 		possibleSchedules = new JComboBox();
 	}
 
-	public void refresh(){}
+	public void refresh(){
+		DefaultComboBoxModel schedmodel = new DefaultComboBoxModel();
+		try{
+			for(String org:commander.getSchedules()){
+				schedmodel.addElement(org);
+				possibleSchedules.setModel(schedmodel);
+			}
+		}catch(UserNotFoundException ex){}
+		catch(NullPointerException ex){}
+	}
 
 }
