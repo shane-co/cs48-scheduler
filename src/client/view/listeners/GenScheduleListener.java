@@ -74,7 +74,10 @@ public class GenScheduleListener implements ActionListener{
         private Schedule candidate;
         public addListener(Schedule e){candidate=e;}
         public void actionPerformed(ActionEvent e){
-            try{BGCommander.getBGCommander().addSchedule(candidate);}
+            try{
+                BGCommander.getBGCommander().addSchedule(candidate);
+                displayWindow.dispose();
+            }
             catch(ElementNotFoundException ex){System.out.println("login please");}
         }
     }

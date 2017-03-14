@@ -2,6 +2,7 @@ package client.view;
 import client.commander.BGCommander;
 import client.app.obj.*;
 import client.app.exceptions.UserNotFoundException;
+import client.view.listeners.SchedSelectionListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
@@ -32,6 +33,8 @@ public class DisplayScheduleDisplay extends JPanel implements DisplayScheduleCom
 		ScheduleDisplay display=new ScheduleDisplay();
 		JScrollPane scroll = new JScrollPane(display);
 		this.add(scroll, BorderLayout.CENTER);
+
+		possibleSchedules.addActionListener(new SchedSelectionListener(possibleSchedules, display));
 
 		JButton deleteScheduleBtn = new JButton("Delete Schedule");
 		this.add(deleteScheduleBtn, BorderLayout.SOUTH);
