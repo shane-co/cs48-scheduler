@@ -149,7 +149,7 @@ public class DisplayMyEvents extends JSplitPane implements DisplayScheduleCompon
 				orgmodel.addElement(org);
 				availableOrgs.setModel(orgmodel);
 			}
-		}catch(UserNotFoundException e){}
+		}catch(UserNotFoundException e){evmodel.clear();availableOrgs.removeAllItems();}
 	}
 
 }

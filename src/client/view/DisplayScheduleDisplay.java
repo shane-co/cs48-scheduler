@@ -51,7 +51,7 @@ public class DisplayScheduleDisplay extends JPanel implements DisplayScheduleCom
 				schedmodel.addElement(org);
 				possibleSchedules.setModel(schedmodel);
 			}
-		}catch(UserNotFoundException ex){}
+		}catch(UserNotFoundException ex){possibleSchedules.removeAllItems();}
 		catch(NullPointerException ex){}
 	}
 

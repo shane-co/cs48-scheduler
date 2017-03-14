@@ -55,18 +55,10 @@ public class DisplayMyOrganizations extends JSplitPane implements DisplaySchedul
 		JTextField ipInputTxtPn = new JTextField();
 		rightColumnPanel.add(ipInputTxtPn);
 
-		JTextPane portTxtPn = new JTextPane();
-		portTxtPn.setText("Port : ");
-		portTxtPn.setEditable(false);
-		rightColumnPanel.add(portTxtPn);
-
-		JTextField portInputTxtPn = new JTextField();
-		rightColumnPanel.add(portInputTxtPn);
-
 		rightPanel.add(rightColumnPanel, BorderLayout.CENTER);
 
 		JButton addHostedEventBtn = new JButton("Add to Hosted Events");
-		addHostedEventBtn.addActionListener(new CreateOrgListener(nameInputTxtPn,ipInputTxtPn,portInputTxtPn));
+		addHostedEventBtn.addActionListener(new CreateOrgListener(nameInputTxtPn,ipInputTxtPn));
 		rightPanel.add(addHostedEventBtn, BorderLayout.SOUTH);
 
 		//add both leftPanel and rightPanel to this

@@ -57,6 +57,11 @@ public class ScheduleDisplay extends JPanel{
 		this.add(calendar, BorderLayout.CENTER);
 	}
 
+	public ScheduleDisplay(Schedule s){
+		this();
+		this.setSchedule(s);
+	}
+
 	public void setSchedule(Schedule s){
 		for (int i =1; i<7; i++)
 			calendar.getTimetableSettings().getDates().add(new DateTime(2017,s.get_month(),s.get_day()).addDays(i));

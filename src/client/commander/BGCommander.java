@@ -212,10 +212,8 @@ public class BGCommander{
         }catch(ElementNotFoundException e){}
     }
 
-    public void addOrganization(String id, String ip, String port){
-        System.out.println("adding org");
-	int portID = Integer.parseInt(port);
-	DatabaseConnection d = new DatabaseConnection(id,ip,portID);
+    public void addOrganization(String id, String ip){
+	DatabaseConnection d = new DatabaseConnection(id,ip,7777);
 	try{
 	    client.registerOrg(d);
 	   }catch(ElementNotFoundException e){}

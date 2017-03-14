@@ -8,11 +8,11 @@ import javax.swing.JTextField;
 
 public class CreateOrgListener implements ActionListener{
     private JTextField id,orgip,port;
-    public CreateOrgListener(JTextField i, JTextField ip, JTextField p){
-        id=i; orgip=ip; port=p;
+    public CreateOrgListener(JTextField i, JTextField ip){
+        id=i; orgip=ip;
     }
     public void actionPerformed(ActionEvent e){
-        BGCommander.getBGCommander().addOrganization(id.getText(),orgip.getText(),port.getText());
+        BGCommander.getBGCommander().addOrganization(id.getText(),orgip.getText());
         UserInterface.getUserInterface().refreshDisplay();
     }
 }

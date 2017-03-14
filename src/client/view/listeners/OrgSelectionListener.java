@@ -11,18 +11,20 @@ import java.util.ArrayList;
 
 public class OrgSelectionListener implements ActionListener{
     private JComboBox orgBox;
-    private DefaultListModel<String> availableOrgsList;
+    private DefaultListModel<String> availableEvsList;
     public OrgSelectionListener(JComboBox box, ListModel list){
         orgBox=box;
-        availableOrgsList=(DefaultListModel)list;
+        availableEvsList=(DefaultListModel)list;
     }
     public void actionPerformed(ActionEvent e){
-        String orgname = (String)orgBox.getSelectedItem();
-        ArrayList<String> available = BGCommander.getBGCommander().search(orgname);
-        availableOrgsList.removeAllElements();
-        for(String ev:available){
-            availableOrgsList.addElement(ev);
-        }
-        UserInterface.getUserInterface().refreshDisplay();
+        try{
+            String orgname = (String)orgBox.getSelectedItem();
+            ArrayList<String> available = BGCommander.getBGCommander().search(orgname);
+            availableEvsList.removeAllElements();
+            for(String ev:available){
+                availableEvsList.addElement(ev);
+            }
+            UserInterface.getUserInterface().refreshDisplay();
+        }catch(NullPointerException ex){}
     }
 }

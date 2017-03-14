@@ -173,7 +173,7 @@ public class DisplayHostedEvents extends JSplitPane implements DisplayScheduleCo
 			for(String ev:BGCommander.getBGCommander().getHosted()){
 				if(!hostedModel.contains(ev)) hostedModel.addElement(ev);
 			}
-		}catch(UserNotFoundException e){}
+		}catch(UserNotFoundException e){hostedModel.clear();}
 	}
 
 }
