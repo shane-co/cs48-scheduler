@@ -2,6 +2,7 @@ package client.view;
 import client.commander.BGCommander;
 import client.app.obj.*;
 import client.app.exceptions.UserNotFoundException;
+import client.view.listeners.SchedSelectionListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
@@ -15,7 +16,7 @@ import javax.swing.*;
 public class DisplayScheduleDisplay extends JPanel implements DisplayScheduleComponent{
 
 	private JComboBox possibleSchedules;
-	private BGCommander commander;
+	private ScheduleDisplay display;
 	public DisplayScheduleDisplay() {
 		initialize();
 		this.setBounds(100, 100, 500, 300);
@@ -25,13 +26,15 @@ public class DisplayScheduleDisplay extends JPanel implements DisplayScheduleCom
 		topPanel.setLayout(new BorderLayout(0, 0));
 		JTextPane chooseSchTxtPn = new JTextPane();
 		chooseSchTxtPn.setText("Choose Schedule to Display");
+		chooseSchTxtPn.setEditable(false);
 		topPanel.add(chooseSchTxtPn, BorderLayout.WEST);
 		topPanel.add(possibleSchedules, BorderLayout.CENTER);
 		this.add(topPanel, BorderLayout.NORTH);
 
-		ScheduleDisplay display=new ScheduleDisplay();
-		JScrollPane scroll = new JScrollPane(display);
-		this.add(scroll, BorderLayout.CENTER);
+		display=new ScheduleDisplay();
+		this.add(new JScrollPane(display), BorderLayout.CENTER);
+
+		possibleSchedules.addActionListener(new SchedSelectionListener(possibleSchedules, display));
 
 		JButton deleteScheduleBtn = new JButton("Delete Schedule");
 		this.add(deleteScheduleBtn, BorderLayout.SOUTH);
@@ -47,12 +50,12 @@ public class DisplayScheduleDisplay extends JPanel implements DisplayScheduleCom
 	public void refresh(){
 		DefaultComboBoxModel schedmodel = new DefaultComboBoxModel();
 		try{
-			for(String org:commander.getSchedules()){
+			for(String org:BGCommander.getBGCommander().getSchedules()){
 				schedmodel.addElement(org);
 				possibleSchedules.setModel(schedmodel);
 			}
-		}catch(UserNotFoundException ex){}
-		catch(NullPointerException ex){}
+		}catch(UserNotFoundException ex){possibleSchedules.removeAllItems();}
+		//catch(NullPointerException ex){		System.out.println("exception");}
 	}
 
 }

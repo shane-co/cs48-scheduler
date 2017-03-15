@@ -75,7 +75,6 @@ public class Client{
  	*Function to add User object to local Database. Allows user to sign in with registered credentials
 	*@param u instantiated User object to be added to Database.
  	*/
-
 	public void addUser(User u){
 		local.addUser(u.record(local.getDocument()));
 	}
@@ -112,7 +111,7 @@ public class Client{
     */
     public void addSchedule(Schedule s)throws ElementNotFoundException{
         if(currUser==null)throw new UserNotFoundException();
-//update the currUser to include schedule.
+        //update the currUser to include schedule.
 		currUser.addToMySchedules(s);
 		//update the local database to reflect new change.
 		local.modifyUser(currUser.getUsername(), true, "mySchedules", s.record(local.getDocument()));

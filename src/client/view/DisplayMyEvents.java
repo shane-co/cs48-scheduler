@@ -63,7 +63,7 @@ public class DisplayMyEvents extends JSplitPane implements DisplayScheduleCompon
 			removeEventsBtn.addActionListener(new DelButtonListener(myEventsList,"event"));
 			eventActions.add(genScheduleBtn,BorderLayout.NORTH);
 			eventActions.add(removeEventsBtn,BorderLayout.SOUTH);
-			myEventsList.addListSelectionListener( new InfoListener(myEventsList, leftAddInfoTxtFld, false));
+			myEventsList.addListSelectionListener( new InfoListener(myEventsList, leftAddInfoTxtFld, "local"));
 		leftAdditionalInfoPanel.add(leftAddInfoTxtPn, BorderLayout.NORTH);
 		leftAdditionalInfoPanel.add(new JScrollPane(leftAddInfoTxtFld), BorderLayout.CENTER);
 		leftAdditionalInfoPanel.add(eventActions, BorderLayout.SOUTH);
@@ -109,6 +109,7 @@ public class DisplayMyEvents extends JSplitPane implements DisplayScheduleCompon
 			rightAdditionalInfoPanel.add(rightAddInfoTxtFld, BorderLayout.CENTER);
 			JButton addEventsBtn = new JButton("Add Event");
 			addEventsBtn.addActionListener(new AddButtonListener(availableEventsList));
+			availableEventsList.addListSelectionListener(new InfoListener(availableEventsList, rightAddInfoTxtPn, "remote"));
 		rightAdditionalInfoPanel.add(rightAddInfoTxtPn, BorderLayout.NORTH);
 		rightAdditionalInfoPanel.add(rightAddInfoTxtFld, BorderLayout.CENTER);
 		rightAdditionalInfoPanel.add(addEventsBtn, BorderLayout.SOUTH);
@@ -129,11 +130,9 @@ public class DisplayMyEvents extends JSplitPane implements DisplayScheduleCompon
 	private void initialize() {
 		myEventsList = new JList(new DefaultListModel<String>());
 		leftAddInfoTxtFld = new JTextPane();
-		leftAddInfoTxtFld.setEditable(false);
 		availableOrgs = new JComboBox(new DefaultComboBoxModel());
 		availableEventsList = new JList(new DefaultListModel());
 		rightAddInfoTxtFld = new JTextPane();
-		rightAddInfoTxtFld.setEditable(false);
 
 		availableOrgs.addActionListener(new OrgSelectionListener(availableOrgs,availableEventsList.getModel()));
 		//myEventsList.addListSelectionListener();
@@ -143,6 +142,7 @@ public class DisplayMyEvents extends JSplitPane implements DisplayScheduleCompon
 	}
 	public void refresh(){
 		DefaultListModel evmodel = (DefaultListModel)myEventsList.getModel();
+		DefaultListModel evmodel2 = (DefaultListModel)availableEventsList.getModel();
 		DefaultComboBoxModel orgmodel = new DefaultComboBoxModel();
 		try{
 			ArrayList<String> orglist = commander.getScheduleEvents();
@@ -157,10 +157,8 @@ public class DisplayMyEvents extends JSplitPane implements DisplayScheduleCompon
 				//a[count] = org;
 				//count++;
 			}
-			//availableOrgs.setModel(new DefaultComboBoxModel(a));
-			availableOrgs.setModel(orgmodel);
-			//availableOrgs = new JComboBox(a);
-		}catch(UserNotFoundException e){evmodel.clear();availableOrgs.removeAllItems();}
+
+		}catch(UserNotFoundException e){evmodel.clear();evmodel2.clear();availableOrgs.removeAllItems();leftAddInfoTxtFld.setText("");}
 	}
 
 }

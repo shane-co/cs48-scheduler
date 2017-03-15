@@ -81,7 +81,7 @@ public class UserInterface extends JFrame{
 		paneRight.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		paneLeft.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		splitPaneLR.setOneTouchExpandable(true);
-		splitPaneLR.setResizeWeight(0.6);
+		splitPaneLR.setDividerLocation(0.8);
 
 		this.getContentPane().add(splitPaneLR);
 	}

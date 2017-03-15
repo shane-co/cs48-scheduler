@@ -64,6 +64,35 @@ public class BGCommander{
         return display;
     }
 
+    public String getEventInfo(String evid)throws UserNotFoundException{
+        String evInfo ="";
+        for(ScheduleEvent e:client.getUserEvents()){
+            if(e.get_ID().equals(evid)){
+                evInfo="ID: " + evid +"\n"+"Description: " + e.get_descpt() + "\n"+"Times: " + e.getDurationString();
+            }
+        }
+        return evInfo;
+    }
+
+    public String getHEventInfo(String evid)throws UserNotFoundException{
+        String evInfo ="";
+        for(ScheduleEvent e:client.getUserHosted()){
+            if(e.get_ID().equals(evid)){
+                evInfo="ID: " + evid +"\n"+"Description: " + e.get_descpt() + "\n"+"Times: " + e.getDurationString();
+            }
+        }
+        return evInfo;
+    }
+
+    public String getRemoteEventInfo(String evid){
+        String evInfo ="";
+        for(ScheduleEvent e:this.remoteList){
+            if(e.get_ID().equals(evid)){
+                evInfo="ID: " + evid +"\n"+"Description: " + e.get_descpt() + "\n"+"Times: " + e.getDurationString();
+            }
+        }
+        return evInfo;
+    }
     public ArrayList<String> getHosted() throws UserNotFoundException{
         ArrayList<String> display = new ArrayList<String>();
         for(ScheduleEvent e:client.getUserHosted()){
@@ -78,6 +107,13 @@ public class BGCommander{
             display.add(s.getID());
         }
         return display;
+    }
+
+    public Schedule getSchedToDisplay(String schedid)throws UserNotFoundException{
+        for(Schedule s:client.getUserSchedules()){
+            if(s.getID().equals(schedid))return s;
+        }
+        return null;
     }
 
     public ArrayList<String> getOrgNames() throws UserNotFoundException{
@@ -204,7 +240,6 @@ public class BGCommander{
                 case "hosted": ScheduleEvent hosted = new ScheduleEvent(new ArrayList<Dependencies>(), new ArrayList<TimeBlock>(), "", id);
                     client.deleteEvent(hosted);
                     break;
-                case "sched": break;
                 case "org": DatabaseConnection d = new DatabaseConnection(id,"",0);
                     client.forgetOrg(d);
                     break;
@@ -212,10 +247,8 @@ public class BGCommander{
         }catch(ElementNotFoundException e){}
     }
 
-    public void addOrganization(String id, String ip, String port){
-        System.out.println("adding org");
-	int portID = Integer.parseInt(port);
-	DatabaseConnection d = new DatabaseConnection(id,ip,portID);
+    public void addOrganization(String id, String ip){
+	DatabaseConnection d = new DatabaseConnection(id,ip,7777);
 	try{
 	    client.registerOrg(d);
 	   }catch(ElementNotFoundException e){}

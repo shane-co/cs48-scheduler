@@ -42,6 +42,7 @@ public abstract class ScheduleObject{
             sched.setAttributeNode(schedid);
             sched.setAttributeNode(schedmo);
             sched.setAttributeNode(schedday);
+            return sched;
         }
         else if(o instanceof TimeBlock){
             TimeBlock t = (TimeBlock) o;

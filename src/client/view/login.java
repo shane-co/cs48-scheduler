@@ -84,35 +84,44 @@ public class login extends JPanel{
 		btnlogin.setForeground(Color.BLUE);
 		btnlogin.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnlogin.setBounds(161, 176, 153, 27);
-		this.add(btnlogin, BorderLayout.SOUTH);
+		JButton btnadd = new JButton("Add User");
+		btnadd.addActionListener(new addUserListener());
+		btnadd.setForeground(Color.BLUE);
+		btnadd.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnadd.setBounds(161, 176, 153, 27);
+		JPanel btnPanel = new JPanel();
+		btnPanel.setLayout(new BorderLayout());
+		btnPanel.add(btnadd, BorderLayout.SOUTH);
+		btnPanel.add(btnlogin, BorderLayout.NORTH);
+		this.add(btnPanel, BorderLayout.SOUTH);
 	}
 
+	private void login()throws ElementNotFoundException, UserLoggedInException, LoginFailedException{
+		String Username=usernameField.getText();
+		String Password=passwordField.getText();
+		command.login(Username, Password);
+		this.removeAll();
+		lblprompt.setText(Username);
+		this.add(lblprompt, BorderLayout.CENTER);
+		JLabel successMsg = new JLabel("Log in successfully", SwingConstants.CENTER);
+		successMsg.setFont(new Font("Sylfaen", Font.PLAIN, 14));
+		successMsg.setBounds(119, 22, 223, 34);
+		this.add(successMsg, BorderLayout.CENTER);
+
+		JButton btnlogout = new JButton("Log out");
+		btnlogout.addActionListener(new logoutButtonListener());
+		btnlogout.setForeground(Color.BLUE);
+		btnlogout.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnlogout.setBounds(161, 176, 153, 27);
+		this.add(btnlogout, BorderLayout.SOUTH);
+
+		this.repaint();
+		this.validate();
+		ui.refreshDisplay();
+	}
 
 //LISTENER CLASSES
 	private class loginButtonListener implements ActionListener, KeyListener{
-		private void login()throws ElementNotFoundException, UserLoggedInException, LoginFailedException{
-			String Username=usernameField.getText();
-			String Password=passwordField.getText();
-			command.login(Username, Password);
-			panel.removeAll();
-			lblprompt.setText(Username);
-			panel.add(lblprompt, BorderLayout.CENTER);
-			JLabel successMsg = new JLabel("Log in successfully", SwingConstants.CENTER);
-			successMsg.setFont(new Font("Sylfaen", Font.PLAIN, 14));
-			successMsg.setBounds(119, 22, 223, 34);
-			panel.add(successMsg, BorderLayout.CENTER);
-
-			JButton btnlogout = new JButton("Log out");
-			btnlogout.addActionListener(new logoutButtonListener());
-			btnlogout.setForeground(Color.BLUE);
-			btnlogout.setFont(new Font("Tahoma", Font.PLAIN, 16));
-			btnlogout.setBounds(161, 176, 153, 27);
-			panel.add(btnlogout, BorderLayout.SOUTH);
-
-			panel.repaint();
-			panel.validate();
-			ui.refreshDisplay();
-		}
 		public void actionPerformed(ActionEvent e) {
 
 			try{
@@ -146,6 +155,20 @@ public class login extends JPanel{
 					panel.removeAll();
 					initialize();
 					panel.repaint();
+					ui.refreshDisplay();
+		}
+	}
+	private class addUserListener implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			String Username=usernameField.getText();
+			String Password=passwordField.getText();
+			usernameField.setText(""); passwordField.setText("");
+			command.addUser(Username,Password);
+			panel.remove(lblprompt);
+			lblprompt.setText("User Added Successfully");
+			panel.add(lblprompt, BorderLayout.NORTH);
+			panel.validate();
+			panel.repaint();
 		}
 	}
 
