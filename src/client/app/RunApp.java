@@ -37,7 +37,7 @@ public class RunApp{
                         break;
                     case "addOrg":System.out.println("Enter Organization name:"); String name=System.console().readLine();
                         System.out.println("Enter IP Address:"); String ip=System.console().readLine();
-                        command.addOrganization(name,ip,"7777");
+                        command.addOrganization(name,ip);
                         break;
                     case "retrieve":System.out.println("Enter Organization name:"); String n=System.console().readLine();
                         command.search(n);
