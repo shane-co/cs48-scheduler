@@ -47,7 +47,7 @@ public class ScheduleDisplay extends JPanel{
 		calendar.getTimetableSettings().setItemOffset(0);
 		calendar.getTimetableSettings().setShowItemSpans(null);
 		calendar.getTimetableSettings().setSnapInterval(Duration.fromMinutes(1));
-		calendar.getTimetableSettings().setStartTime(360);
+		calendar.getTimetableSettings().setStartTime(0);
 		calendar.getTimetableSettings().setEndTime(1380);
 		calendar.getTimetableSettings().setVisibleColumns(7);
 		calendar.endInit();

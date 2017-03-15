@@ -36,9 +36,8 @@ public class CreateHostedListener implements ActionListener{
 	}
 
 	public void actionPerformed(ActionEvent e){
-		//int check = list.getNextMatch(id.getText(), 0, Position.Bias.Forward);
-		//System.out.println(check);
-		//if(check == -1){
+		int check = list.getNextMatch(id.getText(), 0, Position.Bias.Forward);
+		if(check == -1){
 		try{
 		ArrayList<ArrayList<Integer>> duration = new ArrayList<ArrayList<Integer>>();
 		for(int i=0; i<7; i++){
@@ -74,6 +73,6 @@ public class CreateHostedListener implements ActionListener{
 		catch(NullPointerException n){System.out.println("npe");}
 		catch(ElementNotFoundException ex){System.out.println("enfe");}
 
-	//}
+	}
 	}
 }
