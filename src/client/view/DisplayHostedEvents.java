@@ -57,6 +57,7 @@ public class DisplayHostedEvents extends JSplitPane implements DisplayScheduleCo
 			addInfoTxtPn.setEditable(false);
 
 			addInfoTxtFld = new JTextPane();
+			addInfoTxtFld.setEditable(false);
 			JButton removeHostedEventBtn = new JButton("Remove Hosted Event");
 			removeHostedEventBtn.addActionListener(new DelButtonListener(hostedEventsList,"hosted"));
 		additionalInformationPanel.add(removeHostedEventBtn, BorderLayout.SOUTH);
@@ -181,7 +182,17 @@ public class DisplayHostedEvents extends JSplitPane implements DisplayScheduleCo
 		}catch(UserNotFoundException e){
 			hostedModel.removeAllElements();
 			addInfoTxtFld.setText("");
+			idInputTxtPn.setText("");
+			descriptionInputTxtFld.setText("");
+			sunInputTxtPn.setText("");
+			monInputTxtPn.setText("");
+			tueInputTxtPn.setText("");
+			wedInputTxtPn.setText("");
+			thrInputTxtPn.setText("");
+			friInputTxtPn.setText("");
+			satInputTxtPn.setText("");
+		}
 	}
 
 	}
-}
+

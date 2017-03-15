@@ -63,6 +63,7 @@ public class DisplayMyEvents extends JSplitPane implements DisplayScheduleCompon
 			removeEventsBtn.addActionListener(new DelButtonListener(myEventsList,"event"));
 			eventActions.add(genScheduleBtn,BorderLayout.NORTH);
 			eventActions.add(removeEventsBtn,BorderLayout.SOUTH);
+			leftAddInfoTxtFld.setEditable(false);
 		leftAdditionalInfoPanel.add(leftAddInfoTxtPn, BorderLayout.NORTH);
 		leftAdditionalInfoPanel.add(new JScrollPane(leftAddInfoTxtFld), BorderLayout.CENTER);
 		leftAdditionalInfoPanel.add(eventActions, BorderLayout.SOUTH);
@@ -105,6 +106,7 @@ public class DisplayMyEvents extends JSplitPane implements DisplayScheduleCompon
 			JTextPane rightAddInfoTxtPn = new JTextPane();
 			rightAddInfoTxtPn.setText("Additional Information");
 			rightAddInfoTxtPn.setEditable(false);
+			rightAddInfoTxtFld.setEditable(false);
 			rightAdditionalInfoPanel.add(rightAddInfoTxtFld, BorderLayout.CENTER);
 			JButton addEventsBtn = new JButton("Add Event");
 			addEventsBtn.addActionListener(new AddButtonListener(availableEventsList));
@@ -139,15 +141,17 @@ public class DisplayMyEvents extends JSplitPane implements DisplayScheduleCompon
 	public void refresh(){
 		DefaultListModel evmodel = (DefaultListModel)myEventsList.getModel();
 		DefaultListModel evmodel2 = (DefaultListModel)availableEventsList.getModel();
-		DefaultComboBoxModel orgmodel = new DefaultComboBoxModel();
 		try{
 			ArrayList<String> evlist = commander.getScheduleEvents();
 			for(String ev:evlist){
 				if(!evmodel.contains(ev))evmodel.addElement(ev);
 			}
+			DefaultComboBoxModel orgmodel = new DefaultComboBoxModel();
+			if(availableOrgs.getItemCount() != commander.getOrgNames().size()){
 			for(String org:commander.getOrgNames()){
 				orgmodel.addElement(org);
 				availableOrgs.setModel(orgmodel);
+			}
 			}
 
 		}catch(UserNotFoundException e){

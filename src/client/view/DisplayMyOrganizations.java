@@ -61,7 +61,7 @@ public class DisplayMyOrganizations extends JSplitPane implements DisplaySchedul
 		rightPanel.add(rightColumnPanel, BorderLayout.CENTER);
 
 		JButton addOrgBtn = new JButton("Add to Organizations");
-		addOrgBtn.addActionListener(new CreateOrgListener(nameInputTxtPn,ipInputTxtPn));
+		addOrgBtn.addActionListener(new CreateOrgListener(nameInputTxtPn,ipInputTxtPn, organizationDisplay));
 		rightPanel.add(addOrgBtn, BorderLayout.SOUTH);
 
 
