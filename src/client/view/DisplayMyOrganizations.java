@@ -61,7 +61,7 @@ public class DisplayMyOrganizations extends JSplitPane implements DisplaySchedul
 		rightPanel.add(rightColumnPanel, BorderLayout.CENTER);
 
 		JButton addOrgBtn = new JButton("Add to Organizations");
-		addOrgBtn.addActionListener(new CreateOrgListener(nameInputTxtPn,ipInputTxtPn, organizationDisplay));
+		addOrgBtn.addActionListener(new CreateOrgListener(nameInputTxtPn,ipInputTxtPn));
 		rightPanel.add(addOrgBtn, BorderLayout.SOUTH);
 
 
@@ -73,7 +73,7 @@ public class DisplayMyOrganizations extends JSplitPane implements DisplaySchedul
 
 	public void refresh(){
 		DefaultTableModel model = (DefaultTableModel) organizationDisplay.getModel();
-		//initialize display columnNames		
+		//initialize display columnNames
 		while(model.getRowCount() > 0){
 			model.removeRow(0);
 		}

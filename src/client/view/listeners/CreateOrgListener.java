@@ -16,7 +16,6 @@ public class CreateOrgListener implements ActionListener{
     public void actionPerformed(ActionEvent e){
         BGCommander.getBGCommander().addOrganization(id.getText(),orgip.getText());
         UserInterface.getUserInterface().refreshDisplay();
-    	
     }
 
 }

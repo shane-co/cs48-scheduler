@@ -75,8 +75,8 @@ public class ScheduleDisplay extends JPanel{
 				Appointment app = new Appointment();
 				app.setHeaderText(s.get_ScheduleEvents().get(i).get_ID());
 				app.setDescriptionText(s.get_ScheduleEvents().get(i).get_descpt());
-				app.setStartTime(new DateTime(2017,s.get_month(),s.get_day()).addDays(t.getDay()-1).addHours(t.getStart()));
-				app.setEndTime(new DateTime(2017,s.get_month(),s.get_day()).addDays(t.getDay()-1).addHours(t.getStart()+1));
+				app.setStartTime(new DateTime(2017,s.get_month(),s.get_day()).addDays(t.getDay()).addHours(t.getStart()));
+				app.setEndTime(new DateTime(2017,s.get_month(),s.get_day()).addDays(t.getDay()).addHours(t.getStart()+1));
 				calendar.getSchedule().getItems().add(app);
 			}
 		}

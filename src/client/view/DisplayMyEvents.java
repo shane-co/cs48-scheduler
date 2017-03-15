@@ -63,7 +63,6 @@ public class DisplayMyEvents extends JSplitPane implements DisplayScheduleCompon
 			removeEventsBtn.addActionListener(new DelButtonListener(myEventsList,"event"));
 			eventActions.add(genScheduleBtn,BorderLayout.NORTH);
 			eventActions.add(removeEventsBtn,BorderLayout.SOUTH);
-			myEventsList.addListSelectionListener( new InfoListener(myEventsList, leftAddInfoTxtFld, "local"));
 		leftAdditionalInfoPanel.add(leftAddInfoTxtPn, BorderLayout.NORTH);
 		leftAdditionalInfoPanel.add(new JScrollPane(leftAddInfoTxtFld), BorderLayout.CENTER);
 		leftAdditionalInfoPanel.add(eventActions, BorderLayout.SOUTH);
@@ -76,7 +75,7 @@ public class DisplayMyEvents extends JSplitPane implements DisplayScheduleCompon
 		availableEventsListPanel = new JPanel();
 			availableEventsListPanel.setBounds(100, 100, 500, 300);
 			availableEventsListPanel.setLayout(new BorderLayout(0, 0));
-			availableEventsList.addListSelectionListener( new InfoListener(availableEventsList, rightAddInfoTxtFld, true));
+			availableEventsList.addListSelectionListener( new InfoListener(availableEventsList, rightAddInfoTxtFld, "local"));
 			JScrollPane a = new JScrollPane(availableEventsList);
 		availableEventsListPanel.add(a, BorderLayout.CENTER);
 
@@ -109,9 +108,8 @@ public class DisplayMyEvents extends JSplitPane implements DisplayScheduleCompon
 			rightAdditionalInfoPanel.add(rightAddInfoTxtFld, BorderLayout.CENTER);
 			JButton addEventsBtn = new JButton("Add Event");
 			addEventsBtn.addActionListener(new AddButtonListener(availableEventsList));
-			availableEventsList.addListSelectionListener(new InfoListener(availableEventsList, rightAddInfoTxtPn, "remote"));
 		rightAdditionalInfoPanel.add(rightAddInfoTxtPn, BorderLayout.NORTH);
-		rightAdditionalInfoPanel.add(rightAddInfoTxtFld, BorderLayout.CENTER);
+		rightAdditionalInfoPanel.add(new JScrollPane(rightAddInfoTxtFld), BorderLayout.CENTER);
 		rightAdditionalInfoPanel.add(addEventsBtn, BorderLayout.SOUTH);
 
 		//makes rightPanel
@@ -135,30 +133,30 @@ public class DisplayMyEvents extends JSplitPane implements DisplayScheduleCompon
 		rightAddInfoTxtFld = new JTextPane();
 
 		availableOrgs.addActionListener(new OrgSelectionListener(availableOrgs,availableEventsList.getModel()));
-		//myEventsList.addListSelectionListener();
-		//availableEventsList.addListSelectionListener();
-
-
+		availableEventsList.addListSelectionListener(new InfoListener(availableEventsList, rightAddInfoTxtFld, "remote"));
+		myEventsList.addListSelectionListener( new InfoListener(myEventsList, leftAddInfoTxtFld, "local"));
 	}
 	public void refresh(){
 		DefaultListModel evmodel = (DefaultListModel)myEventsList.getModel();
 		DefaultListModel evmodel2 = (DefaultListModel)availableEventsList.getModel();
 		DefaultComboBoxModel orgmodel = new DefaultComboBoxModel();
 		try{
-			ArrayList<String> orglist = commander.getScheduleEvents();
-			for(String ev:orglist){
+			ArrayList<String> evlist = commander.getScheduleEvents();
+			for(String ev:evlist){
 				if(!evmodel.contains(ev))evmodel.addElement(ev);
 			}
-			//String[] a = new String[commander.getOrgNames().size()];
-			//int count = 0;
 			for(String org:commander.getOrgNames()){
 				orgmodel.addElement(org);
-				
-				//a[count] = org;
-				//count++;
+				availableOrgs.setModel(orgmodel);
 			}
 
-		}catch(UserNotFoundException e){evmodel.clear();evmodel2.clear();availableOrgs.removeAllItems();leftAddInfoTxtFld.setText("");}
+		}catch(UserNotFoundException e){
+			evmodel.clear();
+			evmodel2.clear();
+			availableOrgs.removeAllItems();
+			leftAddInfoTxtFld.setText("");
+			rightAddInfoTxtFld.setText("");
+		}
 	}
 
 }
