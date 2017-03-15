@@ -3,6 +3,7 @@ import client.commander.BGCommander;
 import client.app.obj.*;
 import client.app.exceptions.*;
 import client.view.listeners.CreateOrgListener;
+import client.view.listeners.OrgRemoveListener;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -24,12 +25,14 @@ public class DisplayMyOrganizations extends JSplitPane implements DisplaySchedul
 		leftPanel.setLayout(new BorderLayout(0, 0));
 
 		organizationDisplay = new JTable();
-		DefaultTableModel model =(DefaultTableModel)organizationDisplay.getModel();
+		organizationDisplay.setModel(new OtherModel());
+		OtherModel model =(OtherModel)organizationDisplay.getModel();
 		for(int i=0; i<3; i++){model.addColumn(columnNames[i]);}
 		JScrollPane scroll = new JScrollPane(organizationDisplay);
 		leftPanel.add(scroll, BorderLayout.CENTER);
 
 		JButton removeOrgBtn = new JButton("Remove Organization");
+		removeOrgBtn.addActionListener(new OrgRemoveListener(organizationDisplay));
 		leftPanel.add(removeOrgBtn, BorderLayout.SOUTH);
 
 		rightPanel = new JPanel();
@@ -55,19 +58,11 @@ public class DisplayMyOrganizations extends JSplitPane implements DisplaySchedul
 		JTextField ipInputTxtPn = new JTextField();
 		rightColumnPanel.add(ipInputTxtPn);
 
-		JTextPane portTxtPn = new JTextPane();
-		portTxtPn.setText("Port : ");
-		portTxtPn.setEditable(false);
-		rightColumnPanel.add(portTxtPn);
-
-		JTextField portInputTxtPn = new JTextField();
-		rightColumnPanel.add(portInputTxtPn);
-
 		rightPanel.add(rightColumnPanel, BorderLayout.CENTER);
 
-		JButton addHostedEventBtn = new JButton("Add to Hosted Events");
-		addHostedEventBtn.addActionListener(new CreateOrgListener(nameInputTxtPn,ipInputTxtPn,portInputTxtPn));
-		rightPanel.add(addHostedEventBtn, BorderLayout.SOUTH);
+		JButton addOrgBtn = new JButton("Add to Organizations");
+		addOrgBtn.addActionListener(new CreateOrgListener(nameInputTxtPn,ipInputTxtPn, organizationDisplay));
+		rightPanel.add(addOrgBtn, BorderLayout.SOUTH);
 
 		//add both leftPanel and rightPanel to this
 		this.setLeftComponent(leftPanel);
@@ -78,6 +73,10 @@ public class DisplayMyOrganizations extends JSplitPane implements DisplaySchedul
 	public void refresh(){
 		DefaultTableModel model = (DefaultTableModel) organizationDisplay.getModel();
 		//initialize display columnNames
+		
+		while(model.getRowCount() > 0){
+			model.removeRow(0);
+		}
 		try{
 			for(DatabaseConnection d:BGCommander.getBGCommander().getOrgs()){
 				String [] data = {d.getID(), d.getIP(), Integer.toString(d.getPort())};
