@@ -8,28 +8,39 @@ import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 
-public class UserInterface {
-	private JFrame frame;
-	private BGCommander commander;
-	private DisplayMyEvents myEventsDisplay;
-	private DisplayAddEvent addEventDisplay;
-	private DisplayRemoveEvent removeEventDisplay;
-	public BGCommander command(){return commander;}
+public class UserInterface extends JFrame{
+	private DisplayMyEvents displayMyEvents;
+	private DisplayScheduleDisplay displayScheduleDisplay;
+	private DisplayHostedEvents displayHostedEvents;
+	private DisplayMyOrganizations displayMyOrganizations;
+	private JTabbedPane paneLeft;
+	private JTabbedPane paneRight;
+	private static UserInterface ui;
+
+
   /**
 	 * Launch method.
 	 */
 	public void launch(){
 		try {
 			UserInterface uiWindow = new UserInterface();
-			uiWindow.frame.setVisible(true);
+			this.setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public UserInterface() {
+	public static UserInterface getUserInterface(){
+		if(ui==null){
+			ui = new UserInterface();
+		}
+		return ui;
+	}
+	private UserInterface() {
+		super("Del Planner");
 		initialize();
 	}
 
@@ -38,32 +49,31 @@ public class UserInterface {
 	 */
 	private void initialize() {
 		//commander=BGCommander.getBGCommander();
-		frame = new JFrame("Del Planner");
-		frame.setBounds(100, 100, 1200, 600);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(new GridLayout(1, 3));
+		this.setBounds(100, 100, 1200, 600);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.getContentPane().setLayout(new GridLayout(1, 3));
 
 
 		//LEFT PANE OF MAIN UI
-		JTabbedPane paneLeft = new JTabbedPane(JTabbedPane.TOP);
+		paneLeft = new JTabbedPane(JTabbedPane.TOP);
+		paneLeft.addChangeListener(new ChangeListener(){
+			public void stateChanged(ChangeEvent e){
+				DisplayScheduleComponent next = (DisplayScheduleComponent)paneLeft.getSelectedComponent();
+				next.refresh();
+			}
+		});
 
-		myEventsDisplay = new DisplayMyEvents();
-		JPanel panelMyEventsTop = myEventsDisplay.returnFinalPanel();
-		removeEventDisplay = new DisplayRemoveEvent(this);
-		JPanel panelMyEventsBottomRight = removeEventDisplay.returnFinalPanel();
-		addEventDisplay = new DisplayAddEvent(this);
-		JSplitPane panelMyEventsBottomLeft = addEventDisplay.returnPanel();
-		JSplitPane panelMyEventsBottom = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panelMyEventsBottomLeft, panelMyEventsBottomRight);
-		panelMyEventsBottom.setResizeWeight(0.5);
-		JSplitPane panelMyEventsBoth = new JSplitPane(JSplitPane.VERTICAL_SPLIT, panelMyEventsTop, panelMyEventsBottom);
-		panelMyEventsBoth.setResizeWeight(0.5);
-		paneLeft.addTab("My Events", panelMyEventsBoth);
-		paneLeft.addTab("My Schedules", new ScheduleDisplay(new Schedule(new ArrayList<ScheduleEvent>(), "testing", 1,1 )));
-		paneLeft.addTab("My Hosted Events", new JPanel());
-		paneLeft.addTab("My Organizations", new JPanel());
+		displayMyEvents = new DisplayMyEvents();
+		paneLeft.addTab("My Events", displayMyEvents);
+		displayScheduleDisplay = new DisplayScheduleDisplay();
+		paneLeft.addTab("My Schedules", displayScheduleDisplay);
+		displayHostedEvents = new DisplayHostedEvents();
+		paneLeft.addTab("My Hosted Events", displayHostedEvents);
+		displayMyOrganizations = new DisplayMyOrganizations();
+		paneLeft.addTab("My Organizations", displayMyOrganizations);
 
 		//RIGHT PANE OF MAIN UI
-		JTabbedPane paneRight = new JTabbedPane(JTabbedPane.TOP);
+		paneRight = new JTabbedPane(JTabbedPane.TOP);
 
 		paneRight.addTab("Login",new login(this));
 		JSplitPane splitPaneLR = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, paneLeft, paneRight);
@@ -71,14 +81,15 @@ public class UserInterface {
 		paneRight.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		paneLeft.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		splitPaneLR.setOneTouchExpandable(true);
+		splitPaneLR.setDividerLocation(0.8);
 
-		splitPaneLR.setResizeWeight(0.75);
-		frame.getContentPane().add(splitPaneLR);
+		this.getContentPane().add(splitPaneLR);
 	}
 
-	public void refreshMyEvents(){
-		myEventsDisplay.refresh();
-		removeEventDisplay.refresh();
-		frame.repaint();
+	public void refreshDisplay(){
+		DisplayScheduleComponent currTab = (DisplayScheduleComponent) paneLeft.getSelectedComponent();
+		currTab.refresh();
+		this.repaint();
 	}
+
 }

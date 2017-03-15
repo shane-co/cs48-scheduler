@@ -42,6 +42,7 @@ public abstract class ScheduleObject{
             sched.setAttributeNode(schedid);
             sched.setAttributeNode(schedmo);
             sched.setAttributeNode(schedday);
+            return sched;
         }
         else if(o instanceof TimeBlock){
             TimeBlock t = (TimeBlock) o;
@@ -98,6 +99,7 @@ public abstract class ScheduleObject{
             id.setValue(d.getID());
             ip.setValue(d.getIP());
             port.setValue(Integer.toString(d.getPort()));
+            dc.setAttributeNode(id);
             dc.setAttributeNode(ip);
             dc.setAttributeNode(port);
             return dc;

@@ -35,6 +35,12 @@ public class ScheduleEvent extends ScheduleObject{
         load(root);
     }
 
+    public ScheduleEvent(String networkDesc){
+        deps = new ArrayList<Dependencies>();
+        duration = new ArrayList<TimeBlock>();
+        load(networkDesc);
+    }
+
     public ArrayList<TimeBlock> duration(){return duration;}
     public String get_descpt() {return description; }
     public String get_ID() {return id; }
@@ -45,6 +51,29 @@ public class ScheduleEvent extends ScheduleObject{
             if(duration.contains(t)) return true;
         }
         return false;
+    }
+
+    public String getDurationString(){
+        String durationString = "";
+        for(TimeBlock t: duration){
+            switch(t.getDay()){
+                case 0: durationString+="Sunday: " + t.getStart() + "\n";
+                break;
+                case 1:durationString+="Monday: " + t.getStart() + "\n";
+                break;
+                case 2:durationString+="Tuesday: " + t.getStart() + "\n";
+                break;
+                case 3:durationString+="Wednesday: " + t.getStart() + "\n";
+                break;
+                case 4:durationString+="Thursday: " + t.getStart() + "\n";
+                break;
+                case 5:durationString+="Friday: " + t.getStart() + "\n";
+                break;
+                case 6:durationString+="Saturday: " + t.getStart() + "\n";
+                break;
+            }
+        }
+        return durationString;
     }
 
     @Override public boolean equals(Object o){
@@ -59,7 +88,7 @@ public class ScheduleEvent extends ScheduleObject{
         String durationString = "";
         String dependencyString = "";
         for(TimeBlock t: duration){
-            durationString+= t.toString()+"|";
+            durationString+= t.toString()+"&";
         }
         for(Dependencies d: deps){
             dependencyString+=d.toString();
@@ -83,11 +112,31 @@ public class ScheduleEvent extends ScheduleObject{
                 dpnd= (Element)dpnd.getNextSibling();
             }
             Element drtn = (Element)depelem.getNextSibling().getFirstChild();
-            System.out.println("here");
             while(drtn!=null){
                  duration.add(new TimeBlock(drtn));
                  drtn=(Element)drtn.getNextSibling();
             }
+        }
+    }
+
+    public void load(String recv){
+        String[] fields = recv.split(";");
+        id=fields[0].split(":")[1];
+        description=fields[1].split(":")[1];
+        loadArray(fields[2]);
+        loadArray(fields[3]);
+    }
+    private void loadArray(String data){
+        String[] parts = data.split(":");
+        switch(parts[0]){
+            case "duration":
+                for(String dur:parts[1].split("&")){
+                    duration.add(new TimeBlock(dur));
+                }
+            break;
+            case "dependencies":
+                //STUB Class Dependencies has no load(String) function and no Dependencies(String) constructor.
+            break;
         }
     }
 }

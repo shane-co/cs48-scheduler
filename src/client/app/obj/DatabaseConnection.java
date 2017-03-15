@@ -36,7 +36,7 @@ public class DatabaseConnection extends ScheduleObject{
         if(o==null)return false;
         if(!(o instanceof DatabaseConnection)) return false;
         DatabaseConnection other = (DatabaseConnection) o;
-        return other.getIP().equals(IP);
+        return other.getID().equals(id);
     }
     //ScheduleObject methods
     public Element record(Document doc){

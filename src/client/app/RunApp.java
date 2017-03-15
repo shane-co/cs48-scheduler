@@ -10,11 +10,12 @@ public class RunApp{
     private static boolean end;
     public static void main(String[] args){
         if(args.length == 0){
-            UserInterface main = new UserInterface();
+            UserInterface main = UserInterface.getUserInterface();
             main.launch();
         }
         else if(args[0].equals("--no-ui")){
             BGCommander command = BGCommander.getBGCommander();
+            command.setNetworkDiscoverable();
             System.out.println("New BGCommander loaded. No User signed in.");
             while(!end){
                 System.out.println("Enter command: (\"help\" to display all commands)");
@@ -32,25 +33,17 @@ public class RunApp{
                             command.login(uname,pword);
                         }catch(ElementNotFoundException ex){System.out.println(ex.getMsg());}
                         catch(UserLoggedInException uex){System.out.println(uex.getMsg());}
+                        catch(LoginFailedException ex){System.out.println(ex.getMsg());}
                         break;
-                    case "showMyEvents":
+                    case "addOrg":System.out.println("Enter Organization name:"); String name=System.console().readLine();
+                        System.out.println("Enter IP Address:"); String ip=System.console().readLine();
+                        command.addOrganization(name,ip,"7777");
                         break;
-                    /*case "subscribe":
-                        System.out.println("Enter name of ScheduleEvent:"); String id=System.console().readLine();
-                        System.out.println("Enter day of the week (1-7):"); String day=System.console().readLine();
-                        System.out.println("Enter start hour (0-23):"); String start=System.console().readLine();
-                        System.out.println("Enter end hour (0-23):"); String end=System.console().readLine();
-                        System.out.println("Enter description:"); String desc = System.console().readLine();
-                        try{
-                            command.subscribeEvent(id,day,start,end,desc);
-                        }catch(FormatException f){System.out.println(f.getMsg());}
-                        catch(ElementNotFoundException e){System.out.println(e.getMsg());}
-                        break;*/
-                    case "unsubscribe":
-                        System.out.println("Enter Schedule identifier:"); String id=System.console().readLine();
-                        command.unsubscribe(id);
+                    case "retrieve":System.out.println("Enter Organization name:"); String n=System.console().readLine();
+                        command.search(n);
+                        break;
                     case "createEvent":
-                        System.out.println("Enter Event Name:"); id=System.console().readLine();
+                        System.out.println("Enter Event Name:"); String id=System.console().readLine();
                         System.out.println("Enter Event Description:"); String desc=System.console().readLine();
                         ArrayList<ArrayList<Integer>> dur = new ArrayList<ArrayList<Integer>>();
                         ArrayList<Integer> d;
@@ -63,7 +56,9 @@ public class RunApp{
                             }
                             dur.add(i,d);
                         }
-                        command.createHostedEvent(dur,id,desc);
+                        try{
+                            command.createHostedEvent(dur,id,desc);
+                        }catch(ElementNotFoundException e){}
                         break;
                     case "exit":
                         command.exitApp();

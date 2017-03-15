@@ -104,7 +104,6 @@ public class User extends ScheduleObject{
             while(field!=null){
                 //process entries in a field
                 loadArrayList(field,field.getNodeName());
-                System.out.println("loaded: "+field);
                 //get next field.
                 field=(Element)field.getNextSibling();
             }

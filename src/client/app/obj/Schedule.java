@@ -22,6 +22,7 @@ public class Schedule extends ScheduleObject{
 		events=e;
 	}
 	public Schedule(Element root){ //Constructor that takes a DOM element and loads it.
+		events=new ArrayList<ScheduleEvent>();
 		load(root);
 	}
 

@@ -20,6 +20,7 @@ public class BGCommander{
     //instance variables
     private Client client;
     private ScheduleGenerator gen;
+    private ArrayList<ScheduleEvent> remoteList;
     private static BGCommander command;
 
     /*
@@ -28,6 +29,7 @@ public class BGCommander{
     */
     private BGCommander(){
         client = new Client();
+        remoteList=new ArrayList<ScheduleEvent>();
     }
 
     /**
@@ -54,16 +56,63 @@ public class BGCommander{
     }
 
     //Function to get a list of ScheduleEvents objects from current users return to UserInterface for display
-    public ArrayList<ScheduleEvent> getScheduleEvents() throws UserNotFoundException{
-        return client.getUserEvents();
+    public ArrayList<String> getScheduleEvents() throws UserNotFoundException{
+        ArrayList<String> display = new ArrayList<String>();
+        for(ScheduleEvent e:client.getUserEvents()){
+            display.add(e.get_ID());
+        }
+        return display;
     }
 
-    public ArrayList<ScheduleEvent> getHosted() throws UserNotFoundException{
-        return client.getUserHosted();
+    public String getEventInfo(String evid)throws UserNotFoundException{
+        String evInfo ="";
+        for(ScheduleEvent e:client.getUserEvents()){
+            if(e.get_ID().equals(evid)){
+                evInfo="ID: " + evid +"\n"+"Description: " + e.get_descpt() + "\n"+"Times: " + e.getDurationString();
+            }
+        }
+        return evInfo;
+    }
+
+    public String getHEventInfo(String evid)throws UserNotFoundException{
+        String evInfo ="";
+        for(ScheduleEvent e:client.getUserHosted()){
+            if(e.get_ID().equals(evid)){
+                evInfo="ID: " + evid +"\n"+"Description: " + e.get_descpt() + "\n"+"Times: " + e.getDurationString();
+            }
+        }
+        return evInfo;
+    }
+
+    public ArrayList<String> getHosted() throws UserNotFoundException{
+        ArrayList<String> display = new ArrayList<String>();
+        for(ScheduleEvent e:client.getUserHosted()){
+            display.add(e.get_ID());
+        }
+        return display;
     }
     //Function to get a list of schedules
-    public ArrayList<Schedule> getSchedules() throws UserNotFoundException{
-	 return client.getUserSchedules();
+    public ArrayList<String> getSchedules() throws UserNotFoundException{
+        ArrayList<String> display = new ArrayList<String>();
+        for(Schedule s:client.getUserSchedules()){
+            display.add(s.getID());
+        }
+        return display;
+    }
+
+    public Schedule getSchedToDisplay(String schedid)throws UserNotFoundException{
+        for(Schedule s:client.getUserSchedules()){
+            if(s.getID().equals(schedid))return s;
+        }
+        return null;
+    }
+
+    public ArrayList<String> getOrgNames() throws UserNotFoundException{
+        ArrayList<String> display = new ArrayList<String>();
+        for(DatabaseConnection o:client.getUserOrgs()){
+            display.add(o.getID());
+        }
+        return display;
     }
 
     public ArrayList<DatabaseConnection> getOrgs() throws UserNotFoundException{
@@ -86,12 +135,18 @@ public class BGCommander{
     *@param -- Lets leave this for the second iteration, for now just return all the events --
     *filters A set of filters to apply when searching for a ScheduleEvent
     */
-    public ArrayList<ScheduleEvent> search(String orgName/*, ArrayList<String> filters*/){
-    	//CALL client parseRequest, still needs implementation of database.outputSearchResultString ignore filter
-    	//String input = String.format("%s;%get", orgName);
-    	//client.parseRequest(input);
-        return new ArrayList<ScheduleEvent>();
-        //remoteApplication.retrieveAllHostedEvents();
+    public ArrayList<String> search(String orgName){
+        ArrayList<String> display = new ArrayList<String>();
+        String resultString = client.sendRequest(orgName);
+        String[] results = resultString.split("%");
+        for(String s:results){
+            if(!s.equals("")){
+                ScheduleEvent e = new ScheduleEvent(s);
+                display.add(s.split(":")[1].split(";")[0]);
+                remoteList.add(e);
+            }
+        }
+        return display;
     }
 
     /**
@@ -100,7 +155,7 @@ public class BGCommander{
      * @throws UserLoggedInException
      * @throws ElementNotFoundException
     */
-    public void login(String username, String password) throws ElementNotFoundException, UserLoggedInException{
+    public void login(String username, String password) throws ElementNotFoundException, UserLoggedInException, LoginFailedException{
             client.setCurrUser(username,password);
     }
 
@@ -135,13 +190,9 @@ public class BGCommander{
     * @throws ElementNotFoundException
     * @throws UserNotFoundException
     */
-    public void subscribeEvent(String id, String day, String starthr, String endhr, String desc)throws FormatException,ElementNotFoundException{
-        int d = Integer.parseInt(day); int s = Integer.parseInt(starthr); int e =Integer.parseInt(endhr);
-        if(d>7||d<1)throw new FormatException("day");
-        else if(s>24||s<0) throw new FormatException("start");
-        else if(e>24||e<0) throw new FormatException("end");
+    public void subscribeEvent(String id)throws ElementNotFoundException{
         ScheduleEvent event = new ScheduleEvent(new ArrayList<Dependencies>(), new ArrayList<TimeBlock>(), "", id);
-        client.subscribe(event);
+        if(remoteList.contains(event))client.subscribe(remoteList.get(remoteList.indexOf(event)));
     }
 
     /**
@@ -158,7 +209,7 @@ public class BGCommander{
     }
 
     // command.createHostedEvent()
-    public void createHostedEvent(ArrayList<ArrayList<Integer>> duration, String id, String desc){
+    public void createHostedEvent(ArrayList<ArrayList<Integer>> duration, String id, String desc) throws ElementNotFoundException{
         ArrayList<TimeBlock> evduration = new ArrayList<TimeBlock>();
         for(int i=0; i<7; i++){
             for(int j: duration.get(i)){
@@ -167,34 +218,37 @@ public class BGCommander{
                 }
             }
         }
+        ScheduleEvent newev = new ScheduleEvent(new ArrayList<Dependencies>(), evduration, desc, id);
+        client.createEvent(newev);
+    }
+
+    public void deleteFromField(String id, String field){
         try{
-            ScheduleEvent newev = new ScheduleEvent(new ArrayList<Dependencies>(), evduration, desc, id);
-            client.createEvent(newev);
+            switch(field){
+                case "event": ScheduleEvent event = new ScheduleEvent(new ArrayList<Dependencies>(), new ArrayList<TimeBlock>(), "", id);
+                    client.unsubscribe(event);
+                    break;
+                case "hosted": ScheduleEvent hosted = new ScheduleEvent(new ArrayList<Dependencies>(), new ArrayList<TimeBlock>(), "", id);
+                    client.deleteEvent(hosted);
+                    break;
+                case "sched": break;
+                case "org": DatabaseConnection d = new DatabaseConnection(id,"",0);
+                    client.forgetOrg(d);
+                    break;
+            }
         }catch(ElementNotFoundException e){}
     }
 
-    public void deleteHostedEvent(String id){
-        ScheduleEvent event = new ScheduleEvent(new ArrayList<Dependencies>(), new ArrayList<TimeBlock>(), "", id);
-        try{
-            client.deleteEvent(event);
-        }catch(ElementNotFoundException e){}
-    }
-
-    public void addOrganization(String id, String ip, String port){
-	int portID = Integer.parseInt(port);
-	DatabaseConnection d = new DatabaseConnection(id,ip,portID);
+    public void addOrganization(String id, String ip){
+	DatabaseConnection d = new DatabaseConnection(id,ip,7777);
 	try{
 	    client.registerOrg(d);
 	   }catch(ElementNotFoundException e){}
     }
 
-    public void deleteOrganization(String id){
-        DatabaseConnection d = new DatabaseConnection(id,"",0);
-	try{
-	    client.forgetOrg(d);
-	   }catch(ElementNotFoundException e){}
-    }
 
+    public void setNetworkDiscoverable(){client.setPublic();}
+    public void unsetNetworkDiscoverable(){client.setPrivate();}
 
     /**
     *Function to exit the application cleanly. Tells Client to exit application and write application state to file.
