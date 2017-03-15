@@ -181,7 +181,17 @@ public class DisplayHostedEvents extends JSplitPane implements DisplayScheduleCo
 		}catch(UserNotFoundException e){
 			hostedModel.removeAllElements();
 			addInfoTxtFld.setText("");
+			idInputTxtPn.setText("");
+			descriptionInputTxtFld.setText("");
+			sunInputTxtPn.setText("");
+			monInputTxtPn.setText("");
+			tueInputTxtPn.setText("");
+			wedInputTxtPn.setText("");
+			thrInputTxtPn.setText("");
+			friInputTxtPn.setText("");
+			satInputTxtPn.setText("");
+		}
 	}
 
 	}
-}
+
