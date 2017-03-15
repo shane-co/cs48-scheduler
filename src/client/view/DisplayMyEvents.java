@@ -28,8 +28,8 @@ public class DisplayMyEvents extends JSplitPane implements DisplayScheduleCompon
 	//mutable content
 	private JList myEventsList;
 	private JList availableEventsList;
-	private JTextField leftAddInfoTxtFld;
-	private JTextField rightAddInfoTxtFld;
+	private JTextPane leftAddInfoTxtFld;
+	private JTextPane rightAddInfoTxtFld;
 	private JComboBox availableOrgs;
 
 	//Constructor to assemble all the display panes
@@ -63,9 +63,9 @@ public class DisplayMyEvents extends JSplitPane implements DisplayScheduleCompon
 			removeEventsBtn.addActionListener(new DelButtonListener(myEventsList,"event"));
 			eventActions.add(genScheduleBtn,BorderLayout.NORTH);
 			eventActions.add(removeEventsBtn,BorderLayout.SOUTH);
-			myEventsList.addListSelectionListener( new InfoListener(myEventsList, leftAddInfoTxtFld));
+			myEventsList.addListSelectionListener( new InfoListener(myEventsList, leftAddInfoTxtFld, false));
 		leftAdditionalInfoPanel.add(leftAddInfoTxtPn, BorderLayout.NORTH);
-		leftAdditionalInfoPanel.add(leftAddInfoTxtFld, BorderLayout.CENTER);
+		leftAdditionalInfoPanel.add(new JScrollPane(leftAddInfoTxtFld), BorderLayout.CENTER);
 		leftAdditionalInfoPanel.add(eventActions, BorderLayout.SOUTH);
 
 		//makes leftPanel
@@ -76,6 +76,7 @@ public class DisplayMyEvents extends JSplitPane implements DisplayScheduleCompon
 		availableEventsListPanel = new JPanel();
 			availableEventsListPanel.setBounds(100, 100, 500, 300);
 			availableEventsListPanel.setLayout(new BorderLayout(0, 0));
+			availableEventsList.addListSelectionListener( new InfoListener(availableEventsList, rightAddInfoTxtFld, true));
 			JScrollPane a = new JScrollPane(availableEventsList);
 		availableEventsListPanel.add(a, BorderLayout.CENTER);
 
@@ -91,6 +92,7 @@ public class DisplayMyEvents extends JSplitPane implements DisplayScheduleCompon
 				availableEventsTxtPn.setEditable(false);
 				JTextPane availableOrgsTxtPn = new JTextPane();
 				availableOrgsTxtPn.setText("Available Orgs.");
+				availableOrgsTxtPn.setEditable(false);
 			topEventsListPanel.add(availableEventsTxtPn, BorderLayout.NORTH);
 			topEventsListPanel.add(availableOrgs, BorderLayout.CENTER);
 			topEventsListPanel.add(availableOrgsTxtPn, BorderLayout.WEST);
@@ -126,10 +128,12 @@ public class DisplayMyEvents extends JSplitPane implements DisplayScheduleCompon
 	 */
 	private void initialize() {
 		myEventsList = new JList(new DefaultListModel<String>());
-		leftAddInfoTxtFld = new JTextField();
+		leftAddInfoTxtFld = new JTextPane();
+		leftAddInfoTxtFld.setEditable(false);
 		availableOrgs = new JComboBox(new DefaultComboBoxModel());
 		availableEventsList = new JList(new DefaultListModel());
-		rightAddInfoTxtFld = new JTextField();
+		rightAddInfoTxtFld = new JTextPane();
+		rightAddInfoTxtFld.setEditable(false);
 
 		availableOrgs.addActionListener(new OrgSelectionListener(availableOrgs,availableEventsList.getModel()));
 		//myEventsList.addListSelectionListener();
@@ -145,11 +149,18 @@ public class DisplayMyEvents extends JSplitPane implements DisplayScheduleCompon
 			for(String ev:orglist){
 				if(!evmodel.contains(ev))evmodel.addElement(ev);
 			}
+			//String[] a = new String[commander.getOrgNames().size()];
+			//int count = 0;
 			for(String org:commander.getOrgNames()){
 				orgmodel.addElement(org);
-				availableOrgs.setModel(orgmodel);
+				
+				//a[count] = org;
+				//count++;
 			}
-		}catch(UserNotFoundException e){}
+			//availableOrgs.setModel(new DefaultComboBoxModel(a));
+			availableOrgs.setModel(orgmodel);
+			//availableOrgs = new JComboBox(a);
+		}catch(UserNotFoundException e){evmodel.clear();availableOrgs.removeAllItems();}
 	}
 
 }
