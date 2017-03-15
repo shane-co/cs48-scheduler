@@ -84,6 +84,15 @@ public class BGCommander{
         return evInfo;
     }
 
+    public String getRemoteEventInfo(String evid){
+        String evInfo ="";
+        for(ScheduleEvent e:this.remoteList){
+            if(e.get_ID().equals(evid)){
+                evInfo="ID: " + evid +"\n"+"Description: " + e.get_descpt() + "\n"+"Times: " + e.getDurationString();
+            }
+        }
+        return evInfo;
+    }
     public ArrayList<String> getHosted() throws UserNotFoundException{
         ArrayList<String> display = new ArrayList<String>();
         for(ScheduleEvent e:client.getUserHosted()){

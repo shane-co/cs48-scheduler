@@ -59,7 +59,7 @@ public class DisplayHostedEvents extends JSplitPane implements DisplayScheduleCo
 		additionalInformationPanel.add(removeHostedEventBtn, BorderLayout.SOUTH);
 		additionalInformationPanel.add(addInfoTxtPn, BorderLayout.NORTH);
 		additionalInformationPanel.add(new JScrollPane(addInfoTxtFld), BorderLayout.CENTER);
-		hostedEventsList.addListSelectionListener( new InfoListener(hostedEventsList, addInfoTxtFld, true));
+		hostedEventsList.addListSelectionListener( new InfoListener(hostedEventsList, addInfoTxtFld, "hosted"));
 		//make left panel
 		leftPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, topLeftPanel, additionalInformationPanel);
 		leftPanel.setDividerLocation(.5);
