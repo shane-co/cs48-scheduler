@@ -140,6 +140,7 @@ public class DisplayMyEvents extends JSplitPane implements DisplayScheduleCompon
 	}
 	public void refresh(){
 		DefaultListModel evmodel = (DefaultListModel)myEventsList.getModel();
+		DefaultListModel evmodel2 = (DefaultListModel)availableEventsList.getModel();
 		DefaultComboBoxModel orgmodel = new DefaultComboBoxModel();
 		try{
 			ArrayList<String> orglist = commander.getScheduleEvents();
@@ -150,7 +151,7 @@ public class DisplayMyEvents extends JSplitPane implements DisplayScheduleCompon
 				orgmodel.addElement(org);
 				availableOrgs.setModel(orgmodel);
 			}
-		}catch(UserNotFoundException e){evmodel.clear();availableOrgs.removeAllItems();}
+		}catch(UserNotFoundException e){evmodel.clear();evmodel2.clear();availableOrgs.removeAllItems();leftAddInfoTxtFld.setText("");}
 	}
 
 }
