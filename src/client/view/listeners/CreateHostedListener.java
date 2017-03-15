@@ -6,9 +6,13 @@ import client.app.exceptions.ElementNotFoundException;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
+import javax.swing.JList;
+import javax.swing.text.Position;
 import java.util.ArrayList;
+
 public class CreateHostedListener implements ActionListener{
 	private JTextField id,description, sunday,monday,tuesday,wednesday,thursday,friday,saturday;
+	private JList list;
 	public CreateHostedListener(JTextField i,
 				JTextField desc,
 				JTextField sun,
@@ -17,7 +21,8 @@ public class CreateHostedListener implements ActionListener{
 				JTextField wed,
 				JTextField thurs,
 				JTextField fri,
-				JTextField sat){
+				JTextField sat, 
+				JList list){
 		id=i;
 		description=desc;
 		sunday=sun;
@@ -27,9 +32,13 @@ public class CreateHostedListener implements ActionListener{
 		thursday=thurs;
 		friday=fri;
 		saturday=sat;
+		this.list = list;
 	}
 
 	public void actionPerformed(ActionEvent e){
+		//int check = list.getNextMatch(id.getText(), 0, Position.Bias.Forward);
+		//System.out.println(check);
+		//if(check == -1){
 		try{
 		ArrayList<ArrayList<Integer>> duration = new ArrayList<ArrayList<Integer>>();
 		for(int i=0; i<7; i++){
@@ -65,5 +74,6 @@ public class CreateHostedListener implements ActionListener{
 		catch(NullPointerException n){System.out.println("npe");}
 		catch(ElementNotFoundException ex){System.out.println("enfe");}
 
+	//}
 	}
 }
