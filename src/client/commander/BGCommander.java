@@ -240,7 +240,6 @@ public class BGCommander{
                 case "hosted": ScheduleEvent hosted = new ScheduleEvent(new ArrayList<Dependencies>(), new ArrayList<TimeBlock>(), "", id);
                     client.deleteEvent(hosted);
                     break;
-                case "sched": break;
                 case "org": DatabaseConnection d = new DatabaseConnection(id,"",0);
                     client.forgetOrg(d);
                     break;
