@@ -4,9 +4,9 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 
 public class OtherModel extends DefaultTableModel{
-	OtherModel(Object[][] data, String[] columnNames){
+	OtherModel(){
 		//standard initialization
-		super(data, columnNames);
+		super();
 	}
 	
 	//this is literally here to make it so rows are not editable by default

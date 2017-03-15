@@ -54,6 +54,8 @@ public class DisplayHostedEvents extends JSplitPane implements DisplayScheduleCo
 			additionalInformationPanel.setLayout(new BorderLayout(0, 0));
 			JTextPane addInfoTxtPn = new JTextPane();
 			addInfoTxtPn.setText("Additional Information");
+			addInfoTxtPn.setEditable(false);
+
 			addInfoTxtFld = new JTextPane();
 			JButton removeHostedEventBtn = new JButton("Remove Hosted Event");
 			removeHostedEventBtn.addActionListener(new DelButtonListener(hostedEventsList,"hosted"));
@@ -85,7 +87,7 @@ public class DisplayHostedEvents extends JSplitPane implements DisplayScheduleCo
 
 		rightColumnPanel.add(idInputTxtPn);
 
-		JTextField descriptionTxtFld = new JTextField();
+		JTextPane descriptionTxtFld = new JTextPane();
 		descriptionTxtFld.setText("Description : ");
 		descriptionTxtFld.setEditable(false);
 		rightColumnPanel.add(descriptionTxtFld);
@@ -147,7 +149,7 @@ public class DisplayHostedEvents extends JSplitPane implements DisplayScheduleCo
 		JButton addHostedEventBtn= new JButton("Add Hosted Event");
 		addHostedEventBtn.addActionListener(new CreateHostedListener(
 			idInputTxtPn, descriptionInputTxtFld, sunInputTxtPn, monInputTxtPn, tueInputTxtPn,
-			wedInputTxtPn, thrInputTxtPn, friInputTxtPn, satInputTxtPn
+			wedInputTxtPn, thrInputTxtPn, friInputTxtPn, satInputTxtPn, hostedEventsList
 		));
 		rightPanel.add(addHostedEventBtn, BorderLayout.SOUTH);
 
@@ -175,6 +177,7 @@ public class DisplayHostedEvents extends JSplitPane implements DisplayScheduleCo
 			for(String ev:BGCommander.getBGCommander().getHosted()){
 				if(!hostedModel.contains(ev)) hostedModel.addElement(ev);
 			}
+
 		}catch(UserNotFoundException e){
 			hostedModel.removeAllElements();
 			addInfoTxtFld.setText("");
