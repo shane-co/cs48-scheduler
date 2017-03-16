@@ -73,7 +73,7 @@ public class DisplayHostedEvents extends JSplitPane implements DisplayScheduleCo
 		rightPanel.setLayout(new BorderLayout(0, 0));
 
 		JTextPane addHostedEventTxtPn = new JTextPane();
-		addHostedEventTxtPn.setText("Add Hosted Event");
+		addHostedEventTxtPn.setText("Add Hosted Event (Duration must be a comma seperated list)");
 		addHostedEventTxtPn.setEditable(false);
 		rightPanel.add(addHostedEventTxtPn, BorderLayout.NORTH);
 
@@ -195,4 +195,3 @@ public class DisplayHostedEvents extends JSplitPane implements DisplayScheduleCo
 	}
 
 	}
-
