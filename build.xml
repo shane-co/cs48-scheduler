@@ -23,6 +23,14 @@
 
     </target>
 
+    <target name="jar" depends="compile" description="generate the jar files.">
+        <mkdir dir="DelPlanner"/>
+        <jar destfile="DelPlanner/DelPlanner.jar"
+            basedir="build/"
+            manifest="Manifest.txt"/>
+        <copy file="lib/JPlanner.jar" tofile="DelPlanner/JPlanner.jar"/>
+    </target>
+
     <target name="javadoc" depends="compile" description="generate javadoc for application" >
         <delete dir="${javadocDest}"/>
         <javadoc destdir="javadoc">
