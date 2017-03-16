@@ -148,10 +148,11 @@ public class DisplayMyEvents extends JSplitPane implements DisplayScheduleCompon
 			}
 			DefaultComboBoxModel orgmodel = new DefaultComboBoxModel();
 			if(availableOrgs.getItemCount() != commander.getOrgNames().size()){
-			for(String org:commander.getOrgNames()){
-				orgmodel.addElement(org);
-				availableOrgs.setModel(orgmodel);
-			}
+				if(BGCommander.getBGCommander().getOrgNames().size()==0)availableOrgs.removeAllItems();
+				for(String org:commander.getOrgNames()){
+					orgmodel.addElement(org);
+					availableOrgs.setModel(orgmodel);
+				}
 			}
 
 		}catch(UserNotFoundException e){
