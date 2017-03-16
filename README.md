@@ -46,21 +46,21 @@ _ If not, close the display and regenerate. The application will randomly create
 - A **hosted event** is an event that you offer to other people. They can see it and subscribe to it (if you are running this application on a publicly accessible IP)
 - **Hosted events** can be removed by selecting it on the left panel and clicking **Remove Hosted Event**
 - To add a new **hosted event**, fill in the corresponding fields
-..- The time fields must be given as comma separated list of all hours (1-24) the event occurs for the given display
-..- For example, if the Event occurs Monday 9AM - 3PM  `9,10,11,12,13,14,15` must be entered into **Monday Times**
+  - The time fields must be given as comma separated list of all hours (1-24) the event occurs for the given display
+  - For example, if the Event occurs Monday 9AM - 3PM  `9,10,11,12,13,14,15` must be entered into **Monday Times**
 
 ## Managing Organizations
 - The third tab displays informations about **Organizations** you know of and would like to pull events from.
 - An **Organization** is simply another User that uses this application at a remote IP address.
 - Adding an **Organization** requires that you know the user's Username that they use at the remote application.
-..- For example, if User cs48teacher uses DelPlanner at IP 192.168.0.1 you would enter `Organization Name: cs48teacher` `I.P. Address: 192.168.0.1`
+  - For example, if User cs48teacher uses DelPlanner at IP 192.168.0.1 you would enter `Organization Name: cs48teacher` `I.P. Address: 192.168.0.1`
 - To remove an **organization**, select it and click **Remove Organization**.
 
 # Saving your data
 - To save all the information from your current session, **YOU MUST LOG OUT**.
-..- If the application is closed before the current user logs out, any changes made in the current session is lost.
+  - If the application is closed before the current user logs out, any changes made in the current session is lost.
 - This can be done by clicking **Log out** in the login panel.
 
 # Known Errors:
 - If the application is run for the first time, and closed immediately without adding a new user, it will fail to function properly for subsequent launches.
-..- FIX: in the directory you are running from, delete `record.xml` and relaunch the application.
+  - FIX: in the directory you are running from, delete `record.xml` and relaunch the application.
