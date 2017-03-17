@@ -21,7 +21,11 @@ public class DisplayHostedEvents extends JSplitPane implements DisplayScheduleCo
 	private JPanel rightColumnPanel;
 	//mutable fields
 	private JList hostedEventsList;
-
+	
+	//buttons
+	private JButton addHostedEventBtn;
+	private JButton removeHostedEventBtn;
+	
 	//user input fields
 	private JTextField idInputTxtPn;
 	private JTextField descriptionInputTxtFld;
@@ -57,7 +61,9 @@ public class DisplayHostedEvents extends JSplitPane implements DisplayScheduleCo
 			addInfoTxtPn.setEditable(false);
 
 			addInfoTxtFld = new JTextPane();
-			JButton removeHostedEventBtn = new JButton("Remove Hosted Event");
+			addInfoTxtFld.setEditable(false);
+			removeHostedEventBtn = new JButton("Remove Hosted Event");
+			removeHostedEventBtn.setEnabled(false);
 			removeHostedEventBtn.addActionListener(new DelButtonListener(hostedEventsList,"hosted"));
 		additionalInformationPanel.add(removeHostedEventBtn, BorderLayout.SOUTH);
 		additionalInformationPanel.add(addInfoTxtPn, BorderLayout.NORTH);
@@ -72,7 +78,7 @@ public class DisplayHostedEvents extends JSplitPane implements DisplayScheduleCo
 		rightPanel.setLayout(new BorderLayout(0, 0));
 
 		JTextPane addHostedEventTxtPn = new JTextPane();
-		addHostedEventTxtPn.setText("Add Hosted Event");
+		addHostedEventTxtPn.setText("Add Hosted Event (Duration must be a comma seperated list)");
 		addHostedEventTxtPn.setEditable(false);
 		rightPanel.add(addHostedEventTxtPn, BorderLayout.NORTH);
 
@@ -146,7 +152,8 @@ public class DisplayHostedEvents extends JSplitPane implements DisplayScheduleCo
 		rightPanel.add(rightColumnPanel, BorderLayout.CENTER);
 
 
-		JButton addHostedEventBtn= new JButton("Add Hosted Event");
+		addHostedEventBtn= new JButton("Add Hosted Event");
+		addHostedEventBtn.setEnabled(false);
 		addHostedEventBtn.addActionListener(new CreateHostedListener(
 			idInputTxtPn, descriptionInputTxtFld, sunInputTxtPn, monInputTxtPn, tueInputTxtPn,
 			wedInputTxtPn, thrInputTxtPn, friInputTxtPn, satInputTxtPn, hostedEventsList
@@ -181,7 +188,25 @@ public class DisplayHostedEvents extends JSplitPane implements DisplayScheduleCo
 		}catch(UserNotFoundException e){
 			hostedModel.removeAllElements();
 			addInfoTxtFld.setText("");
+			idInputTxtPn.setText("");
+			descriptionInputTxtFld.setText("");
+			sunInputTxtPn.setText("");
+			monInputTxtPn.setText("");
+			tueInputTxtPn.setText("");
+			wedInputTxtPn.setText("");
+			thrInputTxtPn.setText("");
+			friInputTxtPn.setText("");
+			satInputTxtPn.setText("");
+		}
+	}
+	public void activateButtons(){
+		addHostedEventBtn.setEnabled(true);
+		removeHostedEventBtn.setEnabled(true);
+	}
+	
+	public void unactivateButtons(){
+		addHostedEventBtn.setEnabled(false);
+		removeHostedEventBtn.setEnabled(false);
 	}
 
 	}
-}
