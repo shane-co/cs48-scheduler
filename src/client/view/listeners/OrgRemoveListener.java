@@ -20,9 +20,11 @@ public class OrgRemoveListener implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
-		String orgToBeDeleted = table.getModel().getValueAt(table.getSelectedRow(),0).toString();
-		BGCommander.getBGCommander().deleteFromField(orgToBeDeleted , "org");
-		UserInterface.getUserInterface().refreshDisplay();
+		try{
+			String orgToBeDeleted = table.getModel().getValueAt(table.getSelectedRow(),0).toString();
+			BGCommander.getBGCommander().deleteFromField(orgToBeDeleted , "org");
+			UserInterface.getUserInterface().refreshDisplay();
+		}
+		catch (ArrayIndexOutOfBoundsException exception){}
 	}
 }
