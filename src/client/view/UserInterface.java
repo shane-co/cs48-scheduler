@@ -91,5 +91,19 @@ public class UserInterface extends JFrame{
 		currTab.refresh();
 		this.repaint();
 	}
+	
+	public void unactivateButtons(){
+		displayMyEvents.unactivateButtons();
+		displayScheduleDisplay.unactivateButtons();
+		displayHostedEvents.unactivateButtons();
+		displayMyOrganizations.unactivateButtons();
+	}
+	
+	public void activateButtons(){
+		displayMyEvents.activateButtons();
+		displayScheduleDisplay.activateButtons();
+		displayHostedEvents.activateButtons();
+		displayMyOrganizations.activateButtons();
+	}
 
 }
