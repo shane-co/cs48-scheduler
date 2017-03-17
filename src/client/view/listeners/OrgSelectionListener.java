@@ -29,5 +29,6 @@ public class OrgSelectionListener implements ActionListener{
             }
                 UserInterface.getUserInterface().refreshDisplay();
         }catch(NullPointerException ex){}
+        catch(ArrayIndexOutOfBoundsException ex2){}
     }
 }
