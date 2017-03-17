@@ -18,6 +18,10 @@ public class DisplayMyOrganizations extends JSplitPane implements DisplaySchedul
 	private JPanel rightColumnPanel;
 	private String[] columnNames = {"Organization Name", "I.P.", "Port"};
 	private JTable organizationDisplay;
+	
+	//buttons
+	private JButton addOrgBtn;
+	private JButton removeOrgBtn;
 
 	public DisplayMyOrganizations() {
 		leftPanel = new JPanel();
@@ -31,7 +35,8 @@ public class DisplayMyOrganizations extends JSplitPane implements DisplaySchedul
 		JScrollPane scroll = new JScrollPane(organizationDisplay);
 		leftPanel.add(scroll, BorderLayout.CENTER);
 
-		JButton removeOrgBtn = new JButton("Remove Organization");
+		removeOrgBtn = new JButton("Remove Organization");
+		removeOrgBtn.setEnabled(false);
 		removeOrgBtn.addActionListener(new OrgRemoveListener(organizationDisplay));
 		leftPanel.add(removeOrgBtn, BorderLayout.SOUTH);
 
@@ -60,7 +65,8 @@ public class DisplayMyOrganizations extends JSplitPane implements DisplaySchedul
 
 		rightPanel.add(rightColumnPanel, BorderLayout.CENTER);
 
-		JButton addOrgBtn = new JButton("Add to Organizations");
+		addOrgBtn = new JButton("Add to Organizations");
+		addOrgBtn.setEnabled(false);
 		addOrgBtn.addActionListener(new CreateOrgListener(nameInputTxtPn,ipInputTxtPn, organizationDisplay));
 		rightPanel.add(addOrgBtn, BorderLayout.SOUTH);
 
@@ -73,7 +79,7 @@ public class DisplayMyOrganizations extends JSplitPane implements DisplaySchedul
 
 	public void refresh(){
 		DefaultTableModel model = (DefaultTableModel) organizationDisplay.getModel();
-		//initialize display columnNames		
+		//initialize display columnNames
 		while(model.getRowCount() > 0){
 			model.removeRow(0);
 		}
@@ -84,5 +90,14 @@ public class DisplayMyOrganizations extends JSplitPane implements DisplaySchedul
 				model.addRow(data);
 			}
 		}catch(UserNotFoundException e){}
+	}
+	public void activateButtons(){
+		addOrgBtn.setEnabled(true);
+		removeOrgBtn.setEnabled(true);
+	}
+	
+	public void unactivateButtons(){
+		addOrgBtn.setEnabled(false);
+		removeOrgBtn.setEnabled(false);
 	}
 }
