@@ -35,6 +35,7 @@ public class DisplayScheduleDisplay extends JPanel implements DisplayScheduleCom
 		display=new ScheduleDisplay();
 		this.add(new JScrollPane(display), BorderLayout.CENTER);
 
+		possibleSchedules.setEnabled(false);
 		possibleSchedules.addActionListener(new SchedSelectionListener(possibleSchedules, display));
 
 		deleteScheduleBtn = new JButton("Delete Schedule");
@@ -73,9 +74,11 @@ public class DisplayScheduleDisplay extends JPanel implements DisplayScheduleCom
 	}
 	public void activateButtons(){
 		deleteScheduleBtn.setEnabled(true);
+		possibleSchedules.setEnabled(true);
 	}
 	
 	public void unactivateButtons(){
 		deleteScheduleBtn.setEnabled(false);
+		possibleSchedules.setEnabled(false);
 	}
 }
