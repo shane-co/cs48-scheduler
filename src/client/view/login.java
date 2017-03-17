@@ -125,17 +125,19 @@ public class login extends JPanel{
 //LISTENER CLASSES
 	private class loginButtonListener implements ActionListener, KeyListener{
 		public void actionPerformed(ActionEvent e) {
-
-			try{
-				login();
-			}catch(ElementNotFoundException elem){
-				lblprompt.setText(elem.getMsg());
-			}
-			catch(UserLoggedInException uex){
+			if(usernameField.getText().trim().length() > 0 && passwordField.getText().trim().length() > 0){
+				try{
+					login();
+				}catch(ElementNotFoundException elem){
+					lblprompt.setText(elem.getMsg());
+				}
+				catch(UserLoggedInException uex){
 				lblprompt.setText( uex.getMsg());
+				}
+				catch(LoginFailedException l){lblprompt.setText(l.getMsg());}
 			}
-			catch(LoginFailedException l){lblprompt.setText(l.getMsg());}
 		}
+		
 		public void keyPressed(KeyEvent e){
 			if(e.getKeyCode()==KeyEvent.VK_ENTER){
 				try{login();}
@@ -163,15 +165,17 @@ public class login extends JPanel{
 	}
 	private class addUserListener implements ActionListener{
 		public void actionPerformed(ActionEvent e){
-			String Username=usernameField.getText();
-			String Password=passwordField.getText();
-			usernameField.setText(""); passwordField.setText("");
-			command.addUser(Username,Password);
-			panel.remove(lblprompt);
-			lblprompt.setText("User Added Successfully");
-			panel.add(lblprompt, BorderLayout.NORTH);
-			panel.validate();
-			panel.repaint();
+			if(usernameField.getText().trim().length() > 0 && passwordField.getText().trim().length() > 0){
+				String Username=usernameField.getText();
+				String Password=passwordField.getText();
+				usernameField.setText(""); passwordField.setText("");
+				command.addUser(Username,Password);
+				panel.remove(lblprompt);
+				lblprompt.setText("User Added Successfully");
+				panel.add(lblprompt, BorderLayout.NORTH);
+				panel.validate();
+				panel.repaint();
+			}
 		}
 	}
 
