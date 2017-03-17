@@ -13,9 +13,12 @@ public class DelButtonListener extends EventButtonListener{
     }
 
     @Override protected void editDisplay(String evid){
-        BGCommander.getBGCommander().deleteFromField(evid,field);
-        DefaultListModel model = (DefaultListModel)super.eventsList.getModel();
-        model.remove(model.indexOf(evid));
-        UserInterface.getUserInterface().refreshDisplay();
+    	try{
+    		BGCommander.getBGCommander().deleteFromField(evid,field);
+        	DefaultListModel model = (DefaultListModel)super.eventsList.getModel();
+        	model.remove(model.indexOf(evid));
+        	UserInterface.getUserInterface().refreshDisplay();
+    	}
+    	catch (ArrayIndexOutOfBoundsException eexception){}
     }
 }
