@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 import javax.swing.JTable;
+import java.util.regex.Pattern;
 
 public class CreateOrgListener implements ActionListener{
     private JTextField id,orgip,port;
@@ -15,7 +16,7 @@ public class CreateOrgListener implements ActionListener{
         id=i; orgip=ip; this.table = table;
     }
     public void actionPerformed(ActionEvent e){
-    	if(!existsInTable()){
+    	if(!existsInTable() && !Pattern.matches("[a-zA-Z]+", orgip.getText())){
         BGCommander.getBGCommander().addOrganization(id.getText(),orgip.getText());
         UserInterface.getUserInterface().refreshDisplay();
     	}
