@@ -64,6 +64,7 @@ public class DisplayHostedEvents extends JSplitPane implements DisplayScheduleCo
 			addInfoTxtFld.setEditable(false);
 			removeHostedEventBtn = new JButton("Remove Hosted Event");
 			removeHostedEventBtn.setEnabled(false);
+
 			removeHostedEventBtn.addActionListener(new DelButtonListener(hostedEventsList,"hosted"));
 		additionalInformationPanel.add(removeHostedEventBtn, BorderLayout.SOUTH);
 		additionalInformationPanel.add(addInfoTxtPn, BorderLayout.NORTH);

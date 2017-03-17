@@ -19,12 +19,15 @@ public class OrgSelectionListener implements ActionListener{
     public void actionPerformed(ActionEvent e){
         try{
             String orgname = (String)orgBox.getSelectedItem();
-            ArrayList<String> available = BGCommander.getBGCommander().search(orgname);
-            availableEvsList.removeAllElements();
-            for(String ev:available){
-                availableEvsList.addElement(ev);
+            if(orgname==null){availableEvsList.removeAllElements();}
+            else{
+                ArrayList<String> available = BGCommander.getBGCommander().search(orgname);
+                availableEvsList.removeAllElements();
+                for(String ev:available){
+                    availableEvsList.addElement(ev);
+                }
             }
-            UserInterface.getUserInterface().refreshDisplay();
+                UserInterface.getUserInterface().refreshDisplay();
         }catch(NullPointerException ex){}
     }
 }

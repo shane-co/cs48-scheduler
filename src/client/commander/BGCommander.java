@@ -133,8 +133,9 @@ public class BGCommander{
 	  client.addSchedule(s);
     }
     //Function to delete a schedule from user array
-    public void deleteSchedule(Schedule s)throws ElementNotFoundException{
-	    client.deleteSchedule(s);
+    public void deleteSchedule(String schedid)throws ElementNotFoundException{
+        Schedule deleted = new Schedule(new ArrayList<ScheduleEvent>(), schedid, 0,0);
+        client.deleteSchedule(deleted);
     }
 
     /**

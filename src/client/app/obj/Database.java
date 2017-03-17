@@ -113,7 +113,7 @@ public class Database{
                 tagname="event";
                 break;
             case "mySchedules": field = (Element)user.getElementsByTagName("mySchedules").item(0);
-                tagname="schedule";
+                tagname="sched";
                 break;
             case "myOrgs": field = (Element)user.getElementsByTagName("myOrgs").item(0);
                 tagname="org";
@@ -127,12 +127,6 @@ public class Database{
             Element deleted = findElement(field, tagname, newelemid);
             deleted.getParentNode().removeChild(deleted);
         }
-    }
-
-    public String outputSearchResultString(String uname, String filters) throws UserNotFoundException{
-            //get element corresponding to tagname and val.
-            //get all elements from myHostedEvents and apply filters.
-            return ""; //STUB
     }
 
 	/**

@@ -15,6 +15,7 @@ public class ScheduleGenerator{
 	public ScheduleGenerator(ArrayList<ScheduleEvent> e){
 	events = e;
 	output = new ArrayList<ScheduleEvent>();
+	number_of_events=events.size();
 	}
 	private boolean isEligible(ScheduleEvent candidate){
 	  for(ScheduleEvent s: output){
@@ -23,8 +24,11 @@ public class ScheduleGenerator{
 	  return true;
 	}
 	public Schedule getSchedule(String id, int month, int day){
-		for(ScheduleEvent s : events){
-			if(isEligible(s)) output.add(s);
+		for(int i=0; i<number_of_events; i++){
+			Random random = new Random();
+			int index = random.nextInt(events.size());
+			ScheduleEvent randomEvent = events.get(index);
+			if(isEligible(randomEvent)) output.add(randomEvent);
 		}
 		return new Schedule(output, id, month, day);
 	}

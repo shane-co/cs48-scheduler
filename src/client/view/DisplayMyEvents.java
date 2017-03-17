@@ -184,6 +184,7 @@ public class DisplayMyEvents extends JSplitPane implements DisplayScheduleCompon
 		removeEventsBtn.setEnabled(false);
 		addEventsBtn.setEnabled(false);
 		availableOrgs.setEnabled(false);
+
 	}
 
 }

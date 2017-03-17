@@ -40,6 +40,7 @@ public class DisplayScheduleDisplay extends JPanel implements DisplayScheduleCom
 
 		deleteScheduleBtn = new JButton("Delete Schedule");
 		deleteScheduleBtn.setEnabled(false);
+
 		deleteScheduleBtn.addActionListener(new deleteScheduleListener());
 		this.add(deleteScheduleBtn, BorderLayout.SOUTH);
 	}
@@ -81,4 +82,5 @@ public class DisplayScheduleDisplay extends JPanel implements DisplayScheduleCom
 		deleteScheduleBtn.setEnabled(false);
 		possibleSchedules.setEnabled(false);
 	}
+
 }
