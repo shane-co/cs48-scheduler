@@ -99,6 +99,7 @@ public class DisplayMyEvents extends JSplitPane implements DisplayScheduleCompon
 				JTextPane availableOrgsTxtPn = new JTextPane();
 				availableOrgsTxtPn.setText("Available Orgs.");
 				availableOrgsTxtPn.setEditable(false);
+				availableOrgs.setEnabled(false);
 			topEventsListPanel.add(availableEventsTxtPn, BorderLayout.NORTH);
 			topEventsListPanel.add(availableOrgs, BorderLayout.CENTER);
 			topEventsListPanel.add(availableOrgsTxtPn, BorderLayout.WEST);
@@ -175,12 +176,14 @@ public class DisplayMyEvents extends JSplitPane implements DisplayScheduleCompon
 		genScheduleBtn.setEnabled(true);
 		removeEventsBtn.setEnabled(true);
 		addEventsBtn.setEnabled(true);
+		availableOrgs.setEnabled(true);
 	}
 	
 	public void unactivateButtons(){
 		genScheduleBtn.setEnabled(false);
 		removeEventsBtn.setEnabled(false);
 		addEventsBtn.setEnabled(false);
+		availableOrgs.setEnabled(false);
 	}
 
 }
