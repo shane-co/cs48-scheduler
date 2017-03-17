@@ -1,6 +1,6 @@
 package client.view;
 import client.commander.BGCommander;
-import client.app.obj.*;
+import client.app.exceptions.ElementNotFoundException;
 import client.app.exceptions.UserNotFoundException;
 import client.view.listeners.SchedSelectionListener;
 import javax.swing.JFrame;
@@ -17,6 +17,7 @@ public class DisplayScheduleDisplay extends JPanel implements DisplayScheduleCom
 
 	private JComboBox possibleSchedules;
 	private ScheduleDisplay display;
+	private JButton deleteScheduleBtn;
 	public DisplayScheduleDisplay() {
 		initialize();
 		this.setBounds(100, 100, 500, 300);
@@ -36,7 +37,9 @@ public class DisplayScheduleDisplay extends JPanel implements DisplayScheduleCom
 
 		possibleSchedules.addActionListener(new SchedSelectionListener(possibleSchedules, display));
 
-		JButton deleteScheduleBtn = new JButton("Delete Schedule");
+		deleteScheduleBtn = new JButton("Delete Schedule");
+		deleteScheduleBtn.setEnabled(false);
+		deleteScheduleBtn.addActionListener(new deleteScheduleListener());
 		this.add(deleteScheduleBtn, BorderLayout.SOUTH);
 	}
 
@@ -50,12 +53,29 @@ public class DisplayScheduleDisplay extends JPanel implements DisplayScheduleCom
 	public void refresh(){
 		DefaultComboBoxModel schedmodel = new DefaultComboBoxModel();
 		try{
-			for(String org:BGCommander.getBGCommander().getSchedules()){
-				schedmodel.addElement(org);
+			if(BGCommander.getBGCommander().getSchedules().size()==0)possibleSchedules.removeAllItems();
+			for(String sched:BGCommander.getBGCommander().getSchedules()){
+				schedmodel.addElement(sched);
 				possibleSchedules.setModel(schedmodel);
 			}
 		}catch(UserNotFoundException ex){possibleSchedules.removeAllItems();}
-		//catch(NullPointerException ex){		System.out.println("exception");}
+		catch(NullPointerException ex){}
 	}
 
+	private class deleteScheduleListener implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			String schedid = (String)possibleSchedules.getSelectedItem();
+			try{
+				BGCommander.getBGCommander().deleteSchedule(schedid);
+				UserInterface.getUserInterface().refreshDisplay();
+			}catch(ElementNotFoundException ex){}
+		}
+	}
+	public void activateButtons(){
+		deleteScheduleBtn.setEnabled(true);
+	}
+	
+	public void unactivateButtons(){
+		deleteScheduleBtn.setEnabled(false);
+	}
 }
