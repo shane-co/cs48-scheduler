@@ -115,9 +115,11 @@ public class login extends JPanel{
 		btnlogout.setBounds(161, 176, 153, 27);
 		this.add(btnlogout, BorderLayout.SOUTH);
 
+		ui.activateButtons();
 		this.repaint();
 		this.validate();
 		ui.refreshDisplay();
+		
 	}
 
 //LISTENER CLASSES
@@ -155,6 +157,7 @@ public class login extends JPanel{
 					panel.removeAll();
 					initialize();
 					panel.repaint();
+					ui.unactivateButtons();
 					ui.refreshDisplay();
 		}
 	}
